@@ -5,7 +5,7 @@
 TAPS Working Group                                     A. Brunstrom, Ed.
 Internet-Draft                                       Karlstad University
 Intended status: Informational                             T. Pauly, Ed.
-Expires: 27 November 2021                                     Apple Inc.
+Expires: 4 December 2021                                      Apple Inc.
                                                              T. Enghardt
                                                                  Netflix
                                                            K-J. Grinnemo
@@ -18,7 +18,7 @@ Expires: 27 November 2021                                     Apple Inc.
                                                    University of Glasgow
                                                                 M. Welzl
                                                       University of Oslo
-                                                             26 May 2021
+                                                             2 June 2021
 
 
              Implementing Interfaces to Transport Services
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 November 2021.
+   This Internet-Draft will expire on 4 December 2021.
 
 Copyright Notice
 
