@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-05-30T00:51:04.382090+00:00",
+  "timestamp": "2021-06-03T01:03:08.360594+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -21551,7 +21551,7 @@
       "id": "MDU6SXNzdWU4NTQwMjEyNDE=",
       "title": "Can you close a Preconnection?",
       "url": "https://github.com/ietf-tapswg/api-drafts/issues/762",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "martinduke",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -21563,8 +21563,8 @@
       ],
       "body": "From reading -api I am not certain of the lifecycle of preconnections?\r\n\r\nIs it\r\n-Generate preconnection\r\n- initiate() or listen()\r\n- preconnection is immediately destroyed?\r\n\r\nor\r\n-Generate preconnection\r\n- initiate() or listen()\r\n- initiate()/listen()\r\n- ...\r\n\r\nEither way, there ought to be a way for taps to throw away this state, either because we never called initiate/listen (1st case) or we're done creating new connections (2nd case).\r\n\r\nOr is TAPS not holding any state, with the application fully responsible for holding the object? I'm playing with treating connections and preconnections as socket-style file descriptors, and that model won't work without a preconnection.destroy() or whatever. But maybe that model is just wrong!",
       "createdAt": "2021-04-08T23:44:09Z",
-      "updatedAt": "2021-04-09T15:52:59Z",
-      "closedAt": null,
+      "updatedAt": "2021-06-02T15:49:20Z",
+      "closedAt": "2021-06-02T15:49:20Z",
       "comments": [
         {
           "author": "tfpauly",
@@ -22448,7 +22448,7 @@
       "id": "MDU6SXNzdWU4NzMwMzc0Nzg=",
       "title": "S4: Why are only SecurityParameters optional in NewPreconnection?",
       "url": "https://github.com/ietf-tapswg/api-drafts/issues/804",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "abrunstrom",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -22459,8 +22459,8 @@
       ],
       "body": "For other parameters you have to pass in an empty object if you do not want to set anything but not for SecurityParameters. Unclear why the parameters are treated differently?",
       "createdAt": "2021-04-30T18:26:08Z",
-      "updatedAt": "2021-05-07T16:17:16Z",
-      "closedAt": null,
+      "updatedAt": "2021-06-02T15:48:43Z",
+      "closedAt": "2021-06-02T15:48:43Z",
       "comments": [
         {
           "author": "tfpauly",
@@ -68195,7 +68195,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjM0ODE2ODk5",
       "title": "Add appendix note about object freeing",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/830",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tfpauly",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -68206,17 +68206,19 @@
       ],
       "body": "Closes #762",
       "createdAt": "2021-05-08T19:30:48Z",
-      "updatedAt": "2021-05-20T08:09:26Z",
+      "updatedAt": "2021-06-02T15:49:21Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "e142ddd93d7c3f64ed8882076bceb30bd8a47ec2",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "tfpauly-patch-2",
       "headRefOid": "7df496e7029ea48f48d44ca4aa89973f25484488",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2021-06-02T15:49:20Z",
+      "mergedAt": "2021-06-02T15:49:20Z",
+      "mergedBy": "mwelzl",
+      "mergeCommit": {
+        "oid": "c80574dcd331039ec0a80988d319d2031220efe8"
+      },
       "comments": [],
       "reviews": [
         {
@@ -68298,24 +68300,26 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjM0ODQ3NTIw",
       "title": "Make disabling security explicit",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/832",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tfpauly",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #804",
       "createdAt": "2021-05-08T20:02:03Z",
-      "updatedAt": "2021-05-20T08:17:23Z",
+      "updatedAt": "2021-06-02T15:48:43Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "e142ddd93d7c3f64ed8882076bceb30bd8a47ec2",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "tfpauly-patch-4",
       "headRefOid": "b8a06857c78193fd0b725e61a0e4a7e28a383c13",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2021-06-02T15:48:43Z",
+      "mergedAt": "2021-06-02T15:48:43Z",
+      "mergedBy": "mwelzl",
+      "mergeCommit": {
+        "oid": "a2cd004723e6a54f1968cdf1beba54ff012b6836"
+      },
       "comments": [],
       "reviews": [
         {
