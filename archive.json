@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-06-03T01:03:08.360594+00:00",
+  "timestamp": "2021-06-06T00:35:51.200007+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -22376,9 +22376,17 @@
       ],
       "body": "TAPS is used in a few places in the document. I think we said to remove and replace that at some point in time.",
       "createdAt": "2021-04-30T18:01:27Z",
-      "updatedAt": "2021-05-07T15:49:38Z",
+      "updatedAt": "2021-06-04T09:01:21Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Suggestion: add this to #672 in a comment, and close this issue.",
+          "createdAt": "2021-06-04T09:01:21Z",
+          "updatedAt": "2021-06-04T09:01:21Z"
+        }
+      ]
     },
     {
       "number": 801,
@@ -67959,7 +67967,7 @@
       ],
       "body": "",
       "createdAt": "2021-05-07T16:05:43Z",
-      "updatedAt": "2021-05-08T19:19:57Z",
+      "updatedAt": "2021-06-04T05:23:41Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "0139c0e22a6f7e8c85f3c591a5495bde1f439ace",
@@ -68017,6 +68025,46 @@
               "updatedAt": "2021-05-08T19:19:57Z"
             }
           ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njc1MzcwNTIy",
+          "commit": {
+            "abbreviatedOid": "0d019fe"
+          },
+          "author": "philsbln",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-03T14:49:10Z",
+          "updatedAt": "2021-06-03T14:49:10Z",
+          "comments": [
+            {
+              "originalPosition": 13,
+              "body": "Yes, in the current version, we have three times \"Protocol Specific Properties\" and three times \"Specific Protocol Properties\" meaning the same thing. We should really unify on one term.",
+              "createdAt": "2021-06-03T14:49:10Z",
+              "updatedAt": "2021-06-03T14:49:10Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njc1OTI2NTAx",
+          "commit": {
+            "abbreviatedOid": "0d019fe"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-04T05:23:40Z",
+          "updatedAt": "2021-06-04T05:23:41Z",
+          "comments": [
+            {
+              "originalPosition": 13,
+              "body": "Oh yes, absolutely, it should be Protocol Specific Properties everywhere  (actually I wonder if this wouldn't be even better with a dash?  I.e., \"Protocol-specific Properties\"?).\r\n\r\nTo me, \"Specific Protocol Properties\" doesn't read like it would even mean the same thing, it reads to me as \"specific ones as opposed to very vague ones\"  (well, as opposed to \"generic\" ones ... so that kinda works, but it's less clear that these are specific *to* a protocol, IMO).",
+              "createdAt": "2021-06-04T05:23:41Z",
+              "updatedAt": "2021-06-04T05:23:41Z"
+            }
+          ]
         }
       ]
     },
@@ -68034,13 +68082,13 @@
       ],
       "body": "Closes issue #775",
       "createdAt": "2021-05-07T16:27:12Z",
-      "updatedAt": "2021-05-20T08:05:58Z",
+      "updatedAt": "2021-06-04T08:58:38Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "0139c0e22a6f7e8c85f3c591a5495bde1f439ace",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "philsbln/callbacks",
-      "headRefOid": "3c0f9c9c3dd7ea7257c163c87de505c0bdad6337",
+      "headRefOid": "2374e1004ab5d6a0c8b454c22c8146bc9aefb2dd",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -68099,6 +68147,59 @@
               "updatedAt": "2021-05-20T08:05:58Z"
             }
           ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njc1MzY0MzI5",
+          "commit": {
+            "abbreviatedOid": "3c0f9c9"
+          },
+          "author": "philsbln",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-03T14:43:54Z",
+          "updatedAt": "2021-06-03T14:43:54Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "I would prefer to leave the connection on lower case (as I am not sure that the connection object we refer to in upper case has/makes progress, but something in the underlaying transport system).\r\n\r\n ```suggestion\r\nCallbacks block the progress of the connection establishment, which distinguishes them from other Events in the transport system. How callbacks and events are implemented is specific to each implementation.\r\n```",
+              "createdAt": "2021-06-03T14:43:54Z",
+              "updatedAt": "2021-06-03T14:43:54Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njc2MDcxOTUw",
+          "commit": {
+            "abbreviatedOid": "2374e10"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-04T08:58:12Z",
+          "updatedAt": "2021-06-04T08:58:13Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "ok, this makes sense to me",
+              "createdAt": "2021-06-04T08:58:12Z",
+              "updatedAt": "2021-06-04T08:58:13Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njc2MDcyMzQ5",
+          "commit": {
+            "abbreviatedOid": "2374e10"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-06-04T08:58:38Z",
+          "updatedAt": "2021-06-04T08:58:38Z",
+          "comments": []
         }
       ]
     },
