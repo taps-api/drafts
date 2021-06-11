@@ -1094,7 +1094,7 @@ Connection.Close()
 
 4.2.7.  Full Checksum Coverage on Sending
 
-   Name:  perMsgChecksumSend
+   Name:  FullChecksumSend
 
    Type:  Preference
 
@@ -1107,7 +1107,7 @@ Connection.Close()
 
 4.2.8.  Full Checksum Coverage on Receiving
 
-   Name:  perMsgChecksumRecv
+   Name:  FullChecksumRecv
 
    Type:  Preference
 
