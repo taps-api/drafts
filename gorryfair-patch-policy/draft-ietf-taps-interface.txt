@@ -314,8 +314,8 @@ Table of Contents
       transport layer, in line with developments in modern platforms and
       programming languages;
 
-   *  Selection between alternate network paths that can be informed by
-      additional information that is available about the networks over
+   *  Selection between alternate network paths that can be informed
+      when additional information is available about the networks over
       which an endpoint can operate (e.g.  Provisioning Domain (PvD)
       information [RFC7556]);
 
