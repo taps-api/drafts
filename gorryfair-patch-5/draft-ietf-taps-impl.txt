@@ -617,18 +617,22 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
       Section 9.2:
 
       -  Scavenger: Prefer paths with the highest expected available
-         capacity, based on the observed maximum throughput;
+         capacity, but minimising impact on other traffic, based on the
+         observed maximum throughput;
 
       -  Low Latency/Interactive: Prefer paths with the lowest expected
          Round Trip Time, based on observed round trip time estimates;
 
-      -  Low Latency/Non-Interactive: Prefer paths with XXX.
+      -  Low Latency/Non-Interactive: Prefer paths with a low expected
+         Round Trip Time, but can tolerate delay variation;
 
-      -  Constant-Rate Streaming: Prefer paths that can are expected to
+      -  Constant-Rate Streaming: Prefer paths that are expected to
          satisy the requested Stream Send or Stream Receive Bitrate,
-         based on the observed maximum throughput.
+         based on the observed maximum throughput;
 
-      -  Capacity-Seeking: Prefer paths with XXX.
+      -  Capacity-Seeking: Prefer adpating to paths to determine the
+         highest available capacity, based on the observed maximum
+         throughput.
 
    Implementations process the Properties in the following order:
    Prohibit, Require, Prefer, Avoid.  If Selection Properties contain
