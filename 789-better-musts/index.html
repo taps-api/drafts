@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ietf-tapswg/api-drafts 789-better-musts preview</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <style type="text/css">/*<![CDATA[*/
+      body { font-family: "Helvetica Neue","Open Sans", Helvetica, Calibri,sans-serif; }
+      h1, h2, td { font-family: "Helvetica Neue", "Roboto Condensed", "Open Sans", Helvetica, Calibri, sans-serif; }
+      h1 { font-size: 20px; } h2 { font-size: 16px; }
+      table { margin: 5px 10px; border-collapse: collapse; }
+      th, td { font-weight: normal; text-align: left; padding: 2px 5px; }
+      a:link { color: #000; } a:visited { color: #00a; }
+    /*]]>*/</style>
+  </head>
+  <body>
+    <h1>Editor's drafts for 789-better-musts branch of <a href="https://github.com/ietf-tapswg/api-drafts/tree/789-better-musts">ietf-tapswg/api-drafts</a></h1>
+    <p>View <a href="issues.html">saved issues</a>, or the latest GitHub <a href="https://github.com/ietf-tapswg/api-drafts/issues">issues</a> and <a href="https://github.com/ietf-tapswg/api-drafts/pulls">pull requests</a>.</p>
+    <table id="branch-789-better-musts">
+      <tr>
+        <th>draft-ietf-taps-arch</th>
+        <td><a href="./draft-ietf-taps-arch.html" class="html draft-ietf-taps-arch">html</a></td>
+        <td><a href="./draft-ietf-taps-arch.txt" class="txt draft-ietf-taps-arch">plain text</a></td>
+        <td><a href="https://tools.ietf.org/rfcdiff?url1=https://ietf-tapswg.github.io/api-drafts/draft-ietf-taps-arch.txt&amp;url2=https://ietf-tapswg.github.io/api-drafts/789-better-musts/draft-ietf-taps-arch.txt">diff with master</a></td>
+        <td><a href="https://tools.ietf.org/rfcdiff?url1=https://tools.ietf.org/id/draft-ietf-taps-arch.txt&amp;url2=https://ietf-tapswg.github.io/api-drafts/789-better-musts/draft-ietf-taps-arch.txt" class="diff draft-ietf-taps-arch">diff with last submission</a></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th>draft-ietf-taps-impl</th>
+        <td><a href="./draft-ietf-taps-impl.html" class="html draft-ietf-taps-impl">html</a></td>
+        <td><a href="./draft-ietf-taps-impl.txt" class="txt draft-ietf-taps-impl">plain text</a></td>
+        <td><a href="https://tools.ietf.org/rfcdiff?url1=https://ietf-tapswg.github.io/api-drafts/draft-ietf-taps-impl.txt&amp;url2=https://ietf-tapswg.github.io/api-drafts/789-better-musts/draft-ietf-taps-impl.txt">diff with master</a></td>
+        <td><a href="https://tools.ietf.org/rfcdiff?url1=https://tools.ietf.org/id/draft-ietf-taps-impl.txt&amp;url2=https://ietf-tapswg.github.io/api-drafts/789-better-musts/draft-ietf-taps-impl.txt" class="diff draft-ietf-taps-impl">diff with last submission</a></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th>draft-ietf-taps-interface</th>
+        <td><a href="./draft-ietf-taps-interface.html" class="html draft-ietf-taps-interface">html</a></td>
+        <td><a href="./draft-ietf-taps-interface.txt" class="txt draft-ietf-taps-interface">plain text</a></td>
+        <td><a href="https://tools.ietf.org/rfcdiff?url1=https://ietf-tapswg.github.io/api-drafts/draft-ietf-taps-interface.txt&amp;url2=https://ietf-tapswg.github.io/api-drafts/789-better-musts/draft-ietf-taps-interface.txt">diff with master</a></td>
+        <td><a href="https://tools.ietf.org/rfcdiff?url1=https://tools.ietf.org/id/draft-ietf-taps-interface.txt&amp;url2=https://ietf-tapswg.github.io/api-drafts/789-better-musts/draft-ietf-taps-interface.txt" class="diff draft-ietf-taps-interface">diff with last submission</a></td>
+        <td></td>
+      </tr>
+    </table>
+    <script>
+// @licstart
+//  Any copyright is dedicated to the Public Domain.
+//  http://creativecommons.org/publicdomain/zero/1.0/
+// @licend
+window.onload = function() {
+  var referrer_branch = 'master';
+  // e.g., "https://github.com/user/repo/tree/master"
+  var chunks = document.referrer.split("/");
+  if (chunks[2] === 'github.com' && chunks[5] === 'tree') {
+    referrer_branch = chunks[6];
+  }
+  let branch = document.querySelector('#branch-' + referrer_branch);
+  let h = document.location.hash.substring(1);
+  if (h === 'show') {
+    document.location.hash = '#' + branch.id;
+  } else if (branch && h.startsWith('go')) {
+    let e = branch.querySelector(h.substring(2));
+    if (e && e.href) {
+      document.location = e.href;
+    }
+  }
+};
+    </script>
+  </body>
+</html>
