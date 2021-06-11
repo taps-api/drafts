@@ -5,7 +5,7 @@
 TAPS Working Group                                         T. Pauly, Ed.
 Internet-Draft                                                Apple Inc.
 Intended status: Standards Track                        B. Trammell, Ed.
-Expires: 9 November 2021                         Google Switzerland GmbH
+Expires: 13 December 2021                        Google Switzerland GmbH
                                                             A. Brunstrom
                                                      Karlstad University
                                                             G. Fairhurst
@@ -16,7 +16,7 @@ Expires: 9 November 2021                         Google Switzerland GmbH
                                                                   SAP SE
                                                                C.A. Wood
                                                               Cloudflare
-                                                              8 May 2021
+                                                            11 June 2021
 
 
                  An Architecture for Transport Services
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 November 2021.
+   This Internet-Draft will expire on 13 December 2021.
 
 Copyright Notice
 
@@ -785,7 +785,7 @@ Table of Contents
    *  Listen: Enables a listener to accept incoming Connections.  The
       Listener will then create Connection objects as incoming
       connections are accepted (Section 4.1.6).  Listeners by default
-      register with multiple paths, protocols, and local endpoints,
+      register with multiple paths, protocols, and Local Endpoints,
       unless constrained by Selection Properties and/or the specified
       Local Endpoint(s).  Connections can be accepted on any of the
       available paths or endpoints.

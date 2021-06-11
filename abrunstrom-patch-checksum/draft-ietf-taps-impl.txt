@@ -5,7 +5,7 @@
 TAPS Working Group                                     A. Brunstrom, Ed.
 Internet-Draft                                       Karlstad University
 Intended status: Informational                             T. Pauly, Ed.
-Expires: 9 November 2021                                      Apple Inc.
+Expires: 13 December 2021                                     Apple Inc.
                                                              T. Enghardt
                                                                  Netflix
                                                            K-J. Grinnemo
@@ -18,7 +18,7 @@ Expires: 9 November 2021                                      Apple Inc.
                                                    University of Glasgow
                                                                 M. Welzl
                                                       University of Oslo
-                                                              8 May 2021
+                                                            11 June 2021
 
 
              Implementing Interfaces to Transport Services
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 November 2021.
+   This Internet-Draft will expire on 13 December 2021.
 
 Copyright Notice
 
@@ -72,24 +72,24 @@ Table of Contents
      3.1.  Configuration-time errors
      3.2.  Role of system policy
    4.  Implementing Connection Establishment
-     4.1.  Candidate Gathering
-       4.1.1.  Gathering Endpoint Candidates
-       4.1.2.  Structuring Options as a Tree
-       4.1.3.  Branch Types
-       4.1.4.  Branching Order-of-Operations
-       4.1.5.  Sorting Branches
-     4.2.  Candidate Racing
-       4.2.1.  Simultaneous
-       4.2.2.  Staggered
-       4.2.3.  Failover
-     4.3.  Completing Establishment
-       4.3.1.  Determining Successful Establishment
-     4.4.  Establishing multiplexed connections
-     4.5.  Handling connectionless protocols
-     4.6.  Implementing listeners
-       4.6.1.  Implementing listeners for Connected Protocols
-       4.6.2.  Implementing listeners for Connectionless Protocols
-       4.6.3.  Implementing listeners for Multiplexed Protocols
+     4.1.  Structuring Candidates as a Tree
+       4.1.1.  Branch Types
+       4.1.2.  Branching Order-of-Operations
+       4.1.3.  Sorting Branches
+     4.2.  Candidate Gathering
+       4.2.1.  Gathering Endpoint Candidates
+     4.3.  Candidate Racing
+       4.3.1.  Simultaneous
+       4.3.2.  Staggered
+       4.3.3.  Failover
+     4.4.  Completing Establishment
+       4.4.1.  Determining Successful Establishment
+     4.5.  Establishing multiplexed connections
+     4.6.  Handling connectionless protocols
+     4.7.  Implementing listeners
+       4.7.1.  Implementing listeners for Connected Protocols
+       4.7.2.  Implementing listeners for Connectionless Protocols
+       4.7.3.  Implementing listeners for Multiplexed Protocols
    5.  Implementing Sending and Receiving Data
      5.1.  Sending Messages
        5.1.1.  Message Properties
@@ -180,13 +180,13 @@ Table of Contents
    to the details of the chosen Protocol Stack.  For example, the same
    Connection object may ultimately represent the interface into a TCP
    connection, a TLS session over TCP, a UDP flow with fully-specified
-   local and remote endpoints, a DTLS session, a SCTP stream, a QUIC
+   Local and Remote Endpoints, a DTLS session, a SCTP stream, a QUIC
    stream, or an HTTP/2 stream.
 
    Listener objects are created with a Preconnection, at which point
    their configuration should be considered immutable by the
    implementation.  The process of listening is described in
-   Section 4.6.
+   Section 4.7.
 
 3.  Implementing Pre-Establishment
 
@@ -282,7 +282,7 @@ Table of Contents
 4.  Implementing Connection Establishment
 
    The process of establishing a network connection begins when an
-   application expresses intent to communicate with a remote endpoint by
+   application expresses intent to communicate with a Remote Endpoint by
    calling Initiate.  (At this point, any constraints or requirements
    the application may have on the connection are available from pre-
    establishment.)  The process can be considered complete once there is
@@ -294,17 +294,21 @@ Table of Contents
    to use, and Candidate Racing (see Section 4.2.2 of
    [I-D.ietf-taps-arch]), in which the necessary protocol handshakes are
    conducted so that the transport system can select which set to use.
-   This document structures candidates for racing as a tree.
+
+   This document structures the candidates for racing as a tree as
+   terminological convention.  While a a tree structure is not the only
+   way in which racing can be implemented, it does ease the illustration
+   of how racing works.
 
    The most simple example of this process might involve identifying the
    single IP address to which the implementation wishes to connect,
    using the system's current default interface or path, and starting a
    TCP handshake to establish a stream to the specified IP address.
-   However, each step may also vary depending on the requirements of the
-   connection: if the endpoint is defined as a hostname and port, then
-   there may be multiple resolved addresses that are available; there
-   may also be multiple interfaces or paths available, other than the
-   default system interface; and some protocols may not need any
+   However, each step may also differ depending on the requirements of
+   the connection: if the endpoint is defined as a hostname and port,
+   then there may be multiple resolved addresses that are available;
+   there may also be multiple interfaces or paths available, other than
+   the default system interface; and some protocols may not need any
    transport handshake to be considered "established" (such as UDP),
    while other connections may utilize layered protocol handshakes, such
    as TLS over TCP.
@@ -337,89 +341,26 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    Preferred properties, Avoided properties, and possibly other
    criteria.
 
-4.1.  Candidate Gathering
+4.1.  Structuring Candidates as a Tree
 
-   The step of gathering candidates involves identifying which paths,
-   protocols, and endpoints may be used for a given Connection.  This
-   list is determined by the requirements, prohibitions, and preferences
-   of the application as specified in the Selection Properties.
+   As noted above, the considereration of multiple candidates in a
+   gathering and racing process can be conceptually structured as a
+   tree; this terminological convention is used throughout this
+   document.
 
-4.1.1.  Gathering Endpoint Candidates
-
-   Both Local and Remote Endpoint Candidates must be discovered during
-   connection establishment.  To support Interactive Connectivity
-   Establishment (ICE) [RFC8445], or similar protocols that involve out-
-   of-band indirect signalling to exchange candidates with the Remote
-   Endpoint, it's important to be able to query the set of candidate
-   Local Endpoints, and give the protocol stack a set of candidate
-   Remote Endpoints, before it attempts to establish connections.
-
-4.1.1.1.  Local Endpoint candidates
-
-   The set of possible Local Endpoints is gathered.  In the simple case,
-   this merely enumerates the local interfaces and protocols, allocates
-   ephemeral source ports.  For example, a system that has WiFi and
-   Ethernet and supports IPv4 and IPv6 might gather four candidate
-   locals (IPv4 on Ethernet, IPv6 on Ethernet, IPv4 on WiFi, and IPv6 on
-   WiFi) that can form the source for a transient.
-
-   If NAT traversal is required, the process of gathering Local
-   Endpoints becomes broadly equivalent to the ICE candidate gathering
-   phase (see Section 5.1.1. of [RFC8445]).  The endpoint determines its
-   server reflexive Local Endpoints (i.e., the translated address of a
-   local, on the other side of a NAT, e.g via a STUN sever [RFC5389])
-   and relayed locals (e.g., via a TURN server [RFC5766] or other
-   relay), for each interface and network protocol.  These are added to
-   the set of candidate Local Endpoints for this connection.
-
-   Gathering Local Endpoints is primarily a local operation, although it
-   might involve exchanges with a STUN server to derive server reflexive
-   locals, or with a TURN server or other relay to derive relayed
-   locals.  However, it does not involve communication with the Remote
-   Endpoint.
-
-4.1.1.2.  Remote Endpoint Candidates
-
-   The Remote Endpoint is typically a name that needs to be resolved
-   into a set of possible addresses that can be used for communication.
-   Resolving the Remote Endpoint is the process of recursively
-   performing such name lookups, until fully resolved, to return the set
-   of candidates for the remote of this connection.
-
-   How this is done will depend on the type of the Remote Endpoint, and
-   can also be specific to each Local Endpoint.  A common case is when
-   the Remote Endpoint is a DNS name, in which case it is resolved to
-   give a set of IPv4 and IPv6 addresses representing that name.  Some
-   types of remote might require more complex resolution.  Resolving the
-   Remote Endpoint for a peer-to-peer connection might involve
-   communication with a rendezvous server, which in turn contacts the
-   peer to gain consent to communicate and retrieve its set of candidate
-   locals, which are returned and form the candidate remote addresses
-   for contacting that peer.
-
-   Resolving the Remote Endpoint is not a local operation.  It will
-   involve a directory service, and can require communication with the
-   remote to rendezvous and exchange peer addresses.  This can expose
-   some or all of the candidate locals to the remote.
-
-4.1.2.  Structuring Options as a Tree
-
-   When an implementation responsible for connection establishment needs
-   to consider multiple options, it should logically structure these
-   options as a hierarchical tree.  Each leaf node of the tree
-   represents a single, coherent connection attempt, with an Endpoint, a
-   Path, and a set of protocols that can directly negotiate and send
-   data on the network.  Each node in the tree that is not a leaf
-   represents a connection attempt that is either underspecified, or
-   else includes multiple distinct options.  For example, when
-   connecting on an IP network, a connection attempt to a hostname and
-   port is underspecified, because the connection attempt requires a
-   resolved IP address as its remote endpoint.  In this case, the node
-   represented by the connection attempt to the hostname is a parent
-   node, with child nodes for each IP address.  Similarly, an
-   implementation that is allowed to connect using multiple interfaces
-   will have a parent node of the tree for the decision between the
-   paths, with a branch for each interface.
+   Each leaf node of the tree represents a single, coherent connection
+   attempt, with an Endpoint, a Path, and a set of protocols that can
+   directly negotiate and send data on the network.  Each node in the
+   tree that is not a leaf represents a connection attempt that is
+   either underspecified, or else includes multiple distinct options.
+   For example, when connecting on an IP network, a connection attempt
+   to a hostname and port is underspecified, because the connection
+   attempt requires a resolved IP address as its Remote Endpoint.  In
+   this case, the node represented by the connection attempt to the
+   hostname is a parent node, with child nodes for each IP address.
+   Similarly, an implementation that is allowed to connect using
+   multiple interfaces will have a parent node of the tree for the
+   decision between the paths, with a branch for each interface.
 
    The example aggregate connection attempt above can be drawn as a tree
    by grouping the addresses resolved on the same interface into
@@ -476,13 +417,13 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    1 [www.example.com:80, Wi-Fi, TCP]
      1.1 [192.0.2.1:80, Wi-Fi, TCP]
 
-4.1.3.  Branch Types
+4.1.1.  Branch Types
 
    There are three types of branching from a parent node into one or
    more child nodes.  Any parent node of the tree must only use one type
    of branching.
 
-4.1.3.1.  Derived Endpoints
+4.1.1.1.  Derived Endpoints
 
    If a connection originally targets a single endpoint, there may be
    multiple endpoints of different types that can be derived from the
@@ -494,9 +435,9 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    endpoint derivation.  When trying to connect to a hostname endpoint
    on a traditional IP network, the implementation should send DNS
    queries for both A (IPv4) and AAAA (IPv6) records if both are
-   supported on the local link.  The algorithm for ordering and racing
-   these addresses should follow the recommendations in Happy Eyeballs
-   [RFC8305].
+   supported on the local interface.  The algorithm for ordering and
+   racing these addresses should follow the recommendations in Happy
+   Eyeballs [RFC8305].
 
    1 [www.example.com:80, Wi-Fi, TCP]
      1.1 [2001:DB8::1.80, Wi-Fi, TCP]
@@ -516,7 +457,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
      1.1 [term-printer.meeting.ietf.org:631, Wi-Fi, TCP]
        1.1.1 [31.133.160.18.631, Wi-Fi, TCP]
 
-4.1.3.2.  Alternate Paths
+4.1.1.2.  Alternate Paths
 
    If a client has multiple network interfaces available to it, e.g., a
    mobile client with both Wi-Fi and Cellular connectivity, it can
@@ -540,7 +481,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    The list of available paths should be constrained by any requirements
    or prohibitions the application sets, as well as system policy.
 
-4.1.3.3.  Protocol Options
+4.1.1.3.  Protocol Options
 
    Differences in possible protocol compositions and options can also
    provide a branching point in connection establishment.  This allows
@@ -584,7 +525,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    (see Section 9.2).  This information can influence future racing
    decisions to prioritize or prune branches.
 
-4.1.4.  Branching Order-of-Operations
+4.1.2.  Branching Order-of-Operations
 
    Branch types must occur in a specific order relative to one another
    to avoid creating leaf nodes with invalid or incompatible settings.
@@ -646,7 +587,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    1.2.1 [192.0.3.1:80, LTE, SCTP]
    1.2.2 [192.0.3.1:80, LTE, TCP]
 
-4.1.5.  Sorting Branches
+4.1.3.  Sorting Branches
 
    Implementations should sort the branches of the tree of connection
    options in order of their preference rank, from most preferred to
@@ -704,7 +645,75 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    paths that are already used by existing Connections that specified
    similar Properties.
 
-4.2.  Candidate Racing
+4.2.  Candidate Gathering
+
+   The step of gathering candidates involves identifying which paths,
+   protocols, and endpoints may be used for a given Connection.  This
+   list is determined by the requirements, prohibitions, and preferences
+   of the application as specified in the Selection Properties.
+
+4.2.1.  Gathering Endpoint Candidates
+
+   Both Local and Remote Endpoint Candidates must be discovered during
+   connection establishment.  To support Interactive Connectivity
+   Establishment (ICE) [RFC8445], or similar protocols that involve out-
+   of-band indirect signalling to exchange candidates with the Remote
+   Endpoint, it is important to query the set of candidate Local
+   Endpoints, and provide the protocol stack with a set of candidate
+   Remote Endpoints, before the Local Endpoint attempts to establish
+   connections.
+
+4.2.1.1.  Local Endpoint candidates
+
+   The set of possible Local Endpoints is gathered.  In the simple case,
+   this merely enumerates the local interfaces and protocols, and
+   allocates ephemeral source ports.  For example, a system that has
+   WiFi and Ethernet and supports IPv4 and IPv6 might gather four
+   candidate Local Endpoints (IPv4 on Ethernet, IPv6 on Ethernet, IPv4
+   on WiFi, and IPv6 on WiFi) that can form the source for a transient.
+
+   If NAT traversal is required, the process of gathering Local
+   Endpoints becomes broadly equivalent to the ICE candidate gathering
+   phase (see Section 5.1.1. of [RFC8445]).  The endpoint determines its
+   server reflexive Local Endpoints (i.e., the translated address of a
+   Local Endpoint, on the other side of a NAT, e.g via a STUN sever
+   [RFC5389]) and relayed Local Endpoints (e.g., via a TURN server
+   [RFC5766] or other relay), for each interface and network protocol.
+   These are added to the set of candidate Local Endpoints for this
+   connection.
+
+   Gathering Local Endpoints is primarily a local operation, although it
+   might involve exchanges with a STUN server to derive server reflexive
+   Local Endpoints, or with a TURN server or other relay to derive
+   relayed Local Endpoints.  However, it does not involve communication
+   with the Remote Endpoint.
+
+4.2.1.2.  Remote Endpoint Candidates
+
+   The Remote Endpoint is typically a name that needs to be resolved
+   into a set of possible addresses that can be used for communication.
+   Resolving the Remote Endpoint is the process of recursively
+   performing such name lookups, until fully resolved, to return the set
+   of candidates for the Remote Endpoint of this connection.
+
+   How this resolution is done will depend on the type of the Remote
+   Endpoint, and can also be specific to each Local Endpoint.  A common
+   case is when the Remote Endpoint is a DNS name, in which case it is
+   resolved to give a set of IPv4 and IPv6 addresses representing that
+   name.  Some types of Remote Endpoint might require more complex
+   resolution.  Resolving the Remote Endpoint for a peer-to-peer
+   connection might involve communication with a rendezvous server,
+   which in turn contacts the peer to gain consent to communicate and
+   retrieve its set of candidate Local Endpoints, which are returned and
+   form the candidate remote addresses for contacting that peer.
+
+   Resolving the Remote Endpoint is not a local operation.  It will
+   involve a directory service, and can require communication with the
+   Remote Endpoint to rendezvous and exchange peer addresses.  This can
+   expose some or all of the candidate Local Endpoints to the Remote
+   Endpoint.
+
+4.3.  Candidate Racing
 
    The primary goal of the Candidate Racing process is to successfully
    negotiate a protocol stack to an endpoint over an interface--to
@@ -738,7 +747,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    given parent node, and is not ordered precisely with regards to other
    children of other nodes.
 
-4.2.1.  Simultaneous
+4.3.1.  Simultaneous
 
    Simultaneous racing is when multiple alternate branches are started
    without waiting for any one branch to make progress before starting
@@ -747,7 +756,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    implementations, since it consumes extra network resources and
    establishes state that might not be used.
 
-4.2.2.  Staggered
+4.3.2.  Staggered
 
    Staggered racing can be used whenever a single node of the tree has
    multiple child nodes.  Based on the order determined when building
@@ -762,7 +771,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    should not terminate an earlier child connection attempt upon
    starting a secondary child.
 
-   If a child node fails to establish connectivity (as in Section 4.3.1)
+   If a child node fails to establish connectivity (as in Section 4.4.1)
    before the delay time has expired for the next child, the next child
    should be started immediately.
 
@@ -791,7 +800,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    implementation-specific, and may differ based on which branch type is
    being used.
 
-4.2.3.  Failover
+4.3.3.  Failover
 
    If an implementation or application has a strong preference for one
    branch over another, the branching node may choose to wait until one
@@ -806,12 +815,12 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    misconfigured, but any more aggressive type of racing may end up
    unnecessarily avoiding a proxy that was preferred by policy.
 
-4.3.  Completing Establishment
+4.4.  Completing Establishment
 
    The process of connection establishment completes when one leaf node
-   of the tree has completed negotiation with the remote endpoint
-   successfully, or else all nodes of the tree have failed to connect.
-   The first leaf node to complete its connection is then used by the
+   of the tree has successfully completed negotiation with the Remote
+   Endpoint, or else all nodes of the tree have failed to connect.  The
+   first leaf node to complete its connection is then used by the
    application to send and receive data.
 
    Successes and failures of a given attempt should be reported up to
@@ -842,7 +851,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    connections is generally not recommended since those attempts were
    slower to connect and may exhibit less desirable properties.
 
-4.3.1.  Determining Successful Establishment
+4.4.1.  Determining Successful Establishment
 
    Implementations may select the criteria by which a leaf node is
    considered to be successfully connected differently on a per-protocol
@@ -853,7 +862,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    connectionless protocol, like UDP, the implementation may consider
    the node fully "connected" the moment it determines a route is
    present, before sending any packets on the network, see further
-   Section 4.5.
+   Section 4.6.
 
    For protocol stacks with multiple handshakes, the decision becomes
    more nuanced.  If the protocol stack involves both TLS and TCP, an
@@ -861,7 +870,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    the TCP handshake is complete, or it can wait for the TLS handshake
    to complete as well.  The benefit of declaring completion when the
    TCP handshake finishes, and thus stopping the race for other branches
-   of the tree, is reduced burden on the network and remote endpoints
+   of the tree, is reduced burden on the network and Remote Endpoints
    from further connection attempts that are likely to be abandoned.  On
    the other hand, by waiting until the TLS handshake is complete, an
    implementation avoids the scenario in which a TCP handshake completes
@@ -878,7 +887,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    event.  An InitiateError event should also be generated in case the
    transport system finds no usable candidates to race.
 
-4.4.  Establishing multiplexed connections
+4.5.  Establishing multiplexed connections
 
    Multiplexing several Connections over a single underlying transport
    connection requires that the Connections to be multiplexed belong to
@@ -900,7 +909,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    endpoint's Inititate.  Instead, calling the ConnectionReceived event
    may be delayed until the first Message arrives.
 
-4.5.  Handling connectionless protocols
+4.6.  Handling connectionless protocols
 
    While protocols that use an explicit handshake to validate a
    Connection to a peer can be used for racing multiple establishment
@@ -916,7 +925,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    Protocol Stack.  The implementation should maintain the list of other
    candidate Protocol Stacks that were eligible to use.
 
-4.6.  Implementing listeners
+4.7.  Implementing listeners
 
    When an implementation is asked to Listen, it registers with the
    system to wait for incoming traffic to the Local Endpoint.  If no
@@ -937,7 +946,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    should support receiving inbound connections for each eligible
    protocol on each eligible path.
 
-4.6.1.  Implementing listeners for Connected Protocols
+4.7.1.  Implementing listeners for Connected Protocols
 
    Connected protocols such as TCP and TLS-over-TCP have a strong
    mapping between the Local and Remote Endpoints (four-tuple) and their
@@ -946,7 +955,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    should generate a new Connection object and pass it to the
    application.
 
-4.6.2.  Implementing listeners for Connectionless Protocols
+4.7.2.  Implementing listeners for Connectionless Protocols
 
    Connectionless protocols such as UDP and UDP-lite generally do not
    provide the same mechanisms that connected protocols do to offer
@@ -959,7 +968,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    handling of datagrams intended for already created Connection
    objects.
 
-4.6.3.  Implementing listeners for Multiplexed Protocols
+4.7.3.  Implementing listeners for Multiplexed Protocols
 
    Protocols that provide multiplexing of streams into a single four-
    tuple can listen both for entirely new connections (a new HTTP/2
@@ -1031,11 +1040,14 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
       this property may be ignored.
 
    *  Safely Replayable: when this is true, this means that the Message
-      can be used by mechanisms that might transfer it multiple times --
-      e.g., as a result of racing multiple transports or as part of TCP
-      Fast Open.  Also, protocols that do not protect against duplicated
-      messages, such as UDP, can only be used with Messages that are
-      Safely Replayable.
+      can be used by a transport mechanism that might transfer it
+      multiple times -- e.g., as a result of racing multiple transports
+      or as part of TCP Fast Open.  Also, protocols that do not protect
+      against duplicated messages, such as UDP (when used directly,
+      without a protocol layered atop), can only be used with Messages
+      that are Safely Replayable.  When a transport system is permitted
+      to replay messages, replay protection could be provided by the
+      application.
 
    *  Final: when this is true, this means that the sender will not send
       any further messages.  The Connection need not be closed (in case
@@ -1228,7 +1240,7 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
    When a Message Framer generates a "Start" event, the framer
    implementation has the opportunity to start writing some data prior
    to the Connection delivering its "Ready" event.  This allows the
-   implementation to communicate control data to the remote endpoint
+   implementation to communicate control data to the Remote Endpoint
    that can be used to parse Messages.
 
    MessageFramer.MakeConnectionReady(Connection)
@@ -1425,8 +1437,8 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
    be used.  However, detailed handling of these policies is still
    implementation-specific.  For example, if the "multipath" Selection
    Property is set to "active", the decision about when to create a new
-   path or to announce a new path or set of paths to the remote
-   endpoint, e.g., in the form of additional IP addresses, is
+   path or to announce a new path or set of paths to the Remote
+   Endpoint, e.g., in the form of additional IP addresses, is
    implementation-specific.  If the Protocol Stack includes a transport
    protocol that does not support multipath, but does support migrating
    between paths, the update to the set of available paths can trigger
@@ -1467,7 +1479,7 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
    regarding data that the application has handed over to the Transport
    System before calling Abort.
 
-   As explained in Section 4.4, when a new stream is multiplexed on an
+   As explained in Section 4.5, when a new stream is multiplexed on an
    already existing connection of a Transport Protocol Instance, there
    is no need for a connection establishment procedure.  Because the
    Connections that are offered by the Transport System can be
@@ -1563,7 +1575,7 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
    influence preference between candidate paths, endpoints, and protocol
    options.  Eligible options that historically had significantly better
    performance than others should be selected first when gathering
-   candidates (see Section 4.1) to ensure better performance for the
+   candidates (see Section 4.2) to ensure better performance for the
    application.
 
    The reasonable lifetime for cached performance values will vary
@@ -1808,7 +1820,7 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
    Connection Object:  Established UDP Multicast Receive connections
       represent a pair of specific IP addresses and ports.  The
       "unidirectional receive" transport property is required, and the
-      local endpoint must be configured with a group IP address and a
+      Local Endpoint must be configured with a group IP address and a
       port.
 
    Initiate:  Calling "Initiate" on a UDP Multicast Receive Connection
@@ -1831,12 +1843,12 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
 
    Listen:  LISTEN.UDP.  Calling "Listen" for UDP Multicast Receive
       binds a local port, prepares it to receive inbound UDP datagrams
-      from peers, and issues a multicast host join.  If a remote
-      endpoint with an address is supplied, the join is Source-specific
+      from peers, and issues a multicast host join.  If a Remote
+      Endpoint with an address is supplied, the join is Source-specific
       Multicast, and the path selection is based on the route to the
-      remote endpoint.  If a remote endpoint is not supplied, the join
+      Remote Endpoint.  If a Remote Endpoint is not supplied, the join
       is Any-source Multicast, and the path selection is based on the
-      outbound route to the group supplied in the local endpoint.
+      outbound route to the group supplied in the Local Endpoint.
 
    ConnectionReceived:  UDP Multicast Receive Listeners will deliver new
       connections once they have received traffic from a new Remote
@@ -1871,66 +1883,83 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
 
    API mappings for SCTP are as follows:
 
-   Connection Object:  Connection objects represent a flow of SCTP
-      messages between a client and a server, which may be an SCTP
-      association or a stream in a SCTP association.  How to map
-      Connection objects to streams is described in [NEAT-flow-mapping];
-      in the following, a similar method is described.  To map
-      Connection objects to SCTP streams without head-of-line blocking
-      on the sender side, both the sending and receiving SCTP
-      implementation must support message interleaving [RFC8260].  Both
-      SCTP implementations must also support stream reconfiguration.
-      Finally, both communicating endpoints must be aware of this
-      intended multiplexing; [NEAT-flow-mapping] describes a way for a
-      Transport System to negotiate the stream mapping capability using
-      SCTP's adaptation layer indication, such that this functionality
-      would only take effect if both ends sides are aware of it.  The
-      first flow, for which the SCTP association has been created, will
-      always use stream id zero.  All additional flows are assigned to
-      unused stream ids in growing order.  To avoid a conflict when both
-      endpoints map new flows simultaneously, the peer which initiated
-      the transport connection will use even stream numbers whereas the
-      remote side will map its flows to odd stream numbers.  Both sides
-      maintain a status map of the assigned stream numbers.  Generally,
-      new streams must consume the lowest available (even or odd,
-      depending on the side) stream number; this rule is relevant when
-      lower numbers become available because Connection objects
-      associated to the streams are closed.
+   Connection Object:  Connection objects can be mapped to an SCTP
+      association or a stream in an SCTP association.  Mapping
+      Connection objects to SCTP streams is called "stream mapping" and
+      has additional requirements as follows.  The following explanation
+      assumes a client-server communication model.
+
+   Stream mapping requires an association to already be in place between
+   the client and the server, and it requires the server to understand
+   that a new incoming stream should be represented as a new Connection
+   Object by the Transport Services system.  A new SCTP stream is
+   created by sending an SCTP message with a new stream id.  Thus, to
+   implement stream mapping, the Transport Services system MUST provide
+   a newly created Connection Object to the application upon the
+   reception of such a message.  The necessary semantics to implement a
+   Transport Services system's Close and Abort primitives are provided
+   by the stream reconfiguration (reset) procedure described in
+   [RFC6525].  This also allows to re-use a stream id after resetting
+   ("closing") the stream.  To implement this functionality, SCTP stream
+   reconfiguration [RFC6525] MUST be supported by both the client and
+   the server side.
+
+   To avoid head-of-line blocking, stream mapping SHOULD only be
+   implemented when both sides support message interleaving [RFC8260].
+   This allows a sender to schedule transmissions between multiple
+   streams without risking that transmission of a large message on one
+   stream might block transmissions on other streams for a long time.
+
+   To avoid conflicts between stream ids, the following procedure is
+   recommended: the first Connection, for which the SCTP association has
+   been created, MUST always use stream id zero.  All additional
+   Connections are assigned to unused stream ids in growing order.  To
+   avoid a conflict when both endpoints map new Connections
+   simultaneously, the peer which initiated association MUST use even
+   stream ids whereas the remote side MUST map its Connections to odd
+   stream ids.  Both sides maintain a status map of the assigned stream
+   ids.  Generally, new streams SHOULD consume the lowest available
+   (even or odd, depending on the side) stream id; this rule is relevant
+   when lower ids become available because Connection objects associated
+   with the streams are closed.
+
+   SCTP stream mapping as described here has been implemented in a
+   research prototype; a desription of this implementation is given in
+   [NEAT-flow-mapping].
 
    Initiate:  If this is the only Connection object that is assigned to
-      the SCTP association or stream mapping has not been negotiated,
-      CONNECT.SCTP is called.  Else, unless the Selection Property
+      the SCTP association or stream mapping is not used, CONNECT.SCTP
+      is called.  Else, unless the Selection Property
       "activeReadBeforeSend" is Preferred or Required, a new stream is
-      used: if there are enough streams available, "Initiate" is just a
-      local operation that assigns a new stream number to the Connection
-      object.  The number of streams is negotiated as a parameter of the
-      prior CONNECT.SCTP call, and it represents a trade-off between
-      local resource usage and the number of Connection objects that can
-      be mapped without requiring a reconfiguration signal.  When
-      running out of streams, ADD_STREAM.SCTP must be called.
+      used: if there are enough streams available, "Initiate" is a local
+      operation that assigns a new stream id to the Connection object.
+      The number of streams is negotiated as a parameter of the prior
+      CONNECT.SCTP call, and it represents a trade-off between local
+      resource usage and the number of Connection objects that can be
+      mapped without requiring a reconfiguration signal.  When running
+      out of streams, ADD_STREAM.SCTP must be called.
 
    InitiateWithSend:  If this is the only Connection object that is
-      assigned to the SCTP association or stream mapping has not been
-      negotiated, CONNECT.SCTP is called with the "user message"
-      parameter.  Else, a new stream is used (see "Initiate" for how to
-      handle running out of streams), and this just sends the first
-      message on a new stream.
+      assigned to the SCTP association or stream mapping is not used,
+      CONNECT.SCTP is called with the "user message" parameter.  Else, a
+      new stream is used (see "Initiate" for how to handle running out
+      of streams), and this just sends the first message on a new
+      stream.
 
    Ready:  "Initiate" or "InitiateWithSend" returns without an error,
       i.e. SCTP's four-way handshake has completed.  If an association
-      with the peer already exists, and stream mapping has been
-      negotiated and enough streams are available, a Connection Object
-      instantly becomes Ready after calling "Initiate" or
-      "InitiateWithSend".
+      with the peer already exists, stream mapping is used and enough
+      streams are available, a Connection Object instantly becomes Ready
+      after calling "Initiate" or "InitiateWithSend".
 
    InitiateError:  Failure of CONNECT.SCTP.
 
    ConnectionError:  TIMEOUT.SCTP or ABORT-EVENT.SCTP.
 
    Listen:  LISTEN.SCTP.  If an association with the peer already exists
-      and stream mapping has been negotiated, "Listen" just expects to
-      receive a new message on a new stream id (chosen in accordance
-      with the stream number assignment procedure described above).
+      and stream mapping is used, "Listen" just expects to receive a new
+      message with a new stream id (chosen in accordance with the stream
+      id assignment procedure described above).
 
    ConnectionReceived:  LISTEN.SCTP returns without an error (a result
       of successful CONNECT.SCTP from the peer), or, in case of stream
@@ -1938,10 +1967,9 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
       case, "Receive" is also invoked).
 
    Clone:  Calling "Clone" on an SCTP association creates a new
-      Connection object and assigns it a new stream number in accordance
-      with the stream number assignment procedure described above.  If
-      there are not enough streams available, ADD_STREAM.SCTP must be
-      called.
+      Connection object and assigns it a new stream id in accordance
+      with the stream id assignment procedure described above.  If there
+      are not enough streams available, ADD_STREAM.SCTP must be called.
 
    Priority (Connection):  When this value is changed, or a Message with
       Message Property "Priority" is sent, and there are multiple
@@ -1965,9 +1993,9 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
    "InitiateWithSend" or "Listen" calls.  At the peer, the event
    RESET_STREAM-EVENT.SCTP will fire, which the peer must answer by
    issuing RESET_STREAM.SCTP too.  The resulting local RESET_STREAM-
-   EVENT.SCTP informs the transport system that the stream number can
-   now be re-used by the next "Initiate", "InitiateWithSend" or "Listen"
-   calls, and invokes a "Closed" event towards the application.
+   EVENT.SCTP informs the Transport Services system that the stream id
+   can now be re-used by the next "Initiate", "InitiateWithSend" or
+   "Listen" calls, and invokes a "Closed" event towards the application.
 
    Abort: If this is the only Connection object that is assigned to the
    SCTP association, ABORT.SCTP is called.  Else, the Connection object
@@ -2070,12 +2098,6 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
               DOI 10.17487/RFC7540, May 2015,
               <https://datatracker.ietf.org/doc/html/rfc7540>.
 
-   [RFC8260]  Stewart, R., Tuexen, M., Loreto, S., and R. Seggelmann,
-              "Stream Schedulers and User Message Interleaving for the
-              Stream Control Transmission Protocol", RFC 8260,
-              DOI 10.17487/RFC8260, November 2017,
-              <https://datatracker.ietf.org/doc/html/rfc8260>.
-
    [RFC8303]  Welzl, M., Tuexen, M., and N. Khademi, "On the Usage of
               Transport Features Provided by IETF Transport Protocols",
               RFC 8303, DOI 10.17487/RFC8303, February 2018,
@@ -2123,8 +2145,9 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
               2140bis-11.txt>.
 
    [NEAT-flow-mapping]
-              "Transparent Flow Mapping for NEAT", Workshop on Future of
-              Internet Transport (FIT 2017) , 2017.
+              "Transparent Flow Mapping for NEAT", IFIP NETWORKING 2017
+              Workshop on Future of Internet Transport (FIT 2017) ,
+              2017.
 
    [RFC1928]  Leech, M., Ganis, M., Lee, Y., Kuris, R., Koblas, D., and
               L. Jones, "SOCKS Protocol Version 5", RFC 1928,
@@ -2151,6 +2174,11 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
               DOI 10.17487/RFC5766, April 2010,
               <https://datatracker.ietf.org/doc/html/rfc5766>.
 
+   [RFC6525]  Stewart, R., Tuexen, M., and P. Lei, "Stream Control
+              Transmission Protocol (SCTP) Stream Reconfiguration",
+              RFC 6525, DOI 10.17487/RFC6525, February 2012,
+              <https://datatracker.ietf.org/doc/html/rfc6525>.
+
    [RFC6762]  Cheshire, S. and M. Krochmal, "Multicast DNS", RFC 6762,
               DOI 10.17487/RFC6762, February 2013,
               <https://datatracker.ietf.org/doc/html/rfc6762>.
@@ -2168,6 +2196,12 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
               (Diffserv) and Real-Time Communication", RFC 7657,
               DOI 10.17487/RFC7657, November 2015,
               <https://datatracker.ietf.org/doc/html/rfc7657>.
+
+   [RFC8260]  Stewart, R., Tuexen, M., Loreto, S., and R. Seggelmann,
+              "Stream Schedulers and User Message Interleaving for the
+              Stream Control Transmission Protocol", RFC 8260,
+              DOI 10.17487/RFC8260, November 2017,
+              <https://datatracker.ietf.org/doc/html/rfc8260>.
 
    [RFC8445]  Keranen, A., Holmberg, C., and J. Rosenberg, "Interactive
               Connectivity Establishment (ICE): A Protocol for Network
@@ -2229,7 +2263,7 @@ Appendix B.  Additional Properties
 B.1.  Properties Affecting Sorting of Branches
 
    In addition to the Protocol and Path Selection Properties discussed
-   in Section 4.1.5, the following properties under discussion can
+   in Section 4.1.3, the following properties under discussion can
    influence branch sorting:
 
    *  Bounds on Send or Receive Rate: If the application indicates a
@@ -2255,7 +2289,7 @@ Appendix C.  Reasons for errors
 
    *  InvalidConfiguration: The transport properties and endpoints
       provided by the application are either contradictory or
-      incomplete.  Examples include the lack of a remote endpoint on an
+      incomplete.  Examples include the lack of a Remote Endpoint on an
       active open or using a multicast group address while not
       requesting a unidirectional receive.
 
