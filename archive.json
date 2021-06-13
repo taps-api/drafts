@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-06-06T00:35:51.200007+00:00",
+  "timestamp": "2021-06-13T00:20:18.320019+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -20207,7 +20207,7 @@
       "id": "MDU6SXNzdWU3NTU3MjAzODI=",
       "title": "Network Policies",
       "url": "https://github.com/ietf-tapswg/api-drafts/issues/701",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "martinduke",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -20219,8 +20219,8 @@
       ],
       "body": "In Sec 2:\r\n\r\nShould Section 3.2 also talk about network policies, e.g. a certain network supports a DSCP that the application desires?",
       "createdAt": "2020-12-03T00:45:23Z",
-      "updatedAt": "2021-05-19T13:10:45Z",
-      "closedAt": null,
+      "updatedAt": "2021-06-11T16:05:47Z",
+      "closedAt": "2021-06-11T16:05:47Z",
       "comments": [
         {
           "author": "britram",
@@ -21523,7 +21523,7 @@
       "id": "MDU6SXNzdWU4NTQwMTk4NDQ=",
       "title": "Should CloseGroup() and/or AbortGroup() generate events?",
       "url": "https://github.com/ietf-tapswg/api-drafts/issues/761",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "martinduke",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -21534,8 +21534,8 @@
       ],
       "body": "these are analogous to connection-level things that generate events.",
       "createdAt": "2021-04-08T23:40:12Z",
-      "updatedAt": "2021-04-09T15:43:32Z",
-      "closedAt": null,
+      "updatedAt": "2021-06-11T16:22:19Z",
+      "closedAt": "2021-06-11T16:22:19Z",
       "comments": [
         {
           "author": "tfpauly",
@@ -22141,7 +22141,7 @@
       "id": "MDU6SXNzdWU4NTc3NzQ3NzE=",
       "title": "MUST ignore setting properties that does not exists",
       "url": "https://github.com/ietf-tapswg/api-drafts/issues/789",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mirjak",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -22152,8 +22152,8 @@
       ],
       "body": "Section 6 says. \"Attempts to set Specific Protocol Properties on a protocol stack not containing that specific protocol are simply ignored, and do not raise an error\"\r\n\r\nShould this be normative?\r\n\r\n\"Attempts to set Specific Protocol Properties on a protocol stack not containing that specific protocol MUST be ignored, and MUST NOT raise an error\"\r\n\r\nI note that this a random sentence where spotted that normative language could be used. I don't look for these kind of occasion systematically...",
       "createdAt": "2021-04-14T10:50:12Z",
-      "updatedAt": "2021-05-07T16:03:44Z",
-      "closedAt": null,
+      "updatedAt": "2021-06-11T15:37:28Z",
+      "closedAt": "2021-06-11T15:37:27Z",
       "comments": [
         {
           "author": "gorryfair",
@@ -22279,7 +22279,7 @@
       "id": "MDU6SXNzdWU4NTc3ODM1NDI=",
       "title": "Clarify handling of receive errors",
       "url": "https://github.com/ietf-tapswg/api-drafts/issues/792",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mirjak",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -22290,8 +22290,8 @@
       ],
       "body": "Actually handling of receive error is also not fully clear to me. Section 7.3.2.3 says:\r\n\"A ReceiveError occurs when data is received by the underlying Protocol Stack that cannot be fully retrieved or parsed\"\r\n\r\nHowever, I assume that this error should rather not be called if a transport is reliable because the assumption is that the packet will be retransmitted, right?\r\n\r\nE.g. in case of QUIC if a packet cannot be decrypted would that trigger an error or not? I assume not, because the QUIC stack cannot even know if a packet contained any payload data, right?",
       "createdAt": "2021-04-14T11:02:10Z",
-      "updatedAt": "2021-05-07T16:07:47Z",
-      "closedAt": null,
+      "updatedAt": "2021-06-11T16:11:51Z",
+      "closedAt": "2021-06-11T16:11:51Z",
       "comments": [
         {
           "author": "mwelzl",
@@ -22618,7 +22618,7 @@
       "id": "MDU6SXNzdWU4NzM0Mzg2NDE=",
       "title": "S4.2.7, S4.2.8 Full Checksum Coverage - Names of the Properties do not seem intutive",
       "url": "https://github.com/ietf-tapswg/api-drafts/issues/810",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "abrunstrom",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -22630,8 +22630,8 @@
       ],
       "body": "Why is the name not rather something like perMsgChecksumFullSend?",
       "createdAt": "2021-04-30T22:33:52Z",
-      "updatedAt": "2021-05-26T11:48:24Z",
-      "closedAt": null,
+      "updatedAt": "2021-06-11T16:12:21Z",
+      "closedAt": "2021-06-11T16:12:21Z",
       "comments": [
         {
           "author": "gorryfair",
@@ -22653,6 +22653,20 @@
           "body": "@abrunstrom :  Did the merged PR 839 happen to address this? - If not please make a PR.",
           "createdAt": "2021-05-26T11:48:24Z",
           "updatedAt": "2021-05-26T11:48:24Z"
+        },
+        {
+          "author": "abrunstrom",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gorryfair PR 839 updated the name, but still found it confusing so made a PR.",
+          "createdAt": "2021-06-11T12:32:34Z",
+          "updatedAt": "2021-06-11T12:32:34Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "See review.",
+          "createdAt": "2021-06-11T12:50:58Z",
+          "updatedAt": "2021-06-11T12:50:58Z"
         }
       ]
     },
@@ -22755,13 +22769,15 @@
       "state": "OPEN",
       "author": "abrunstrom",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "philsbln"
+      ],
       "labels": [
         "API"
       ],
       "body": "The text below is a bit confusing as there are no details about how to to send replies and map responses to their requests in Section 7.1.1. This can be easily fixed by clarifying what Section 7.1.1 provides details on. But I was also wondering if there should be some more details on how to send replies and map responses to their requests somewhere?\r\n\r\n> The messageContext is provided to enable retrieving metadata about the message and referring to the message, e.g., to send replies and map responses to their requests. See Section 7.1.1 for details.\r\n\r\n",
       "createdAt": "2021-04-30T23:29:48Z",
-      "updatedAt": "2021-04-30T23:29:48Z",
+      "updatedAt": "2021-06-11T16:40:00Z",
       "closedAt": null,
       "comments": []
     },
@@ -22803,16 +22819,31 @@
       ],
       "body": "I think this protocol specific Property is only included because it comes from RFC8923? Should be made clear in the text.",
       "createdAt": "2021-04-30T23:37:38Z",
-      "updatedAt": "2021-05-07T15:49:40Z",
+      "updatedAt": "2021-06-11T12:07:44Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yes.\r\nJust for clarification: RFC 8923 takes this from RFC 8304, which takes it from RFC 8085.",
+          "createdAt": "2021-06-11T11:07:57Z",
+          "updatedAt": "2021-06-11T11:07:57Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "How about something like: \" [RFC8293] following the guidance in [RFC8085] \"?",
+          "createdAt": "2021-06-11T12:07:44Z",
+          "updatedAt": "2021-06-11T12:07:44Z"
+        }
+      ]
     },
     {
       "number": 818,
       "id": "MDU6SXNzdWU4NzM0NjUzOTE=",
       "title": "8. Connection Termination - Introduction",
       "url": "https://github.com/ietf-tapswg/api-drafts/issues/818",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "abrunstrom",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -22824,8 +22855,8 @@
       ],
       "body": "This section would benefit from some introductory sentences on the different ways to terminate a connection, i.e. local and remote actions and Connection errors.",
       "createdAt": "2021-04-30T23:43:25Z",
-      "updatedAt": "2021-05-07T15:49:40Z",
-      "closedAt": null,
+      "updatedAt": "2021-06-11T16:22:20Z",
+      "closedAt": "2021-06-11T16:22:20Z",
       "comments": []
     },
     {
@@ -22866,9 +22897,17 @@
       ],
       "body": "The appendix text about convenience functions talks about \"implementations should\" provide various things. This reads strangely to me. I think these are not requirements and the text should be more in the form of it can be useful for implementations to provide various things.",
       "createdAt": "2021-04-30T23:58:14Z",
-      "updatedAt": "2021-05-07T15:49:40Z",
+      "updatedAt": "2021-06-11T13:03:37Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "How about: \" implementations can provide special actions for adding each preference level i.e, TransportProperties.Set(some_property, avoid) would be equivalent to TransportProperties.Avoid(some_property):...\"",
+          "createdAt": "2021-06-11T13:03:37Z",
+          "updatedAt": "2021-06-11T13:03:37Z"
+        }
+      ]
     },
     {
       "number": 821,
@@ -22878,13 +22917,15 @@
       "state": "OPEN",
       "author": "abrunstrom",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "gorryfair"
+      ],
       "labels": [
         "API"
       ],
       "body": "Why are the settings for reliability, preserveOrder, congestionControl Ignore rather than Avoid? The current profile will match SCTP equally well as UDP.",
       "createdAt": "2021-05-01T00:01:42Z",
-      "updatedAt": "2021-05-19T15:29:01Z",
+      "updatedAt": "2021-06-11T16:41:58Z",
       "closedAt": null,
       "comments": [
         {
@@ -22893,6 +22934,13 @@
           "body": "To me, there are multiple ways a DG service cabn be used. I think there are at least two distinct cases here:\r\n* A datagram usage that WANTS full control, e.g. because something like RTP is layered above that handles these things, and any lower layer additions might interfere with these mechanisms.\r\n* A datagram usage that PREFS no hinderance, but does not mind how these are handled as long as the packets get through - i.e. connects.\r\n",
           "createdAt": "2021-05-13T10:19:50Z",
           "updatedAt": "2021-05-13T10:19:50Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm OK with:\r\nreliability | avoid\r\npreserveOrder | avoid\r\nCan't this be ignore?:\r\ncongestionControl |  Ignore\r\n\r\n\r\n",
+          "createdAt": "2021-06-11T13:27:35Z",
+          "updatedAt": "2021-06-11T13:27:35Z"
         }
       ]
     },
@@ -22952,13 +23000,15 @@
       "state": "OPEN",
       "author": "mwelzl",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "gorryfair"
+      ],
       "labels": [
         "Implementation"
       ],
       "body": "The Capacity Profile in the API draft (now) lists these possible choices: Default, Scavenger, Low Latency/Interactive, Low Latency/Non-Interactive, Constant-Rate Streaming and Capacity-Seeking.\r\n\r\nThe text in section 4.1.3 only discusses Scavenger, Low Latency/Interactive, and Constant-Rate Streaming.\r\n",
       "createdAt": "2021-05-18T10:57:38Z",
-      "updatedAt": "2021-05-18T13:05:12Z",
+      "updatedAt": "2021-06-11T16:50:36Z",
       "closedAt": null,
       "comments": [
         {
@@ -22978,13 +23028,310 @@
       "state": "OPEN",
       "author": "martinduke",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
-      "labels": [],
+      "assignees": [
+        "tfpauly"
+      ],
+      "labels": [
+        "API",
+        "Implementation"
+      ],
       "body": "In the impl draft, I'm supposed to build a tree based on, in order\r\n\r\n(1) \"path\": AFAICT this means \"interface\". The -api draft provides in interface preference framework in 4.2.11. (BTW if it really means interface maybe we should say 'interface').\r\n\r\n(2) Protocol: almost all of 4.2 in -api explains how to express this. (with an assist in -impl 4.1.3 explaining how to handle PREFER vs. AVOID)\r\n\r\n(3) \"derived endpoint\" I gather this is basically multiple addresses coming back from remote endpoint resolution. But where is the construct in -api that allows applications to express a preference here?",
       "createdAt": "2021-05-27T18:07:57Z",
-      "updatedAt": "2021-05-27T18:07:57Z",
+      "updatedAt": "2021-06-11T17:21:31Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 843,
+      "id": "MDU6SXNzdWU5MTg2NjU3MTc=",
+      "title": "Where are events sent?",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/843",
+      "state": "OPEN",
+      "author": "csperkins",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "britram"
+      ],
+      "labels": [
+        "API",
+        "editorial"
+      ],
+      "body": "In the interface draft, Section 1.1:\r\n```\r\n*  An Object sends an Event:\r\n         Object -> Event<>\r\n```\r\nWhere is the event sent? Perhaps `An Object generates an Event that needs to be processed by the application`?",
+      "createdAt": "2021-06-11T12:08:12Z",
+      "updatedAt": "2021-06-11T16:49:32Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Interim: add \"to the application\"  (but double check, related to framers)",
+          "createdAt": "2021-06-11T16:43:05Z",
+          "updatedAt": "2021-06-11T16:43:47Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Could alternatively say the same another way around: \"Applications can use these events...\" (i.e. avoid saying *only* applications do this).",
+          "createdAt": "2021-06-11T16:45:24Z",
+          "updatedAt": "2021-06-11T16:45:24Z"
+        },
+        {
+          "author": "MaxF12",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Section 6 in impl-draft has the parts where the framer objects receive events. There is no terminology section in implementation, so not sure if the terminology section in API should cover it as well. ",
+          "createdAt": "2021-06-11T16:49:32Z",
+          "updatedAt": "2021-06-11T16:49:32Z"
+        }
+      ]
+    },
+    {
+      "number": 844,
+      "id": "MDU6SXNzdWU5MTg2NzAzOTc=",
+      "title": "Number or symbols",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/844",
+      "state": "OPEN",
+      "author": "csperkins",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "squarooticus"
+      ],
+      "labels": [
+        "API"
+      ],
+      "body": "In the interface draft, section 1.1:\r\n```\r\n   *  Integer: Instances take positive or negative numeric integer\r\n      values, or sometimes special non-numeric (symbolic) values.\r\n   *  Numeric: Instances take positive or negative numeric values, or\r\n      sometimes special non-numeric (symbolic) values.\r\n```\r\nDo we need to conflate numeric types and enumerations, or can numbers be numbers?",
+      "createdAt": "2021-06-11T12:12:47Z",
+      "updatedAt": "2021-06-11T16:48:06Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "From interim: add a clarification on what this is about, why it (symbolic values) is there.",
+          "createdAt": "2021-06-11T16:48:05Z",
+          "updatedAt": "2021-06-11T16:48:05Z"
+        }
+      ]
+    },
+    {
+      "number": 846,
+      "id": "MDU6SXNzdWU5MTg2ODgzMTk=",
+      "title": "unified interface to datagram and connection-oriented transports",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/846",
+      "state": "OPEN",
+      "author": "csperkins",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "britram"
+      ],
+      "labels": [
+        "API",
+        "editorial"
+      ],
+      "body": "Interface, Section 2, \"A unified interface to datagram and connection-oriented transports, allowing use of a common API for connection-establishment and closing\". Should this be \"\u2026to datagram and stream-oriented transports\"?\r\n\r\nAt what point do we explain that `Connection` and `Preconnection` are also used for connectionless protocols? This change would finesse the question here, leaving it for Section 3, or we can restructure the draft to clarify earlier.\r\n",
+      "createdAt": "2021-06-11T12:29:20Z",
+      "updatedAt": "2021-06-11T16:39:05Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yes to (1): Datagram protocols can be connection-oriented or not; however the point here seems to be either:\r\n/interface to datagram and stream-oriented transports/ or\r\n/interface to both connection-less and connection-oriented transports/\r\n... I'd favour the first, it's clear enough and doesn't use terms that we later re-use.\r\n\r\nAlso to (2): I think we could insert a specific sentence after: \" A Connection represents an instance of a transport Protocol Stack on which data can be sent to and/or received from a Remote Endpoint (i.e., depending on the kind of transport, connections can be bi-directional or unidirectional). \" \r\nThat explicitly says something like:\r\n\"This connections are presently consistently to the application, irrespective of whether the underlying transport is connection-less and connection-oriented.\"\r\n",
+          "createdAt": "2021-06-11T12:59:39Z",
+          "updatedAt": "2021-06-11T12:59:39Z"
+        }
+      ]
+    },
+    {
+      "number": 849,
+      "id": "MDU6SXNzdWU5MTg3NTc5MDM=",
+      "title": "API summary does more than summarise",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/849",
+      "state": "OPEN",
+      "author": "csperkins",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "britram"
+      ],
+      "labels": [
+        "API",
+        "editorial"
+      ],
+      "body": "Section 3.2 of interface feels out of place as a subsection of \"API Summary\" - should it be part of Section 4.2 instead? Or a new top-level section between the current Sections 3 and 4?",
+      "createdAt": "2021-06-11T13:32:14Z",
+      "updatedAt": "2021-06-11T16:39:06Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The latter (new top-level section ) may be easiest.",
+          "createdAt": "2021-06-11T13:41:00Z",
+          "updatedAt": "2021-06-11T13:41:00Z"
+        }
+      ]
+    },
+    {
+      "number": 850,
+      "id": "MDU6SXNzdWU5MTg3NjA4NDM=",
+      "title": "Can we give the tables names in Appendix B?",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/850",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "britram"
+      ],
+      "labels": [
+        "API",
+        "editorial"
+      ],
+      "body": "They are currently just called \"Table\"",
+      "createdAt": "2021-06-11T13:34:46Z",
+      "updatedAt": "2021-06-11T16:39:06Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 851,
+      "id": "MDU6SXNzdWU5MTg3Njc3MzU=",
+      "title": "Scope of the Interface Definition",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/851",
+      "state": "OPEN",
+      "author": "csperkins",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "britram"
+      ],
+      "labels": [
+        "API",
+        "editorial"
+      ],
+      "body": "Section 3.3 of interface doesn't fit in an \"API summary\" \u2013\u00a0it feels like it should be a top-level section.",
+      "createdAt": "2021-06-11T13:40:50Z",
+      "updatedAt": "2021-06-11T16:39:06Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 852,
+      "id": "MDU6SXNzdWU5MTg3OTUzMTI=",
+      "title": "Using Multicast Endpoints",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/852",
+      "state": "OPEN",
+      "author": "csperkins",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "GrumpyOldTroll"
+      ],
+      "labels": [
+        "API"
+      ],
+      "body": "The interface draft, section 4.1.1, talks about multicast endpoints, but doesn't mention whether such endpoints can be used with Rendezvous(). ",
+      "createdAt": "2021-06-11T14:04:17Z",
+      "updatedAt": "2021-06-12T00:51:25Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "What is your proposal?",
+          "createdAt": "2021-06-11T14:19:46Z",
+          "updatedAt": "2021-06-11T14:19:46Z"
+        },
+        {
+          "author": "GrumpyOldTroll",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I wouldn't have thought this is unambiguous, so I'm not quite sure what text is needed that would clarify this.\r\n\r\nTo me at first blush this seems covered by the Rendezvous description in 5.3, between what Rendezvous does in the 4th paragraph:\r\n\r\n\"If there are multiple Local Endpoints or Remote Endpoints configured, then initiating a Rendezvous() action will systematically probe the reachability of those endpoint candidates following an approach such as that used in Interactive Connectivity Establishment (ICE) [RFC5245].\"\r\n\r\nAnd what happens if it doesn't work in the final paragraph:\r\n\r\n\"An EstablishmentError occurs either when the Properties and Security Parameters of the Preconnection cannot be fulfilled for rendezvous or cannot be reconciled with the Local and/or Remote Endpoints, when the Local Endpoint or Remote Endpoint cannot be resolved, when no transport-layer connection can be established to the Remote Endpoint, or when the application is prohibited from rendezvous by policy:\"\r\n\r\nAbsent an ICE-like mechanism that works with multicast (is there such a thing?) I don't see how someone would expect anything other than this error condition if they did this.\r\n\r\nWas there a context to this question?  It wouldn't have occurred to me there was another possible answer that needed an explanation to avoid confusion on this point, but maybe there's a case I haven't considered?",
+          "createdAt": "2021-06-12T00:49:55Z",
+          "updatedAt": "2021-06-12T00:51:25Z"
+        }
+      ]
+    },
+    {
+      "number": 854,
+      "id": "MDU6SXNzdWU5MTg3OTg2NDY=",
+      "title": "Endpoint aliases and protocols",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/854",
+      "state": "OPEN",
+      "author": "csperkins",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "britram"
+      ],
+      "labels": [
+        "API",
+        "editorial"
+      ],
+      "body": "Interface, section 4.1.2:\r\n```\r\n   In order to scope an alias to a specific transport protocol, an\r\n   Endpoint can specify a protocol identifier.  These identifiers MUST\r\n   only be set for aliases.\r\n\r\n   RemoteSpecifier.WithProtocol(QUIC)\r\n```\r\nWhy the limitation to aliases? Specifying a protocol might limit the utility of connection racing, so should perhaps be discouraged, but does it break anything to specify a protocol for a non-alias Endpoint?",
+      "createdAt": "2021-06-11T14:07:17Z",
+      "updatedAt": "2021-06-11T16:57:58Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Interim: suggest to remove the second sentence.",
+          "createdAt": "2021-06-11T16:57:51Z",
+          "updatedAt": "2021-06-11T16:57:51Z"
+        }
+      ]
+    },
+    {
+      "number": 859,
+      "id": "MDU6SXNzdWU5MTg5NTg0MTk=",
+      "title": "When are objects frozen?",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/859",
+      "state": "OPEN",
+      "author": "martinduke",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "gorryfair"
+      ],
+      "labels": [
+        "API",
+        "Implementation"
+      ],
+      "body": "Discussion at the 11 Jun 2021 Interim:\r\n\r\nThe content of any objects passed as part of NewPreconnection(), Initiate(), Listen(), or Rendezvous() is frozen at the moment of Initiate/Listen/Rendezvous.\r\n\r\nThus, objects sent to NewPreconnection (Endpoints and Properties) are mutable, and it might be possible (depending on the implementation) to change them in the preconnection by modifying the object directly. Applications should either\r\n(1) Instantiate the connection before modifying Endpoint or Property objects for another preconnection.\r\n(2) If there are open preconnections that will initiate further connections, create new instances of Properties and Endpoints to modify their attributes in a different preconnection.\r\n\r\nThere are other ways to do this. For example, NewPreconnection() could do a deep copy of the properties and endpoints, and therefore reusing or freeing the argument objects would always be safe. But this was not the sense of the group at the interim.\r\n\r\nWhile this issue is uncomfortably close to the \"implementation dependent\", not having fixed assumptions about this increasing the friction of switching platforms using TAPS, and would probably be the source of nasty bugs.",
+      "createdAt": "2021-06-11T16:30:12Z",
+      "updatedAt": "2021-06-11T22:26:45Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "martinduke",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Reference: (https://mailarchive.ietf.org/arch/msg/taps/ZHCc4sLCXb2984hwob_F5aiZXsY/)",
+          "createdAt": "2021-06-11T16:31:40Z",
+          "updatedAt": "2021-06-11T16:31:40Z"
+        },
+        {
+          "author": "theri",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Comment by @MaxF12 in the interim chat:\r\n\r\nAlso in section 2 in the impl draft it says \"Preconnection objects should be implemented as bundles of properties that an application can both read and write. Once a Preconnection has been used to create an outbound Connection or a Listener, the implementation should ensure that the copy of the properties held by the Connection or Listener is immutable.\" which I assume means that the properties the bundle is made of can also be overwritten",
+          "createdAt": "2021-06-11T17:01:03Z",
+          "updatedAt": "2021-06-11T17:01:03Z"
+        },
+        {
+          "author": "martinduke",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "to be clear, IMO the draft is quite clear about freezing at Initiate(), but it is not clear about NOT freezing at NewPreconnection().",
+          "createdAt": "2021-06-11T17:01:05Z",
+          "updatedAt": "2021-06-11T17:01:05Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "At Interim, we heard that this might be fixed by emphasising in the preconception text  that everything is frozen (aka deep-copied) at Initiate.",
+          "createdAt": "2021-06-11T17:01:44Z",
+          "updatedAt": "2021-06-11T17:01:44Z"
+        },
+        {
+          "author": "martinduke",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I will also point out that this sits somewhat uneasily with Sec 3.1 of taps-impl, where we should fail the preconnection immediately if nothing matches the desired properties. What if I change the desired properties after getting the preconnection?\r\n\r\nIt's not insurmountable, but it's conceptually not very clean.",
+          "createdAt": "2021-06-11T22:26:45Z",
+          "updatedAt": "2021-06-11T22:26:45Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -66931,7 +67278,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjEzNTgwNzM2",
       "title": "Clarify Events upon various close / abort calls.",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/771",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "mwelzl",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -66942,17 +67289,19 @@
       ],
       "body": "(Gracefully,  he he  :)  ) Closes #761.\r\n ",
       "createdAt": "2021-04-12T12:21:56Z",
-      "updatedAt": "2021-05-20T12:00:32Z",
+      "updatedAt": "2021-06-11T16:22:20Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "0139c0e22a6f7e8c85f3c591a5495bde1f439ace",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "mw-api-closegroup-abortgroup-events",
       "headRefOid": "aa6bab1fa613a776aca29b3e72b92ad560929667",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2021-06-11T16:22:20Z",
+      "mergedAt": "2021-06-11T16:22:19Z",
+      "mergedBy": "mwelzl",
+      "mergeCommit": {
+        "oid": "fdea22b1f5acaabecd5c5a6c576d8f64a111833d"
+      },
       "comments": [
         {
           "author": "mwelzl",
@@ -67554,7 +67903,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjIwMTg4NDQ1",
       "title": "Hopefully clearer text for the ReceiveError Event.",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/795",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "mwelzl",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -67563,17 +67912,19 @@
       ],
       "body": "Closes #792.",
       "createdAt": "2021-04-21T13:02:45Z",
-      "updatedAt": "2021-05-08T19:17:58Z",
+      "updatedAt": "2021-06-11T16:11:54Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "e3335b297a76b0b55ab17db47117a651c31c7f29",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "mw-api-receive-errors",
       "headRefOid": "5bf923dd704dc8a4ee63f8d602642b3745a5c8e7",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2021-06-11T16:11:51Z",
+      "mergedAt": "2021-06-11T16:11:51Z",
+      "mergedBy": "britram",
+      "mergeCommit": {
+        "oid": "400525d9f198e816beca4086cde566ca64c03c7a"
+      },
       "comments": [],
       "reviews": [
         {
@@ -67958,7 +68309,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjMzMDA4MTIx",
       "title": "Clarify applicability of specific properties; fix #789",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/826",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "britram",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -67967,17 +68318,19 @@
       ],
       "body": "",
       "createdAt": "2021-05-07T16:05:43Z",
-      "updatedAt": "2021-06-04T05:23:41Z",
+      "updatedAt": "2021-06-11T15:37:32Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "0139c0e22a6f7e8c85f3c591a5495bde1f439ace",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "789-better-musts",
-      "headRefOid": "0d019fede9595cda82a0dd0c731dddc99b7e503b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "7d6ac01e1d69facbe113c0d01dbdc21e9d07fb11",
+      "closedAt": "2021-06-11T15:37:28Z",
+      "mergedAt": "2021-06-11T15:37:27Z",
+      "mergedBy": "britram",
+      "mergeCommit": {
+        "oid": "fc1d1dce7eb568f9035e63f2be47b7add67152df"
+      },
       "comments": [],
       "reviews": [
         {
@@ -68065,6 +68418,26 @@
               "updatedAt": "2021-06-04T05:23:41Z"
             }
           ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgxNDE0NTI4",
+          "commit": {
+            "abbreviatedOid": "0d019fe"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-11T03:22:23Z",
+          "updatedAt": "2021-06-11T03:22:23Z",
+          "comments": [
+            {
+              "originalPosition": 15,
+              "body": "@philsbln - Looking good, but would \"Protocol-Specific Properties\" also be OK for all the cases?",
+              "createdAt": "2021-06-11T03:22:23Z",
+              "updatedAt": "2021-06-11T03:22:23Z"
+            }
+          ]
         }
       ]
     },
@@ -68073,7 +68446,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjMzMDM4NDQ1",
       "title": "Explicitly distinguish Callbacks from Events",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/827",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "philsbln",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -68082,17 +68455,19 @@
       ],
       "body": "Closes issue #775",
       "createdAt": "2021-05-07T16:27:12Z",
-      "updatedAt": "2021-06-04T08:58:38Z",
+      "updatedAt": "2021-06-11T15:34:26Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "0139c0e22a6f7e8c85f3c591a5495bde1f439ace",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "philsbln/callbacks",
       "headRefOid": "2374e1004ab5d6a0c8b454c22c8146bc9aefb2dd",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2021-06-11T15:34:26Z",
+      "mergedAt": "2021-06-11T15:34:26Z",
+      "mergedBy": "britram",
+      "mergeCommit": {
+        "oid": "7890dd740c62239ef5b7830e294f6e316a95a56c"
+      },
       "comments": [],
       "reviews": [
         {
@@ -68199,6 +68574,19 @@
           "body": "",
           "createdAt": "2021-06-04T08:58:38Z",
           "updatedAt": "2021-06-04T08:58:38Z",
+          "comments": []
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgxOTYxOTk4",
+          "commit": {
+            "abbreviatedOid": "2374e10"
+          },
+          "author": "britram",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-06-11T15:32:43Z",
+          "updatedAt": "2021-06-11T15:32:43Z",
           "comments": []
         }
       ]
@@ -68580,7 +68968,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjQ3NjUwNjc5",
       "title": "Trying to add some policy to the path selection",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/836",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gorryfair",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -68589,17 +68977,19 @@
       ],
       "body": "This tries to write something small but specific about Network Policies #701",
       "createdAt": "2021-05-19T13:10:04Z",
-      "updatedAt": "2021-05-20T08:51:32Z",
+      "updatedAt": "2021-06-11T16:05:47Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "ab6e6e5f2c40d904086bc26b4e7742aa79a62a4d",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "gorryfair-patch-policy",
-      "headRefOid": "6b568d0909d16c8ef2b033e40aad76d81abce30d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "c61928e74220e81a6834cb768b6a5af6db28c04d",
+      "closedAt": "2021-06-11T16:05:47Z",
+      "mergedAt": "2021-06-11T16:05:47Z",
+      "mergedBy": "gorryfair",
+      "mergeCommit": {
+        "oid": "47fcd8e11f61c3b9dca9b2a4db076e99a021b459"
+      },
       "comments": [
         {
           "author": "martinduke",
@@ -68675,6 +69065,52 @@
               "updatedAt": "2021-05-20T08:48:37Z"
             }
           ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgxNzA3MzI0",
+          "commit": {
+            "abbreviatedOid": "6b568d0"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-11T10:58:31Z",
+          "updatedAt": "2021-06-11T10:58:32Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "I think you've done this but not resolved this conversation. Clicking the button.",
+              "createdAt": "2021-06-11T10:58:32Z",
+              "updatedAt": "2021-06-11T10:58:32Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgxNzA3NTE0",
+          "commit": {
+            "abbreviatedOid": "6b568d0"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-06-11T10:58:47Z",
+          "updatedAt": "2021-06-11T10:58:47Z",
+          "comments": []
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgxOTgzOTk0",
+          "commit": {
+            "abbreviatedOid": "c61928e"
+          },
+          "author": "philsbln",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "LGTM",
+          "createdAt": "2021-06-11T15:55:43Z",
+          "updatedAt": "2021-06-11T15:55:43Z",
+          "comments": []
         }
       ]
     },
@@ -69011,6 +69447,376 @@
               "body": "```suggestion\r\nThe process of connection establishment completes when one leaf node of the tree has successfully completed negotiation with the Remote Endpoint, or else all nodes of the tree have failed to connect. The first leaf node to complete its connection is then used by the application to send and receive data.\r\n```\r\n\r\nThis just removes a space before the comma",
               "createdAt": "2021-05-20T08:50:15Z",
               "updatedAt": "2021-05-20T08:51:41Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 845,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY4MDkxNzE4",
+      "title": "Update names full checksum conn. properties",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/845",
+      "state": "MERGED",
+      "author": "abrunstrom",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "API"
+      ],
+      "body": "",
+      "createdAt": "2021-06-11T12:29:16Z",
+      "updatedAt": "2021-06-11T16:12:29Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "c80574dcd331039ec0a80988d319d2031220efe8",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "abrunstrom-patch-checksum",
+      "headRefOid": "3b8ad3777879930fc15397514e61fc6ae461bcce",
+      "closedAt": "2021-06-11T16:12:22Z",
+      "mergedAt": "2021-06-11T16:12:21Z",
+      "mergedBy": "britram",
+      "mergeCommit": {
+        "oid": "397dc2dd4a3f38a4cbb8f8a9294a609cc349bfab"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgxNzkyMjQ3",
+          "commit": {
+            "abbreviatedOid": "3b8ad37"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "I do not mind what the name is called as long as it is clear. I think the proposal looks good.",
+          "createdAt": "2021-06-11T12:49:06Z",
+          "updatedAt": "2021-06-11T12:49:06Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 847,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY4MTI0NzIx",
+      "title": "Clarifications around Connections",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/847",
+      "state": "MERGED",
+      "author": "csperkins",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "API",
+        "editorial"
+      ],
+      "body": "Tries to clarify that a Connection is a logical connection, and doesn't necessarily require a connection oriented underlying transport protocol. \r\n\r\nCross-reference to the descriptions of Preconnection and the connection establishment procedures.",
+      "createdAt": "2021-06-11T13:03:06Z",
+      "updatedAt": "2021-06-11T16:03:27Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "c80574dcd331039ec0a80988d319d2031220efe8",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "csperkins-connections20210611",
+      "headRefOid": "facfc1c4a7c93e2e63cd54887ad04194d5161c86",
+      "closedAt": "2021-06-11T16:03:27Z",
+      "mergedAt": "2021-06-11T16:03:27Z",
+      "mergedBy": "britram",
+      "mergeCommit": {
+        "oid": "c04810af88e7de2f340095ff5b0d4fc377e290f3"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgxODExODEx",
+          "commit": {
+            "abbreviatedOid": "facfc1c"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "Looks good.\r\nCan we also change to something like this in section 1: /A unified interface to datagram and connection-oriented transport protocols, allowing use of a common API for connection-establishment and closing;/\r\n",
+          "createdAt": "2021-06-11T13:09:20Z",
+          "updatedAt": "2021-06-11T13:09:20Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 848,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY4MTQ0OTMz",
+      "title": "No such protocol\u2026",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/848",
+      "state": "MERGED",
+      "author": "gorryfair",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "gorryfair"
+      ],
+      "labels": [],
+      "body": "Nit: Section 3.1: No such protocol\u2026 #753",
+      "createdAt": "2021-06-11T13:22:52Z",
+      "updatedAt": "2021-06-11T16:47:44Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "c80574dcd331039ec0a80988d319d2031220efe8",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "gorryfair-patch-4",
+      "headRefOid": "5f808d61f8fb665ff09cf8652b58e3cb11c37982",
+      "closedAt": "2021-06-11T15:36:45Z",
+      "mergedAt": "2021-06-11T15:36:45Z",
+      "mergedBy": "britram",
+      "mergeCommit": {
+        "oid": "0e7710fab72f73c61ce65c58b58ceeda98676d8e"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 853,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY4MTg5NzAz",
+      "title": "Clarify Setting Message Properties on Preconnections and Connections",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/853",
+      "state": "OPEN",
+      "author": "philsbln",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "API"
+      ],
+      "body": "closes #808",
+      "createdAt": "2021-06-11T14:06:54Z",
+      "updatedAt": "2021-06-11T16:43:23Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "c80574dcd331039ec0a80988d319d2031220efe8",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "philsbln/message-properties-closing-808",
+      "headRefOid": "1f9e73c6e20ef065b25ae783a374500deb1c353e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyMDExMjEy",
+          "commit": {
+            "abbreviatedOid": "1f9e73c"
+          },
+          "author": "britram",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2021-06-11T16:13:31Z",
+          "updatedAt": "2021-06-11T16:14:32Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "Might be nitpicking here, but -- the Message Properties at this time are not configuring the Protocol Stack, they're just setting common defaults for Send, correct?",
+              "createdAt": "2021-06-11T16:13:31Z",
+              "updatedAt": "2021-06-11T16:14:32Z"
+            },
+            {
+              "originalPosition": 16,
+              "body": "This change seems unrelated to the main change (and we've gone back and forth here); propose removing it.",
+              "createdAt": "2021-06-11T16:14:24Z",
+              "updatedAt": "2021-06-11T16:14:33Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyMDMzNzM2",
+          "commit": {
+            "abbreviatedOid": "1f9e73c"
+          },
+          "author": "philsbln",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-11T16:40:20Z",
+          "updatedAt": "2021-06-11T16:40:21Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "Correct, but there is no implication when the configuration will actually take effect.",
+              "createdAt": "2021-06-11T16:40:21Z",
+              "updatedAt": "2021-06-11T16:40:21Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyMDM2MDA0",
+          "commit": {
+            "abbreviatedOid": "1f9e73c"
+          },
+          "author": "philsbln",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-11T16:43:23Z",
+          "updatedAt": "2021-06-11T16:43:23Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "Reading it without this hint felt a little confusing to me after not reading it a long time. I am happy to remove it, but would prefer third opinion here.",
+              "createdAt": "2021-06-11T16:43:23Z",
+              "updatedAt": "2021-06-11T16:43:23Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 855,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY4MTkwMjk0",
+      "title": "Resolve #672: increase consistency of formatting/spelling",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/855",
+      "state": "OPEN",
+      "author": "squarooticus",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "DO NOT MERGE YET. This is a partial proposed change. See #672 for more info and questions.",
+      "createdAt": "2021-06-11T14:07:25Z",
+      "updatedAt": "2021-06-11T14:07:25Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "c80574dcd331039ec0a80988d319d2031220efe8",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "672-krose-edit-pass",
+      "headRefOid": "3b411f46a50514a17543037d467c583590b16039",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 856,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY4MjM5ODQ0",
+      "title": "Editorial nits",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/856",
+      "state": "OPEN",
+      "author": "csperkins",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "API",
+        "editorial"
+      ],
+      "body": "Fix a bunch of nits",
+      "createdAt": "2021-06-11T14:56:24Z",
+      "updatedAt": "2021-06-11T15:29:29Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "c80574dcd331039ec0a80988d319d2031220efe8",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "csperkins-nits20210611",
+      "headRefOid": "83da2b040a8cc09f351a825cc410d3a60dcaf233",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Looks good.",
+          "createdAt": "2021-06-11T15:29:29Z",
+          "updatedAt": "2021-06-11T15:29:29Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgxOTQxMTE3",
+          "commit": {
+            "abbreviatedOid": "83da2b0"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Looks good",
+          "createdAt": "2021-06-11T15:11:41Z",
+          "updatedAt": "2021-06-11T15:11:41Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 857,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY4MjQ0NTQx",
+      "title": "Fixes #812",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/857",
+      "state": "OPEN",
+      "author": "philsbln",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "API"
+      ],
+      "body": "closes #812 ",
+      "createdAt": "2021-06-11T15:00:40Z",
+      "updatedAt": "2021-06-11T16:37:42Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "c80574dcd331039ec0a80988d319d2031220efe8",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "philsbln/multipath-812",
+      "headRefOid": "8d248148c6f86adcc9cec6e74e1df6dfc78d7333",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 858,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY4MjkxMTk2",
+      "title": "PR to align Capacity profile with API",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/858",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "gorryfair"
+      ],
+      "labels": [
+        "Implementation"
+      ],
+      "body": "This is a first cut, I'll update next.",
+      "createdAt": "2021-06-11T15:48:52Z",
+      "updatedAt": "2021-06-11T16:38:24Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "fc1d1dce7eb568f9035e63f2be47b7add67152df",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "gorryfair-patch-5",
+      "headRefOid": "29828245e2a1133ec548c08c518171b477e3a3f2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyMDMwNjM3",
+          "commit": {
+            "abbreviatedOid": "2982824"
+          },
+          "author": "theri",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-11T16:37:50Z",
+          "updatedAt": "2021-06-11T16:37:51Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "```suggestion\r\n     Prefer adapting to paths to determine the highest available capacity, based on the observed maximum throughput.\r\n```",
+              "createdAt": "2021-06-11T16:37:51Z",
+              "updatedAt": "2021-06-11T16:37:51Z"
             }
           ]
         }
