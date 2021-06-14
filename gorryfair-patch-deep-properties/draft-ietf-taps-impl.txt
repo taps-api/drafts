@@ -164,9 +164,9 @@ Table of Contents
 
    Preconnection objects should be implemented as bundles of properties
    that an application can both read and write.  An implementation could
-   allow properties of a precponnection to be updated, but changes to
-   the Preconnection Selection and Connection may be language dependent
-   and is to be avoided in code that could be used across different
+   allow properties of a preconnection to be updated, but changes to the
+   Preconnection Selection and Connection may be language dependent and
+   is to be avoided in code that could be used across different
    implementations.
 
    Connection objects represent the interface between the application
