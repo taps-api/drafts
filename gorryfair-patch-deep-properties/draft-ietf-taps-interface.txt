@@ -5,7 +5,7 @@
 TAPS Working Group                                      B. Trammell, Ed.
 Internet-Draft                                   Google Switzerland GmbH
 Intended status: Standards Track                           M. Welzl, Ed.
-Expires: 14 November 2021                             University of Oslo
+Expires: 16 December 2021                             University of Oslo
                                                              T. Enghardt
                                                                  Netflix
                                                             G. Fairhurst
@@ -22,7 +22,7 @@ Expires: 14 November 2021                             University of Oslo
                                                               Apple Inc.
                                                                  K. Rose
                                                Akamai Technologies, Inc.
-                                                             13 May 2021
+                                                            14 June 2021
 
 
      An Abstract Application Layer Interface to Transport Services
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 November 2021.
+   This Internet-Draft will expire on 16 December 2021.
 
 Copyright Notice
 
@@ -314,6 +314,11 @@ Table of Contents
       transport layer, in line with developments in modern platforms and
       programming languages;
 
+   *  Selection between alternate network paths that can be informed
+      when additional information is available about the networks over
+      which an endpoint can operate (e.g.  Provisioning Domain (PvD)
+      information [RFC7556]);
+
    *  Explicit support for transport-specific features to be applied
       should that particular transport be part of a chosen Protocol
       Stack;
@@ -336,17 +341,19 @@ Table of Contents
    in the TAPS Architecture [I-D.ietf-taps-arch].
 
    An application primarily interacts with this API through two Objects:
-   Preconnections and Connections.  A Preconnection represents a set of
-   properties and constraints on the selection and configuration of
-   paths and protocols to establish a Connection with a Remote Endpoint.
-   A Connection represents an instance of a transport Protocol Stack on
-   which data can be sent to and/or received from a Remote Endpoint
-   (i.e., depending on the kind of transport, connections can be bi-
-   directional or unidirectional).  Connections can be created from
-   Preconnections in three ways: by initiating the Preconnection (i.e.,
-   actively opening, as in a client), through listening on the
-   Preconnection (i.e., passively opening, as in a server), or
-   rendezvousing on the Preconnection (i.e. peer to peer establishment).
+   Preconnections and Connections.  A Preconnection object (Section 4)
+   represents a set of properties and constraints on the selection and
+   configuration of paths and protocols to establish a Connection with
+   an Endpoint.  A Connection object represents an instance of a
+   transport Protocol Stack on which data can be sent to and/or received
+   from a Remote Endpoint (i.e., a logical connection that, depending on
+   the kind of transport, can be bi-directional or unidirectional, and
+   that can use a stream protocol or a datagram protocol).  Connections
+   can be created from Preconnections in three ways: by initiating the
+   Preconnection (i.e., actively opening, as in a client; Section 5.1),
+   through listening on the Preconnection (i.e., passively opening, as
+   in a server Section 5.2), or rendezvousing on the Preconnection (i.e.
+   peer to peer establishment; Section 5.3).
 
    Once a Connection is established, data can be sent and received on it
    in the form of Messages.  The interface supports the preservation of
@@ -413,7 +420,7 @@ Table of Contents
    SecurityParameters.Set(identity, myIdentity)
    SecurityParameters.Set(key-pair, myPrivateKey, myPublicKey)
 
-   // Specifying a remote endpoint is optional when using Listen()
+   // Specifying a Remote Endpoint is optional when using Listen()
    Preconnection := NewPreconnection(LocalSpecifier,
                                      TransportProperties,
                                      SecurityParameters)
@@ -452,7 +459,7 @@ Table of Contents
 
    SecurityParameters := NewSecurityParameters()
    TrustCallback := NewCallback({
-     // Verify identity of the remote endpoint, return the result
+     // Verify identity of the Remote Endpoint, return the result
    })
    SecurityParameters.SetTrustVerificationCallback(TrustCallback)
 
@@ -487,7 +494,7 @@ Table of Contents
    with a peer using Rendezvous(), send a Message, and receive a
    Message.
 
-// Configure local candidates: a port on the local host and via a STUN server
+// Configure local candidates: a port on the Local Endpoint and via a STUN server
 HostCandidate := NewLocalEndpoint()
 HostCandidate.WithPort(9876)
 
@@ -543,7 +550,11 @@ Connection.Close()
    application.  Although Connection Properties (see Section 6.1) can be
    set during pre-establishment, they may be changed later.  They are
    used to inform decisions made during establishment and to fine-tune
-   the established connection.
+   the established connection.  Calling Initiate on a Preconnection
+   creates an outbound Connection or a Listener, the Selection and
+   Connection properties held by the Connection or Listener then become
+   immutable (e.g., by a 'deep copy' of the properties and endpoints).
+
    The behavior of the selected protocol stack(s) when sending Messages
    is controlled by Message Properties (see Section 7.1.3).
 
@@ -565,7 +576,7 @@ Connection.Close()
    input to the selection process.  Protocol Specific Properties, which
    enable configuration of specialized features of a specific protocol,
    see Section 3.2 of [I-D.ietf-taps-arch], are not used as an input to
-   the selection process but only support configuration if the
+   the selection process, but only support configuration if the
    respective protocol has been selected.
 
 3.2.1.  Transport Property Names
@@ -682,7 +693,7 @@ Connection.Close()
       Preconnection := NewPreconnection([]LocalEndpoint,
                                         []RemoteEndpoint,
                                         TransportProperties,
-                                        SecurityParameters?)
+                                        SecurityParameters)
 
    At least one Local Endpoint MUST be specified if the Preconnection is
    used to Listen() for incoming Connections, but the list of Local
@@ -716,9 +727,6 @@ Connection.Close()
    a list of concrete endpoints.  Specifying multiple Remote Endpoints
    on a Preconnection allows applications to override this for more
    detailed control.
-
-   Transport Properties MUST always be specified while security
-   parameters are OPTIONAL.
 
    If Message Framers are used (see Section 7.1.2), they MUST be added
    to the Preconnection during pre-establishment.
@@ -900,6 +908,16 @@ Connection.Close()
    between multiple local interfaces that are connected to different
    access networks.
 
+   When additional information (such as Provisioning Domain (PvD)
+   information [RFC7556]) is available about the networks over which an
+   endpoint can operate, this can inform the selection between alternate
+   network paths.
+   Path information can include network segment PMTU, set of supported
+   DSCPs, expected usage, cost, etc.  The usage of this information by
+   the Transport Services System is generally independent of the
+   specific mechanism/protocol used to receive the information (e.g.
+   zero-conf, DHCP, or IPv6 RA).
+
    Most Selection Properties are represented as Preferences, which can
    take one of five values:
 
@@ -1080,7 +1098,7 @@ Connection.Close()
 
 4.2.7.  Full Checksum Coverage on Sending
 
-   Name:  perMsgChecksumLenSend
+   Name:  FullChecksumSend
 
    Type:  Preference
 
@@ -1093,7 +1111,7 @@ Connection.Close()
 
 4.2.8.  Full Checksum Coverage on Receiving
 
-   Name:  perMsgChecksumLenRecv
+   Name:  FullChecksumRecv
 
    Type:  Preference
 
@@ -1264,7 +1282,7 @@ Connection.Close()
       the chosen transport supports this.
 
    Passive:  The connection will support the use of multiple paths if
-      the remote endpoint requests it.
+      the Remote Endpoint requests it.
 
    The policy for using multiple paths is specified using the separate
    "multipath-policy" property, see Section 6.1.7 below.  To enable the
@@ -1427,6 +1445,21 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
    SecurityParameters.Set(max-cached-sessions, 16)
    SecurityParameters.Set(cached-session-lifetime-seconds, 3600)
 
+   Connections that use Transport Services SHOULD use security in
+   general.  However, for compatibility with endpoints that do not
+   support transport security protocols (such as a TCP endpoint that
+   does not support TLS), applications can initialize their security
+   parameters to indicate that security can be disabled, or can be
+   opportunistic.  If security is disabled, the Transport Services
+   system will not attempt to add transport security automatically.  If
+   security is opportunistic, it will allow Connections without
+   transport security, but will still attempt to use security if
+   available.
+
+   SecurityParameters := NewDisabledSecurityParameters()
+
+   SecurityParameters := NewOpportunisticSecurityParameters()
+
    Representation of Security Parameters in implementations should
    parallel that chosen for Transport Property names as recommended in
    Section 3.3.
@@ -1436,8 +1469,11 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
    Security decisions, especially pertaining to trust, are not static.
    Once configured, parameters may also be supplied during connection
    establishment.  These are best handled as client-provided callbacks.
-   Security handshake callbacks that may be invoked during connection
-   establishment include:
+   Callbacks block the progress of the connection establishment, which
+   distinguishes them from other Events in the transport system.  How
+   callbacks and events are implemented is specific to each
+   implementation.  Security handshake callbacks that may be invoked
+   during connection establishment include:
 
    *  Trust verification callback: Invoked when a Remote Endpoint's
       trust must be validated before the handshake protocol can
@@ -1450,7 +1486,7 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
 
    *  Identity challenge callback: Invoked when a private key operation
       is required, e.g., when local authentication is requested by a
-      remote.
+      Remote Endpoint.
 
    ChallengeCallback := NewCallback({
      // Handle challenge
@@ -1492,7 +1528,7 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
 
    Once Initiate is called, the candidate Protocol Stack(s) may cause
    one or more candidate transport-layer connections to be created to
-   the specified remote endpoint.  The caller may immediately begin
+   the specified Remote Endpoint.  The caller may immediately begin
    sending Messages on the Connection (see Section 7.2) after calling
    Initiate(); note that any data marked "Safely Replayable" that is
    sent while the Connection is being established may be sent multiple
@@ -1756,14 +1792,13 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
    Properties may be Generic, applying regardless of transport protocol,
    or Specific, applicable to a single implementation of a single
    transport protocol stack.  Generic Connection Properties are defined
-   in Section 6.1 below.  Specific Protocol Properties are defined in a
-   transport- and implementation-specific way, and MUST NOT be assumed
-   to apply across different protocols.  Attempts to set Specific
-   Protocol Properties on a protocol stack not containing that specific
-   protocol are simply ignored, and do not raise an error; however, too
-   much reliance by an application on Specific Protocol Properties can
-   significantly reduce the flexibility of a transport services
-   implementation.
+   in Section 6.1 below.
+
+   Protocol Specific Properties are defined in a transport- and
+   implementation-specific way, and MUST NOT apply across different
+   protocols.  Too much reliance by an application on Protocol Specific
+   Properties can significantly reduce the flexibility of a transport
+   services implementation.
 
    The application can set and query Connection Properties on a per-
    Connection basis.  Connection Properties that are not read-only can
@@ -1838,16 +1873,17 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
 
    Name:  recvChecksumLen
 
-   Type:  Integer, with special value "Full Coverage"
+   Type:  Integer (non-negative with special value "Full Coverage")
 
    Default:  Full Coverage
 
    This property specifies the minimum number of bytes in a received
    message that need to be covered by a checksum.  A special value of 0
-   means that no checksum is permitted.  A receiving Endpoint will not
-   forward messages to the application that have less coverage.  The
-   application is responsible for handling any corruption within the
-   non-protected part of the message [RFC8085].
+   means that a received packet does not need to have a non-zero
+   checksum field.  A receiving endpoint will not forward messages that
+   have less coverage to the application.  The application is
+   responsible for handling any corruption within the non-protected part
+   of the message [RFC8085].
 
 6.1.2.  Connection Priority
 
@@ -2106,9 +2142,11 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
    Type:  Integer
 
    This property, if applicable, represents the maximum Message size
-   that can be sent without incurring network-layer fragmentation or
-   transport layer segmentation at the sender.  It exposes the Maximum
-   Packet Size (MPS) as described in Datagram PLPMTUD [RFC8899].
+   that can be sent without incurring network-layer fragmentation at the
+   sender.  It exposes a value to the application based on the Maximum
+   Packet Size (MPS) as described in Datagram PLPMTUD [RFC8899].  This
+   can allow a sending stack to avoid unwanted fragmentation at the
+   network-layer or segmentation by the transport layer.
 
 6.1.11.3.  Maximum Message Size on Send
 
@@ -2243,7 +2281,7 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
 
    For MessageContexts returned by send Events (see Section 7.2.2) and
    receive Events (see Section 7.3.2), the application can query
-   information about the local and Remote Endpoint:
+   information about the Local and Remote Endpoint:
 
    RemoteEndpoint := MessageContext.GetRemoteEndpoint()
    LocalEndpoint := MessageContext.GetLocalEndpoint()
@@ -2404,10 +2442,10 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
    example, if "Reliable Data Transfer (Connection)" is set to "Require"
    and a protocol with configurable per-Message reliability is used,
    setting "Reliable Data Transfer (Message)" to "false" for a
-   particular Message will allow this Message to be unreliably
-   delivered.  Changing the Reliable Data Transfer property on Messages
-   is only possible for Connections that were established enabling the
-   Selection Property "Configure Per-Message Reliability".
+   particular Message will allow this Message to be sent without any
+   reliability guarantees.  Changing the Reliable Data Transfer property
+   on Messages is only possible for Connections that were established
+   enabling the Selection Property "Configure Per-Message Reliability".
 
    The following Message Properties are supported:
 
@@ -2531,10 +2569,10 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
    Message, starting from byte 0, that the application requires to be
    delivered without corruption due to lower layer errors.  It is used
    to specify options for simple integrity protection via checksums.  A
-   value of 0 means that no checksum is required, and "Full Coverage"
-   means that the entire Message needs to be protected by a checksum.
-   Only "Full Coverage" is guaranteed, any other requests are advisory,
-   which may result in "Full Coverage" being applied.
+   value of 0 means that no checksum needs to be calculated, and "Full
+   Coverage" means that the entire Message needs to be protected by a
+   checksum.  Only "Full Coverage" is guaranteed, any other requests are
+   advisory, which may result in "Full Coverage" being applied.
 
 7.1.3.7.  Reliable Data Transfer (Message)
 
@@ -2605,11 +2643,13 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
 
    Default:  false
 
-   When set to true, this property requests the network layer at the
-   sending endpoint to not fragment the packets generated by the
-   transport layer.  When running over IPv4, setting this property to
-   true will also cause the Don't Fragment bit to be set in the IP
-   header.  When this property is set, an attempt to send a message size
+   When set to true, this property requests the transport layer to not
+   provide segmentation of messages larger than the maximum size
+   permitted by the network layer, and also to avoid network-layer
+   source fragmentation of messages.  When running over IPv4, setting
+   this property to true can result in a sending endpount setting the
+   Don't Fragment bit in the IPv4 header of packets generated by the
+   transport layer.  An attempt to send a message that results in a size
    greater than the transport's current estimate of its maximum packet
    size (singularTransmissionMsgMaxLen) will result in a SendError.
    This only takes effect when the transport and network layer support
@@ -2947,15 +2987,23 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
    Connection -> ReceiveError<messageContext, reason?>
 
    A ReceiveError occurs when data is received by the underlying
-   Protocol Stack that cannot be fully retrieved or parsed, or when some
-   other indication is received that reception has failed.  In contrast,
-   conditions that irrevocably lead to the termination of the Connection
-   are instead signaled using ConnectionError (see Section 8).
+   Protocol Stack that cannot be fully retrieved or parsed, and when it
+   is useful for the application to be notified of such errors.  For
+   example, a ReceiveError can indicate that a Message (identified via
+   the MessageContext) that was being partially received previously, but
+   had not completed, encountered an error and will not be completed.
+   This can be useful for an application, which may want to use this
+   error as a hint to remove previously received Message parts from
+   memory.  As another example, if an incoming Message does not fulfill
+   the Required Minimum Corruption Protection Coverage for Receiving
+   property (see Section 6.1.1), an application can use this error as a
+   hint to inform the peer application to adjust the Sending Corruption
+   Protection Length property (see Section 7.1.3.6).
 
-   The ReceiveError event passes an optional associated MessageContext.
-   This can indicate that a Message that was being partially received
-   previously, but had not completed, encountered an error and will not
-   be completed.
+   In contrast, internal protocol reception errors (e.g., loss causing
+   retransmissions in TCP) are not signalled by this Event.  Conditions
+   that irrevocably lead to the termination of the Connection are
+   signaled using ConnectionError (see Section 8).
 
 7.3.3.  Receive Message Properties
 
@@ -3011,25 +3059,53 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
 
 8.  Connection Termination
 
+   A Connection can be terminated i) by the Local Endpoint (i.e., the
+   application calls the Close, CloseGroup, Abort or AbortGroup Action),
+   ii) by the Remote Endpoint (i.e., the remote application calls the
+   Close, CloseGroup, Abort or AbortGroup Action), or iii) because of an
+   error (e.g., a timeout).  A local call of the Close Action will cause
+   the Connection to either send a Closed Event or a ConnectionError
+   Event, and a local call of the CloseGroup Action will cause all of
+   the Connections in the group to either send a Closed Event or a
+   ConnectionError Event.  A local call of the Abort Action will cause
+   the Connection to send a ConnectionError Event, indicating local
+   Abort as a reason, and a local call of the AbortGroup Action will
+   cause all of the Connections in the group to send a ConnectionError
+   Event, indicating local Abort as a reason.
+
+   Remote Action calls map to Events similar to local calls (e.g., a
+   remote Close causes the Connection to either send a Closed Event or a
+   ConnectionError Event), but, different from local Action calls, it is
+   not guaranteed that such Events will indeed be invoked.  When an
+   application needs to free resources associated with a Connection, it
+   should therefore not rely on the invocation of such Events due to
+   termination calls from the Remote Endpoint, but instead use the local
+   termination Actions.
+
    Close terminates a Connection after satisfying all the requirements
    that were specified regarding the delivery of Messages that the
-   application has already given to the Transport Services system.  For
-   example, if reliable delivery was requested for a Message handed over
-   before calling Close, the Closed Event will signify that this Message
-   has indeed been delivered.  This action does not affect any other
-   Connection in the same Connection Group.
+   application has already given to the Transport Services system.  Upon
+   successfully satisfying all these requirements, the Connection will
+   send the Closed Event.  For example, if reliable delivery was
+   requested for a Message handed over before calling Close, the Closed
+   Event will signify that this Message has indeed been delivered.  This
+   Action does not affect any other Connection in the same Connection
+   Group.
 
    Connection.Close()
 
-   The Closed Event informs the application that the Remote Endpoint has
-   closed the Connection.  There is no guarantee that a remote Close
-   will indeed be signaled.
+   The Closed Event informs the application that a Close Action has
+   successfully completed, or that the Remote Endpoint has closed the
+   Connection.  There is no guarantee that a remote Close will be
+   signaled.
 
    Connection -> Closed<>
 
    Abort terminates a Connection without delivering any remaining
-   Messages.  This action does not affect any other Connection that in
-   the same Connection Group.
+   Messages.  This action does not affect any other Connection that is
+   entangled with this one in a Connection Group.  When the Abort Action
+   has finished, the Connection will send a ConnectionError Event,
+   indicating local Abort as a reason.
 
    Connection.Abort()
 
@@ -3037,21 +3113,25 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
    Connections in the same Connection Group.  For example, all of the
    Connections in a group might be streams of a single session for a
    multistreaming protocol; closing the entire group will close the
-   underlying session.  See also Section 5.4.  As with Close, any
-   Messages remaining to be processed on a Connection will be handled
-   prior to closing.
+   underlying session.  See also Section 5.4.  All Connections in the
+   group will send a Closed Event when the CloseGroup Action was
+   successful.  As with Close, any Messages remaining to be processed on
+   a Connection will be handled prior to closing.
 
    Connection.CloseGroup()
 
-   AbortGroup terminates a Connection and any other Connections in the
-   same Connection Group without delivering any remaining Messages.
+   AbortGroup terminates a Connection and any other Connections that are
+   in the same Connection Group without delivering any remaining
+   Messages.  When the AbortGroup Action has finished, all Connections
+   in the group will send a ConnectionError Event, indicating local
+   Abort as a reason.
 
    Connection.AbortGroup()
 
    A ConnectionError informs the application that: 1) data could not be
    delivered to the peer after a timeout, or 2) the Connection has been
    aborted (e.g., because the peer has called Abort).  There is no
-   guarantee that an Abort will indeed be signaled.
+   guarantee that an Abort from the peer will be signaled.
 
    Connection -> ConnectionError<reason?>
 
@@ -3448,6 +3528,16 @@ A.1.  Types
       "set" in Python.  In C, it may be represented as an array or as a
       higher-level data structure with appropriate accessors defined.
 
+   The objects described in Section 1.1 can similarly be represented in
+   different ways depending on which programming language is used.
+   Objects like Preconnections, Connections, and Listeners can be long-
+   lived, and benefit from using object-oriented constructs.  Note that
+   in C, these objects may need to provide a way to release or free
+   their underlying memory when the application is done using them.  For
+   example, since a Preconnection can be used to initiate multiple
+   Connections, it is the responsibility of the application to clean up
+   the Preconnection memory if necessary.
+
 A.2.  Events and Errors
 
    This specification treats Events and Errors similarly.  Errors, just
@@ -3455,10 +3545,10 @@ A.2.  Events and Errors
    applications.  However, implementations of this interface may report
    Errors synchronously, according to the error handling idioms of the
    implementation platform, where they can be immediately detected, such
-   as by throwing an exception when attempting to initiate a connection
-   with inconsistent Transport Properties.  An error can provide an
-   optional reason to the application with further details about why the
-   error occurred.
+   as by generating an exception when attempting to initiate a
+   connection with inconsistent Transport Properties.  An error can
+   provide an optional reason to the application with further details
+   about why the error occurred.
 
 A.3.  Time Duration
 
@@ -3533,9 +3623,9 @@ B.2.2.  reliable-message
 
 B.2.3.  unreliable-datagram
 
-   This profile provides unreliable datagram transport service.  An
-   example of a protocol that provides this service is UDP.  It consists
-   of the following properties:
+   This profile provides a datagram transport service without any
+   reliability guarantee.  An example of a protocol that provides this
+   service is UDP.  It consists of the following properties:
 
                     +=======================+=========+
                     | Property              | Value   |
