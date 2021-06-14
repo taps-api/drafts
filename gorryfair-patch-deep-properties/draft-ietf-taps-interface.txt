@@ -552,8 +552,8 @@ Connection.Close()
    used to inform decisions made during establishment and to fine-tune
    the established connection.  Calling Initiate on a Preconnection
    creates an outbound Connection or a Listener, the Selection and
-   Connection properties held by the Connection or Listener then become
-   immutable (e.g., by a 'deep copy' of the properties and endpoints).
+   Connection properties are then readable from the Connection or
+   Listener, but become immutable.
 
    The behavior of the selected protocol stack(s) when sending Messages
    is controlled by Message Properties (see Section 7.1.3).
