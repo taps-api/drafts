@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-06-13T00:20:18.320019+00:00",
+  "timestamp": "2021-06-15T00:18:55.309552+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -23008,7 +23008,7 @@
       ],
       "body": "The Capacity Profile in the API draft (now) lists these possible choices: Default, Scavenger, Low Latency/Interactive, Low Latency/Non-Interactive, Constant-Rate Streaming and Capacity-Seeking.\r\n\r\nThe text in section 4.1.3 only discusses Scavenger, Low Latency/Interactive, and Constant-Rate Streaming.\r\n",
       "createdAt": "2021-05-18T10:57:38Z",
-      "updatedAt": "2021-06-11T16:50:36Z",
+      "updatedAt": "2021-06-14T09:31:10Z",
       "closedAt": null,
       "comments": [
         {
@@ -23017,6 +23017,13 @@
           "body": "Aha - I could offer to align the Capacity Profile classes?",
           "createdAt": "2021-05-18T13:05:12Z",
           "updatedAt": "2021-05-18T13:05:12Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "See a PR to align Capacity profile with API #858 ",
+          "createdAt": "2021-06-14T09:31:09Z",
+          "updatedAt": "2021-06-14T09:31:09Z"
         }
       ]
     },
@@ -23228,7 +23235,7 @@
       ],
       "body": "The interface draft, section 4.1.1, talks about multicast endpoints, but doesn't mention whether such endpoints can be used with Rendezvous(). ",
       "createdAt": "2021-06-11T14:04:17Z",
-      "updatedAt": "2021-06-12T00:51:25Z",
+      "updatedAt": "2021-06-14T13:00:18Z",
       "closedAt": null,
       "comments": [
         {
@@ -23244,6 +23251,34 @@
           "body": "I wouldn't have thought this is unambiguous, so I'm not quite sure what text is needed that would clarify this.\r\n\r\nTo me at first blush this seems covered by the Rendezvous description in 5.3, between what Rendezvous does in the 4th paragraph:\r\n\r\n\"If there are multiple Local Endpoints or Remote Endpoints configured, then initiating a Rendezvous() action will systematically probe the reachability of those endpoint candidates following an approach such as that used in Interactive Connectivity Establishment (ICE) [RFC5245].\"\r\n\r\nAnd what happens if it doesn't work in the final paragraph:\r\n\r\n\"An EstablishmentError occurs either when the Properties and Security Parameters of the Preconnection cannot be fulfilled for rendezvous or cannot be reconciled with the Local and/or Remote Endpoints, when the Local Endpoint or Remote Endpoint cannot be resolved, when no transport-layer connection can be established to the Remote Endpoint, or when the application is prohibited from rendezvous by policy:\"\r\n\r\nAbsent an ICE-like mechanism that works with multicast (is there such a thing?) I don't see how someone would expect anything other than this error condition if they did this.\r\n\r\nWas there a context to this question?  It wouldn't have occurred to me there was another possible answer that needed an explanation to avoid confusion on this point, but maybe there's a case I haven't considered?",
           "createdAt": "2021-06-12T00:49:55Z",
           "updatedAt": "2021-06-12T00:51:25Z"
+        },
+        {
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thinking about this some more, I think there's an ASM vs. SSM question here. \r\n\r\nFor SSM, the model of receivers call `Listen()` and sender calls `Initiate()` makes a lot of sense, and matches the asymmetry of the underlying data flows.\r\n\r\nFor ASM, things are more symmetric, and `Rendezvous()` might be the right abstraction.",
+          "createdAt": "2021-06-14T11:14:33Z",
+          "updatedAt": "2021-06-14T11:14:33Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm finding it hard to think we need to combine \"rendezvous\" and \"multicast\". ",
+          "createdAt": "2021-06-14T12:12:58Z",
+          "updatedAt": "2021-06-14T12:12:58Z"
+        },
+        {
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "rendezvous is for peer-to-peer connections, and ASM multicast is peer-to-peer",
+          "createdAt": "2021-06-14T12:21:30Z",
+          "updatedAt": "2021-06-14T12:21:30Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Unsure about this... ASM can also be used unidirectionally also, it's just not source-specific. I had other things in mind with Rendezvous. Anyway, others may think differently.",
+          "createdAt": "2021-06-14T13:00:18Z",
+          "updatedAt": "2021-06-14T13:00:18Z"
         }
       ]
     },
@@ -69787,13 +69822,13 @@
       ],
       "body": "This is a first cut, I'll update next.",
       "createdAt": "2021-06-11T15:48:52Z",
-      "updatedAt": "2021-06-11T16:38:24Z",
+      "updatedAt": "2021-06-14T09:32:20Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "fc1d1dce7eb568f9035e63f2be47b7add67152df",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "gorryfair-patch-5",
-      "headRefOid": "29828245e2a1133ec548c08c518171b477e3a3f2",
+      "headRefOid": "1cbcb83472f33741cf33ad121ad3e4c7d1fcdbee",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -69821,6 +69856,240 @@
           ]
         }
       ]
+    },
+    {
+      "number": 860,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY5Mzc5ODA4",
+      "title": "Freezing pre-connection state.",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/860",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "API",
+        "Implementation"
+      ],
+      "body": "To clarify when and how objects are froze.  #859\r\n\r\nArch: No current change needed\r\nAPI: Clarify \r\nImpl: Explain how\r\n",
+      "createdAt": "2021-06-14T08:54:49Z",
+      "updatedAt": "2021-06-14T17:28:17Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "fdea22b1f5acaabecd5c5a6c576d8f64a111833d",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "gorryfair-patch-deep-properties",
+      "headRefOid": "6018ca0b0f9af85677d5a52ad35741ce828ffa44",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyNzk2MTg5",
+          "commit": {
+            "abbreviatedOid": "ae3d914"
+          },
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-14T11:24:32Z",
+          "updatedAt": "2021-06-14T11:24:32Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "The original seems clearer to me: it's more explicit about what happens, and when. Maybe remove the second sentence, since it's covered below?",
+              "createdAt": "2021-06-14T11:24:32Z",
+              "updatedAt": "2021-06-14T11:25:38Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyODI3NDMx",
+          "commit": {
+            "abbreviatedOid": "ae3d914"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-14T12:03:44Z",
+          "updatedAt": "2021-06-14T12:03:44Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Oh dear we don't seem to agree - I think the original hints at everything being immutable. Instead, I think everything should be copied; but only the selection params are immutable, the other params are mutable on the copy.",
+              "createdAt": "2021-06-14T12:03:44Z",
+              "updatedAt": "2021-06-14T12:03:44Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyODM0MTIz",
+          "commit": {
+            "abbreviatedOid": "ae3d914"
+          },
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-14T12:11:31Z",
+          "updatedAt": "2021-06-14T12:11:31Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "That would be fine, but I didn't get that meaning from the new text.",
+              "createdAt": "2021-06-14T12:11:31Z",
+              "updatedAt": "2021-06-14T12:11:31Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyODM3Njg3",
+          "commit": {
+            "abbreviatedOid": "ae3d914"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-14T12:15:40Z",
+          "updatedAt": "2021-06-14T12:15:41Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "So... what's missing? - The text on copying was moved to the section after \"once a connection is established.",
+              "createdAt": "2021-06-14T12:15:40Z",
+              "updatedAt": "2021-06-14T12:15:41Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyODQyMjM3",
+          "commit": {
+            "abbreviatedOid": "ae3d914"
+          },
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-14T12:20:51Z",
+          "updatedAt": "2021-06-14T12:20:51Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "I can't parse \"An implementation could allow properties of a preconnection to be updated, but changes to the Preconnection Selection and Connection may be language dependent and is to be avoided in code that could be used across different implementations\". I read it as trying to simplify the original wording, but actually making it less clear to me. I don't see how it relates to the selection parameters being immutable and while the other parameters remain mutable.\r\n",
+              "createdAt": "2021-06-14T12:20:51Z",
+              "updatedAt": "2021-06-14T12:20:51Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyOTEzNTA0",
+          "commit": {
+            "abbreviatedOid": "032f1d7"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-14T13:30:36Z",
+          "updatedAt": "2021-06-14T13:30:44Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Improved text",
+              "createdAt": "2021-06-14T13:30:36Z",
+              "updatedAt": "2021-06-14T13:30:44Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgzMTQxNTkw",
+          "commit": {
+            "abbreviatedOid": "032f1d7"
+          },
+          "author": "martinduke",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "I found the first change a bit unclear. Here's proposed rewording:",
+          "createdAt": "2021-06-14T16:53:38Z",
+          "updatedAt": "2021-06-14T16:55:46Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\nPreconnection objects should be implemented as bundles of properties that an application can both read and write. An implementation could allow applications to update the properties or endpoints of a preconnection after it is initiated. However, an application should avoid changes to the Preconnection properties and endpoints to improve consistent operation across different implementations.\r\n```",
+              "createdAt": "2021-06-14T16:53:38Z",
+              "updatedAt": "2021-06-14T16:55:46Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 861,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY5NDEyMTYw",
+      "title": "Change B.2.3. unreliable-datagram profile",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/861",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Update and explain choices\r\nSeeks to address #821 ",
+      "createdAt": "2021-06-14T09:39:14Z",
+      "updatedAt": "2021-06-14T09:39:14Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "fdea22b1f5acaabecd5c5a6c576d8f64a111833d",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "gorryfair-patch-4",
+      "headRefOid": "a3a7cd410bb2f8928f74210ac55d0246b220e813",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 862,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjY5NDIzMTEw",
+      "title": "Help UDP fit wrt connection",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/862",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "gorryfair"
+      ],
+      "labels": [
+        "Architecture"
+      ],
+      "body": "Added a couple of sentences to Arch that are hoped to early introduce that connections are things in the API, not aretfacts of the transport protocol instances.\r\n\r\nDifferent to, but related to an issue for the description in API.",
+      "createdAt": "2021-06-14T09:55:39Z",
+      "updatedAt": "2021-06-14T11:57:18Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "fdea22b1f5acaabecd5c5a6c576d8f64a111833d",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "gorryfair-patch-7",
+      "headRefOid": "263a23af8797070250042fb317af99885a756e73",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "\"A `Connection` is an abstraction that represents the communication. If the transport services interface selects a protocol such as TCP for the communication, a `Connection` will correspond to an underlying protocol connection. In the other hand, if a protocol such as UDP is selected, the `Connection` remains an abstraction in the end points and doesn't correspond to explicit protocol state\" ?",
+          "createdAt": "2021-06-14T11:21:44Z",
+          "updatedAt": "2021-06-14T11:21:44Z"
+        }
+      ],
+      "reviews": []
     }
   ]
 }
