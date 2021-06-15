@@ -5,7 +5,7 @@
 TAPS Working Group                                      B. Trammell, Ed.
 Internet-Draft                                   Google Switzerland GmbH
 Intended status: Standards Track                           M. Welzl, Ed.
-Expires: 13 December 2021                             University of Oslo
+Expires: 17 December 2021                             University of Oslo
                                                              T. Enghardt
                                                                  Netflix
                                                             G. Fairhurst
@@ -22,7 +22,7 @@ Expires: 13 December 2021                             University of Oslo
                                                               Apple Inc.
                                                                  K. Rose
                                                Akamai Technologies, Inc.
-                                                            11 June 2021
+                                                            15 June 2021
 
 
      An Abstract Application Layer Interface to Transport Services
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 December 2021.
+   This Internet-Draft will expire on 17 December 2021.
 
 Copyright Notice
 
@@ -3626,9 +3626,9 @@ B.2.3.  unreliable-datagram
                     +=======================+=========+
                     | Property              | Value   |
                     +=======================+=========+
-                    | reliability           | ignore  |
+                    | reliability           | avoid   |
                     +-----------------------+---------+
-                    | preserveOrder         | ignore  |
+                    | preserveOrder         | avoid   |
                     +-----------------------+---------+
                     | congestionControl     | ignore  |
                     +-----------------------+---------+
@@ -3639,9 +3639,13 @@ B.2.3.  unreliable-datagram
 
                                   Table 4
 
-   Applications that choose this Transport Property Profile for latency
-   reasons should also consider setting an appropriate Capacity Profile
-   Property, see Section 6.1.6 and could benefit from controlling
+   Applications that choose this Transport Property Profile would avoid
+   the additional latency that could be introduced by retransmission or
+   reordering in a transport protocol.
+
+   Applications that choose this Transport Property Profile to reduce
+   latency should also consider setting an appropriate Capacity Profile
+   Property, see Section 6.1.6 and might benefit from controlling
    checksum coverage, see Section 4.2.7 and Section 4.2.8.
 
 Appendix C.  Relationship to the Minimal Set of Transport Services for
