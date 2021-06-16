@@ -550,7 +550,11 @@ Connection.Close()
    application.  Although Connection Properties (see Section 6.1) can be
    set during pre-establishment, they may be changed later.  They are
    used to inform decisions made during establishment and to fine-tune
-   the established connection.
+   the established connection.  Calling Initiate on a Preconnection
+   creates an outbound Connection or a Listener, and the Selection
+   Properties remain readable from the Connection or Listener, but
+   become immutable.
+
    The behavior of the selected protocol stack(s) when sending Messages
    is controlled by Message Properties (see Section 7.1.3).
 
@@ -572,7 +576,7 @@ Connection.Close()
    input to the selection process.  Protocol Specific Properties, which
    enable configuration of specialized features of a specific protocol,
    see Section 3.2 of [I-D.ietf-taps-arch], are not used as an input to
-   the selection process but only support configuration if the
+   the selection process, but only support configuration if the
    respective protocol has been selected.
 
 3.2.1.  Transport Property Names
