@@ -177,8 +177,8 @@ Table of Contents
 
    Once the Connection is established, its interface maps actions and
    events to the details of the chosen Protocol Stack.  For example, the
-   same Connection object may ultimately interface to a single instance
-   of one transport protocol (e.g., a TCP connection, a TLS session over
+   same Connection object may ultimately represent a single instance of
+   one transport protocol (e.g., a TCP connection, a TLS session over
    TCP, a UDP flow with fully-specified Local and Remote Endpoints, a
    DTLS session, a SCTP stream, a QUIC stream, or an HTTP/2 stream).
    The implementation should ensure that the copy of all Properties held
