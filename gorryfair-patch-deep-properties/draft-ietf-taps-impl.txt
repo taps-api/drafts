@@ -5,7 +5,7 @@
 TAPS Working Group                                     A. Brunstrom, Ed.
 Internet-Draft                                       Karlstad University
 Intended status: Informational                             T. Pauly, Ed.
-Expires: 16 December 2021                                     Apple Inc.
+Expires: 18 December 2021                                     Apple Inc.
                                                              T. Enghardt
                                                                  Netflix
                                                            K-J. Grinnemo
@@ -18,7 +18,7 @@ Expires: 16 December 2021                                     Apple Inc.
                                                    University of Glasgow
                                                                 M. Welzl
                                                       University of Oslo
-                                                            14 June 2021
+                                                            16 June 2021
 
 
              Implementing Interfaces to Transport Services
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 December 2021.
+   This Internet-Draft will expire on 18 December 2021.
 
 Copyright Notice
 
@@ -236,10 +236,8 @@ Table of Contents
       requires "Configure Reliability per Message", this mismatch should
       result in an error.
 
-   To avoid allocating resources, it is important that such cases fail
-   as early as possible, e.g., prior to endpoint resolution, only to
-   find out later that there is no protocol that satisfies the
-   requirements.
+   To avoid allocating resources that are not finally needed, it is
+   important that configuration-time errors fail as early as possible.
 
 3.2.  Role of system policy
 
