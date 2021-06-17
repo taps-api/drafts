@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-06-15T00:18:55.309552+00:00",
+  "timestamp": "2021-06-17T00:17:24.954318+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -22553,9 +22553,17 @@
       ],
       "body": "For this property we state. \"This property applies to Connections and Connection Groups.\" But I think this is true for all Selection Properties, so it read strangely to me to point it out for only one property. Particularly the part about the Connection Groups. It makes you wonder if the other properties do not apply to Connection Groups. I guess it is here because the Property relates to messages, but maybe the text can be reformulated and the part about Connection Groups can be removed.\r\n\r\nMaybe something like \"This property specifies whether an application considers it useful to indicate its reliability requirements on a per-Message basis for the Messages within the Connection.\" or \"This property specifies whether an application considers it useful to specify different reliability requirements for individual Messages in a Connection. ",
       "createdAt": "2021-04-30T19:55:28Z",
-      "updatedAt": "2021-05-07T15:49:38Z",
+      "updatedAt": "2021-06-16T07:58:50Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "A clarification:\r\n* I'm pretty sure that the statement \"This property applies to Connections and Connection Groups.\" comes from me - I had originally written this for all properties where it applies like this, the only different one being per-Message priority. Then we changed this at some point, to only make per-Message priority stand out, and removed that statement everywhere. In the process, we (probably I) must have overlooked this one. So yes, this statement doesn't fit and should be removed.\r\n* Anna's second paragraph above proposes an update to the only remaining sentence describing this property. I suggest to use her second suggestion.",
+          "createdAt": "2021-06-16T07:58:49Z",
+          "updatedAt": "2021-06-16T07:58:49Z"
+        }
+      ]
     },
     {
       "number": 808,
@@ -22573,7 +22581,7 @@
       ],
       "body": "In 3.2 it is clear that you can set Message Properties on Connections and Preconnections, but the rest of the document is not very clear about this.\r\n\r\nIn 4.2 for instance the text only talks about setting Selection Properties and Connection Properties on PreConnections. \r\n\r\nIn 7.1.3 the text says \"Connection Properties describe the default behavior for all Messages on a Connection\". But I think that Message Properties set on a Connection or PreConnection may also describe the default behavior so this relationship should be clarified. Also, the Message Property defaults given for Properties that do not depend on other Properties sets the defaults for all Messages in a Connection I assume? I also assume that a Message Property set on a Message Context overrides a Message Property set on a PreConnection or Connection, but this is also not specified.\r\n\r\nIn 5.4. Connection Groups, I assume that setting Message Properties on a Connection applies to all Connections in the Connection Group? This is not clear. ",
       "createdAt": "2021-04-30T22:08:21Z",
-      "updatedAt": "2021-05-07T16:42:08Z",
+      "updatedAt": "2021-06-16T10:47:14Z",
       "closedAt": null,
       "comments": [
         {
@@ -22582,6 +22590,27 @@
           "body": "In general, I agree. If you set a message property dynamically on a connection, though, I don't think it would affect the group\u2014I could have one stream in a multiplexed protocol have separate behavior, such as priority.",
           "createdAt": "2021-05-07T16:41:30Z",
           "updatedAt": "2021-05-07T16:41:30Z"
+        },
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "+1 to tfpauly. But this is already written in 5.4, maybe you missed it (Anna)?   \"Message Properties are also not entangled. For example, changing Lifetime (see Section 7.1.3.1) of a Message will only affect a single Message on a single Connection.\"",
+          "createdAt": "2021-06-16T07:39:04Z",
+          "updatedAt": "2021-06-16T07:39:04Z"
+        },
+        {
+          "author": "abrunstrom",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I am fine with an update of a Message Property to a connection applying only to that connection. Priority is not a good example as it is already a special case, but my main issue was that we need to be more clear about the behavior in the specification. \r\n\r\n@mwelzl the issue is about setting a Message Property on a Connection. The text you refer to talk about setting Message Properties on a message. You could interpret the first part as a general statement, but the way the text is structured it is easy to think it refers to setting Message Properties on a message so I think we should be explicit also about setting Message Properties on a Connection. Could be a second example.",
+          "createdAt": "2021-06-16T10:28:59Z",
+          "updatedAt": "2021-06-16T10:28:59Z"
+        },
+        {
+          "author": "abrunstrom",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "So after looking at the text again, I think the example talking about setting Message Properties on a message should be removed, see comment in the pull request.",
+          "createdAt": "2021-06-16T10:47:14Z",
+          "updatedAt": "2021-06-16T10:47:14Z"
         }
       ]
     },
@@ -23235,7 +23264,7 @@
       ],
       "body": "The interface draft, section 4.1.1, talks about multicast endpoints, but doesn't mention whether such endpoints can be used with Rendezvous(). ",
       "createdAt": "2021-06-11T14:04:17Z",
-      "updatedAt": "2021-06-14T13:00:18Z",
+      "updatedAt": "2021-06-16T03:56:06Z",
       "closedAt": null,
       "comments": [
         {
@@ -23279,6 +23308,27 @@
           "body": "Unsure about this... ASM can also be used unidirectionally also, it's just not source-specific. I had other things in mind with Rendezvous. Anyway, others may think differently.",
           "createdAt": "2021-06-14T13:00:18Z",
           "updatedAt": "2021-06-14T13:00:18Z"
+        },
+        {
+          "author": "GrumpyOldTroll",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "ASM is deprecated interdomain ([RFC 8815](https://www.rfc-editor.org/rfc/rfc8815.html)).  Within a domain I don't think it needs a rendezvous?  Or at least I don't know of anyone trying to use it that way.\r\n\r\nI take @csperkins point that it's possible someone could want to build something for a peer to peer multicast use case. If they do so, I'm guessing this would include some kind of ICE-like underlying rendezvous protocol that can support multicast, and at that point a rendezvous operation might reasonably start working.\r\n\r\nTo me this looks like a function of whether there's an ICE-like protocol that can perform a rendezvous for the endpoints, so it's correct to avoid calling out non-support of rendezvous inside the multicast endpoint description so that it doesn't need to be specifically updated if the situation changes, though in practice today it will fail due to being unsupported if someone tries it with today's rendezvous protocol implementations.  (At least, I assume so?  Haven't tried it...)",
+          "createdAt": "2021-06-15T16:30:38Z",
+          "updatedAt": "2021-06-15T16:30:38Z"
+        },
+        {
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I read `Rendezvous()` as setting up a peer-to-peer connection, not as necessarily running a specific rendezvous protocol. For unicast, it needs something like ICE, I agree. For ASM, I was assuming a `Rendezvous()` would just turn into a multicast group that I could send to/receive from with no additional signalling, whereas SSM multicast needs explicit send-to-group and receive-from-group calls. Do we have different models for how this works?",
+          "createdAt": "2021-06-15T22:42:33Z",
+          "updatedAt": "2021-06-15T22:42:33Z"
+        },
+        {
+          "author": "GrumpyOldTroll",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I don't understand the claim that SSM would require explicit send-to-group or receive-from-group calls.  To me if you've made a local endpoint with a group address, the connection is non-sending, and if you made a remote endpoint with a group address, the connection is non-receiving.\r\n\r\nWith that said: a search for \"multicast stun\" did find what seems like a non-IETF STUN usage proposal that does something with multicast, so maybe somebody's using it?  I have no idea: https://ieeexplore.ieee.org/document/7275794\r\n\r\nAnyway, my starting assumption was that if you make a multicast group endpoint and give it a \"withStunServer\" and use it in a preconnection that you Rendezvous(), you'll get an error unless the stack and the server thinks it knows what to do with that, in which case sending or receiving will just work if there's a remote app that did the opposite.\r\n\r\nIn the (unlikely?) case the stack does support it, like with unicast, I guess I'd assume if you did a sending preconnection (remote group address), you'd want to do the withStunServer on the remote endpoint, and if you did a receiving preconnection (local group address), you'd do the withStunServer on the local endpoint.\r\n\r\nI guess also I'd assume that if you'd like bidirectional ASM, you'll want to make 2 separate connections, one for sending (with the group address as the remote endpoint) and the other for receiving (with the group address as the local endpoint), and on the receive one you won't provide a remote address.\r\n\r\nAFAICT all the above is sort of implicit in what's already written in the spec, and I'm not sure it needs spelling out if that sort of usage would work in a stack that cared to implement it.\r\n\r\nBut I do worry I'm missing something, and it could be annoying to find out in 5 years that the API structurally doesn't work with any kind of Rendezvous because it was specified wrong.  And on that score I'm worried that I might not be fully understanding what happens in a Rendezvous.  And when I tried to follow the pseudocode example in section 3.1.3, I noticed there's a complicated bit that's just comments as an exercise for the reader, which perhaps contains some assumptions I haven't really understood:\r\n\r\n~~~\r\n// ...Send the ResolvedLocal list to peer via signalling channel\r\n// ...Receive a list of RemoteCandidates from peer via signalling channel\r\n~~~\r\n\r\nAnyway, does anyone know what the STUN/TURN servers actually do here?  Taking a step back from what I'd expect out of an API that did support it, I'd think defining a new usage for STUN is probably out of scope for this doc, if it's not written up and deployed somewhere already.",
+          "createdAt": "2021-06-16T03:56:06Z",
+          "updatedAt": "2021-06-16T03:56:06Z"
         }
       ]
     },
@@ -23328,7 +23378,7 @@
       ],
       "body": "Discussion at the 11 Jun 2021 Interim:\r\n\r\nThe content of any objects passed as part of NewPreconnection(), Initiate(), Listen(), or Rendezvous() is frozen at the moment of Initiate/Listen/Rendezvous.\r\n\r\nThus, objects sent to NewPreconnection (Endpoints and Properties) are mutable, and it might be possible (depending on the implementation) to change them in the preconnection by modifying the object directly. Applications should either\r\n(1) Instantiate the connection before modifying Endpoint or Property objects for another preconnection.\r\n(2) If there are open preconnections that will initiate further connections, create new instances of Properties and Endpoints to modify their attributes in a different preconnection.\r\n\r\nThere are other ways to do this. For example, NewPreconnection() could do a deep copy of the properties and endpoints, and therefore reusing or freeing the argument objects would always be safe. But this was not the sense of the group at the interim.\r\n\r\nWhile this issue is uncomfortably close to the \"implementation dependent\", not having fixed assumptions about this increasing the friction of switching platforms using TAPS, and would probably be the source of nasty bugs.",
       "createdAt": "2021-06-11T16:30:12Z",
-      "updatedAt": "2021-06-11T22:26:45Z",
+      "updatedAt": "2021-06-16T21:05:56Z",
       "closedAt": null,
       "comments": [
         {
@@ -23365,6 +23415,55 @@
           "body": "I will also point out that this sits somewhat uneasily with Sec 3.1 of taps-impl, where we should fail the preconnection immediately if nothing matches the desired properties. What if I change the desired properties after getting the preconnection?\r\n\r\nIt's not insurmountable, but it's conceptually not very clean.",
           "createdAt": "2021-06-11T22:26:45Z",
           "updatedAt": "2021-06-11T22:26:45Z"
+        },
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@martinduke I think this is only because you assume that \"we should **fail the preconnection** immediately\".  Nowhere does it say that \"the preconnection\" should fail - it just says that trying to make meaningless changes should result in an error. This could be the function call that intends to make a change failing, not the object itself becoming unusable.\r\n\r\nOr am I misreading your concern?\r\n\r\nTo be clear, my view on this is:\r\n- create a preconnection: If you do it wrong, you get a failure and you don't get one. You can try again.\r\n- change something on a preconnection: if you do it wrong, the change fails, but the preconnection object doesn't \"fail\" or disappear, it's just unaffected.\r\n\r\nThat's probably not how you read the text in this section - what should change? Best to make a suggestion directly inside PR #860, I think.",
+          "createdAt": "2021-06-16T08:42:18Z",
+          "updatedAt": "2021-06-16T08:42:18Z"
+        },
+        {
+          "author": "martinduke",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I would like to have the discussion about what the right thing to do here in the issue, and the wordsmithing in the PR.\r\n\r\nIt's not meaningless changes. It's adding constraints that reduce the pool of protocols to zero.\r\n\r\nNone of this is impossible to implement in code, but what you suggest is the following is quite inelegant:\r\n- App instantiates satisfiable transport properties\r\n- App instantiates a preconnection with that TP, success\r\n- App changes the transport properties -- so you are proposing that each preconn with a reference to the properties would check that they are still satisfiable; if yes, then accept the change; if not, ignore it?\r\n\r\nAlternatively, the initiate/listen command could fail due to the updated properties\r\nOr, the preconnection could fail when the properties become unsatisfiable\r\nOr, the transport properties object itself could fail, if it is aware of the protocol choices.\r\nOr, objects passed to the preconnection could be immutable.\r\n\r\n****************\r\n\r\nZooming out for a bit, I don't see the preconnection object as adding a ton of value as currently specified. Perhaps it's too late to rethink that. Anyway that discussion is too big for this issue.",
+          "createdAt": "2021-06-16T18:33:43Z",
+          "updatedAt": "2021-06-16T18:33:43Z"
+        },
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hi, first, just to be clear, by suggesting to move this to the PR I didn't mean to be dismissive about your comment!  I just thought it's an easy fix - it seems not, my apologies!\r\n\r\nSo, let's keep discussing here. I still see things very differently. First, your bullet list begins with \"App instantiates satisfiable transport properties\".  The way I regard these properties is: they are atomary elements of an object. Attributes of a Preconnection object, in OO language terms. Members of a Preconnection record (or struct), in more old fashioned language terms. Not objects in their own right - and a Preconnection doesn't get a reference to them, it \"contains\" them (i.e., memory allocated for each).\r\n\r\nSo - the Preconnection's the thing that's instantiated, and the properties \"belong\" to it. Then, the statement from bullet 3: \"each preconn with a reference to the properties would check...\" - is wrong in my view of the world (I agree that this would otherwise be quite inelegant).\r\n\r\nSo here are my answers to the possible failures, in \"my\" context:\r\n> Alternatively, the initiate/listen command could fail due to the updated properties\r\nYes.\r\n\r\n>Or, the preconnection could fail when the properties become unsatisfiable\r\nNo: the preconnection per se doesn't fail, the call to create it may, and a call to make a change to one of its properties may.\r\n\r\n>Or, the transport properties object itself could fail, if it is aware of the protocol choices.\r\nA \"transport properties object\" doesn't exist from my point of view.\r\n\r\n>Or, objects passed to the preconnection could be immutable.\r\nBut where do we say that \"objects\" are passed to a preconnection?\r\n\r\nSo... either I'm totally wrong, or you're thinking of a very obscure language (you said C, which isn't SO obscure?), or the current draft is extremely ambiguous ... but then, about what?  If others agree with my view of the world, then there must be something very bad in the text that misled you. We should fix it!\r\n\r\nRegarding \"Zooming out\": why, what's the issue?  I don't personally think it matters very much if we define that changing things on a Preconnection can already fail or not, if that's what disturbs you - but we need to be able to hand over some input to the racing algorithm before trying to initiate or listen on a Connection. How else would you do it?  I can see no way around collecting the application's requirements / requests somewhere, in some sort of data structure, and handing that over.",
+          "createdAt": "2021-06-16T19:32:04Z",
+          "updatedAt": "2021-06-16T19:32:04Z"
+        },
+        {
+          "author": "martinduke",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Hi, first, just to be clear, by suggesting to move this to the PR I didn't mean to be dismissive about your comment! I just thought it's an easy fix - it seems not, my apologies!\r\n\r\nNo worries!\r\n\r\n> So, let's keep discussing here. I still see things very differently. First, your bullet list begins with \"App instantiates satisfiable transport properties\". The way I regard these properties is: they are atomary elements of an object. Attributes of a Preconnection object, in OO language terms. Members of a Preconnection record (or struct), in more old fashioned language terms. Not objects in their own right - and a Preconnection doesn't get a reference to them, it \"contains\" them (i.e., memory allocated for each).\r\n\r\nI think that's a fine approach, but it is not what we discussed at the interim. Your proposal would make the properties \"immutable\" once the preconnection formed.\r\n\r\ntp := TransportProperties.new()\r\npc1 := Preconnection.new(tp)\r\ntp.SetProperty(foo, true)\r\npc2 := Preconnection.new(tp)\r\n\r\nDo pc1 and pc2 have the same properties?  At the interim, we said yes! You're arguing no. FWIW, I agree with you, but this is something we should work out. Gorry's PR, IIUC, is trying to capture the interim's consensus.\r\n\r\n> So... either I'm totally wrong, or you're thinking of a very obscure language (you said C, which isn't SO obscure?), or the current draft is extremely ambiguous ... but then, about what? If others agree with my view of the world, then there must be something very bad in the text that misled you. We should fix it!\r\n>\r\n\r\nI believe the text is ambiguous enough that we may not have actual consensus on how this is supposed to work. To some extent we can say it's \"implementation dependent\" but IMO this would be a bad place for apps to have to flex to different data models.\r\n \r\n> Regarding \"Zooming out\": why, what's the issue? I don't personally think it matters very much if we define that changing things on a Preconnection can already fail or not, if that's what disturbs you - but we need to be able to hand over some input to the racing algorithm before trying to initiate or listen on a Connection. How else would you do it? I can see no way around collecting the application's requirements / requests somewhere, in some sort of data structure, and handing that over.\r\n\r\nYour perception of what the preconnection is doing is not what the group told me at the interim. See also my \"preconnection confusion\" email.\r\n\r\nThe preconn takes localEndpoints, remoteEndpoints, transportProperties, and securityProperties.\r\n\r\nIt simply stores all of this stuff, except for checking that the properties are satisfiable. It does *not* build a candidate tree, does not resolve FQDNs, and definitely does not do any racing. Two things:\r\n1) I object to TAPS taking a bunch of data in the preconnection and just storing it well before it's needed. Just send it on Initiate()!\r\n2) The preconnection could be much more active, building the candidate tree so that it's ready for racing. At the maximum, it could begin name resolution.\r\n\r\nThis is getting long so maybe I should write an email.\r\nIt may be that everyone is on the same page but me and we just need to clarify, or perhaps there is no true consensus on these points. They are kind of subtle when you're reviewing the drafts, but when I tried to implement them I found these concepts to be quite vaguely written and inconvenient to code in a low-level language.\r\n\r\n",
+          "createdAt": "2021-06-16T20:05:34Z",
+          "updatedAt": "2021-06-16T20:05:34Z"
+        },
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Maybe we can narrow things down again. This is a core piece of what you wrote:\r\n>tp := TransportProperties.new()\r\n>pc1 := Preconnection.new(tp)\r\n>tp.SetProperty(foo, true)\r\n>pc2 := Preconnection.new(tp)\r\n>\r\n>Do pc1 and pc2 have the same properties? At the interim, we said yes! You're arguing no.\r\n\r\nAha! I get it now. I think I misunderstood things at the interim, then, and the deep copy should already apply when creating a Preconnection. Would that be better?  (I think we should hear more voices!)\r\n\r\nTowards the end of your answer above, you say:\r\n> It simply stores all of this stuff, except for checking that the properties are satisfiable. It does not build a candidate tree, does not resolve FQDNs, and definitely does not do any racing\r\n\r\n... and I agree. However, you suggest other possibilities towards the end (your two things).\r\n\r\nFirst, don't they contradict each other?  FWIW, I don't think it would be against the current spec if a TAPS implementation started doing things early when it a Preconnection is created... I agree, name resolution could be one of the things to do right away, why wait. But, doing this requires handing over information early. Anyway I don't think we should *guarantee* that a TAPS system does anything before Initiate() (in the active open case) is called... but making it possible requires handing over data early.\r\n\r\nHm. I have a feeling that I'm sowing seeds of confusion. Do I represent the group consensus, or have I been misunderstanding things? I'm not sure anymore. It would be better for others to chime in.",
+          "createdAt": "2021-06-16T20:55:28Z",
+          "updatedAt": "2021-06-16T20:55:28Z"
+        },
+        {
+          "author": "martinduke",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I agree that we should from more voices. One quick point:\r\n>the deep copy should already apply when creating a Preconnection. Would that be better? \r\n\r\nConceptually, it's much cleaner. Unfortunately, it also means I'm doing a deepcopy twice: once from the object into the preconnection, and then again from the preconnection to the connection. Sounds expensive!\r\n\r\nWhich is why I'm gravitating to one of the two options. Either (1) build the candidate tree in the preconnection, so the connection doesn't need any of that stuff, or (2) don't store it needlessly in the preconn, to avoid a deep copy.\r\n\r\nAll this said, I am disinclined to blow up the whole conceptual model at this stage in the life of the doc, where Apple already has some deployed code.",
+          "createdAt": "2021-06-16T21:04:28Z",
+          "updatedAt": "2021-06-16T21:04:28Z"
+        },
+        {
+          "author": "martinduke",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "A quick glance at Apple's NetworkFramework makes me believe they don't have the concept of the Preconnection at all, which is informative to me.",
+          "createdAt": "2021-06-16T21:05:56Z",
+          "updatedAt": "2021-06-16T21:05:56Z"
         }
       ]
     }
@@ -69620,7 +69719,7 @@
       ],
       "body": "closes #808",
       "createdAt": "2021-06-11T14:06:54Z",
-      "updatedAt": "2021-06-11T16:43:23Z",
+      "updatedAt": "2021-06-16T10:44:40Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "c80574dcd331039ec0a80988d319d2031220efe8",
@@ -69698,6 +69797,78 @@
               "updatedAt": "2021-06-11T16:43:23Z"
             }
           ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg0ODI5MDg1",
+          "commit": {
+            "abbreviatedOid": "1f9e73c"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "I also wonder if this really does all that's requested in #808...",
+          "createdAt": "2021-06-16T07:42:39Z",
+          "updatedAt": "2021-06-16T07:52:59Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "```suggestion\r\nof the selected Protocol Stacks on a per-Connection and Message level.\r\n```\r\n\r\nI agree that @britram is nitpicking  :-)   ... because I think that pointing out that Message Properties only influence the send call will only make this harder to read, at no real benefit.",
+              "createdAt": "2021-06-16T07:42:39Z",
+              "updatedAt": "2021-06-16T07:52:59Z"
+            },
+            {
+              "originalPosition": 16,
+              "body": "I agree to remove it. The text below the Clone call explains it all, and it was revised not too long ago in a PR, so this sits with agreement behind it.\r\n\r\nA side note, we no longer talk about Connections being \"entangled\": the term only applies to their Connection Properties.  Also, using the term here before it's explained isn't good... at best, we could use the \"streams in a multi-streaming protocol\" example, but if you're missing this, it also fits better as an addition to the text below the call.",
+              "createdAt": "2021-06-16T07:48:35Z",
+              "updatedAt": "2021-06-16T07:52:59Z"
+            },
+            {
+              "originalPosition": 27,
+              "body": "The sentence that you included here is only making things more confusing, IMO. Suggest to remove it.",
+              "createdAt": "2021-06-16T07:52:02Z",
+              "updatedAt": "2021-06-16T07:52:59Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg1MDAxOTEy",
+          "commit": {
+            "abbreviatedOid": "1f9e73c"
+          },
+          "author": "abrunstrom",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-16T10:35:34Z",
+          "updatedAt": "2021-06-16T10:35:34Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "Agree to remove.",
+              "createdAt": "2021-06-16T10:35:34Z",
+              "updatedAt": "2021-06-16T10:35:34Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg1MDA5Mjgw",
+          "commit": {
+            "abbreviatedOid": "1f9e73c"
+          },
+          "author": "abrunstrom",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-16T10:44:39Z",
+          "updatedAt": "2021-06-16T10:44:40Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "I think a first modified sentence is sufficient \"Message Properties set on a Connection also apply only to that Connection\". Actually reading it again now I realize that it is the example that confuses things, because that talks about setting a Message Property on a Message, so maybe we can just remove the example as it does not belong in this section. ",
+              "createdAt": "2021-06-16T10:44:40Z",
+              "updatedAt": "2021-06-16T10:44:40Z"
+            }
+          ]
         }
       ]
     },
@@ -69742,7 +69913,7 @@
       ],
       "body": "Fix a bunch of nits",
       "createdAt": "2021-06-11T14:56:24Z",
-      "updatedAt": "2021-06-11T15:29:29Z",
+      "updatedAt": "2021-06-16T13:47:26Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "c80574dcd331039ec0a80988d319d2031220efe8",
@@ -69760,6 +69931,13 @@
           "body": "Looks good.",
           "createdAt": "2021-06-11T15:29:29Z",
           "updatedAt": "2021-06-11T15:29:29Z"
+        },
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I would just go ahead and merge it, but, sigh, it has a conflict...  I hope someone more git-savvy than me can solve this.",
+          "createdAt": "2021-06-16T13:47:26Z",
+          "updatedAt": "2021-06-16T13:47:26Z"
         }
       ],
       "reviews": [
@@ -69774,6 +69952,19 @@
           "body": "Looks good",
           "createdAt": "2021-06-11T15:11:41Z",
           "updatedAt": "2021-06-11T15:11:41Z",
+          "comments": []
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg1MTkxMTQz",
+          "commit": {
+            "abbreviatedOid": "83da2b0"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-06-16T13:46:43Z",
+          "updatedAt": "2021-06-16T13:46:43Z",
           "comments": []
         }
       ]
@@ -69792,7 +69983,7 @@
       ],
       "body": "closes #812 ",
       "createdAt": "2021-06-11T15:00:40Z",
-      "updatedAt": "2021-06-11T16:37:42Z",
+      "updatedAt": "2021-06-15T16:39:18Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "c80574dcd331039ec0a80988d319d2031220efe8",
@@ -69804,14 +69995,28 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg0MjQ1Mjg2",
+          "commit": {
+            "abbreviatedOid": "8d24814"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "This reflects what we agreed on, during the last interim.",
+          "createdAt": "2021-06-15T16:39:18Z",
+          "updatedAt": "2021-06-15T16:39:18Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 858,
       "id": "MDExOlB1bGxSZXF1ZXN0NjY4MjkxMTk2",
       "title": "PR to align Capacity profile with API",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/858",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gorryfair",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -69822,17 +70027,19 @@
       ],
       "body": "This is a first cut, I'll update next.",
       "createdAt": "2021-06-11T15:48:52Z",
-      "updatedAt": "2021-06-14T09:32:20Z",
+      "updatedAt": "2021-06-16T13:59:52Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "fc1d1dce7eb568f9035e63f2be47b7add67152df",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "gorryfair-patch-5",
       "headRefOid": "1cbcb83472f33741cf33ad121ad3e4c7d1fcdbee",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2021-06-16T13:59:52Z",
+      "mergedAt": "2021-06-16T13:59:52Z",
+      "mergedBy": "gorryfair",
+      "mergeCommit": {
+        "oid": "53d54d078fc360fb42e59b7ce46ce78d16df18dd"
+      },
       "comments": [],
       "reviews": [
         {
@@ -69854,6 +70061,19 @@
               "updatedAt": "2021-06-11T16:37:51Z"
             }
           ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg1MjAwOTI5",
+          "commit": {
+            "abbreviatedOid": "1cbcb83"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "LGTM, thanks!",
+          "createdAt": "2021-06-16T13:53:55Z",
+          "updatedAt": "2021-06-16T13:53:55Z",
+          "comments": []
         }
       ]
     },
@@ -69862,7 +70082,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjY5Mzc5ODA4",
       "title": "Freezing pre-connection state.",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/860",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gorryfair",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -69872,18 +70092,35 @@
       ],
       "body": "To clarify when and how objects are froze.  #859\r\n\r\nArch: No current change needed\r\nAPI: Clarify \r\nImpl: Explain how\r\n",
       "createdAt": "2021-06-14T08:54:49Z",
-      "updatedAt": "2021-06-14T17:28:17Z",
+      "updatedAt": "2021-06-16T14:01:56Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "fdea22b1f5acaabecd5c5a6c576d8f64a111833d",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "gorryfair-patch-deep-properties",
-      "headRefOid": "6018ca0b0f9af85677d5a52ad35741ce828ffa44",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "bfb28e44a2cbcf1b32ca59efc4383953015d5837",
+      "closedAt": "2021-06-16T14:01:52Z",
+      "mergedAt": "2021-06-16T14:01:52Z",
+      "mergedBy": "gorryfair",
+      "mergeCommit": {
+        "oid": "6f07eb75c5e847e37460140cc4b57bb406acd320"
+      },
+      "comments": [
+        {
+          "author": "martinduke",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "LGTM.",
+          "createdAt": "2021-06-15T17:44:34Z",
+          "updatedAt": "2021-06-15T17:44:34Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm merging this I think I have resolved the issues I was addressing, if there are still issues, let's open a new PR.",
+          "createdAt": "2021-06-16T14:01:56Z",
+          "updatedAt": "2021-06-16T14:01:56Z"
+        }
+      ],
       "reviews": [
         {
           "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjgyNzk2MTg5",
@@ -70024,6 +70261,184 @@
               "updatedAt": "2021-06-14T16:55:46Z"
             }
           ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg0NTQxMjUw",
+          "commit": {
+            "abbreviatedOid": "6018ca0"
+          },
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-15T22:22:08Z",
+          "updatedAt": "2021-06-15T22:22:08Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "The last two sentences here still seem vague and contradictory with the below. I think it'd be clearer just to remove them, and leave the detailed following explanations.",
+              "createdAt": "2021-06-15T22:22:08Z",
+              "updatedAt": "2021-06-15T22:22:08Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg0Nzg5NTI1",
+          "commit": {
+            "abbreviatedOid": "6018ca0"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-16T06:57:59Z",
+          "updatedAt": "2021-06-16T06:57:59Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "@martinduke :  The expected operation is now clearer, csp suggests simply not mentioning the \"update during pre-connection\" possibility. What do you think?",
+              "createdAt": "2021-06-16T06:57:59Z",
+              "updatedAt": "2021-06-16T06:57:59Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg0ODc2MzM3",
+          "commit": {
+            "abbreviatedOid": "6018ca0"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "This is going in a good direction, I like it!\r\n\r\nCan I make a request to change one more thing as a part of this PR, because it really belongs here?\r\n\r\nThis sentence in section 3.1 of the implementation draft is broken:\r\n\r\n\"To avoid allocating resources, it is important that such cases fail as early as possible, e.g., prior to endpoint resolution, only to find out later that there is no protocol that satisfies the requirements.\"\r\n\r\nPlese remove the \"only to find out later...\" part from it.",
+          "createdAt": "2021-06-16T08:29:52Z",
+          "updatedAt": "2021-06-16T08:38:01Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "I have to agree with @csperkins that the original was clearer, mainly for being more explicit - but I think that, after looking at this for some time, I now see where the problem is (which @csperkins is perhaps missing, and which @gorryfair is perhaps trying to fix).\r\n\r\nI suspect that @gorryfair wants to avoid that we say, here, that properties on a Connection cannot be changed after creating an outbound Connection or a Listener. This would, of course, be wrong, but the text says that they are all \"immutable\", which gives a wrong indication.\r\n\r\nThen again, the proposed text now doesn't look like a good fix to me. E.g., it says \"an implementation could allow applications to...\", followed by \"however, applications should not do this\". This is awkward. Maybe you meant to write \"Connection\", not \"preconnection\" in the  second sentence?\r\n\r\nHere's a proposal: a change to the original text that avoids falsely indicating that everything becomes immutable:\r\n\r\n***\r\nPreconnection objects should be implemented as bundles of properties that an application can both read and write. A Preconnection object influences a Connection only at one point in time: when the Connection is created. Once a Preconnection has been used to create an outbound Connection or a Listener, the implementation should ensure that the copy of the properties held by the Connection or Listener is not affected when the application makes changes to the Preconnection object. This may involve performing a deep-copy, copying the object with all the objects it references.\r\n***\r\n\r\nI also removed the trailing \"if the application is still able...\" because I don't think this added clarity.",
+              "createdAt": "2021-06-16T08:29:52Z",
+              "updatedAt": "2021-06-16T08:38:01Z"
+            },
+            {
+              "originalPosition": 10,
+              "body": "Here, the original text said \"may ultimately represent the interface into\", and the proposed text now says \"may ultimately interface to\"...  all this reads a bit clumsy to me.\r\n\r\nCould we not just say \"may ultimately represent a single instance ......\"\r\nMaybe it's a bit vague, that's in the nature of the word \"represent\", but I think the meaning is clear enough and this would read better.",
+              "createdAt": "2021-06-16T08:32:48Z",
+              "updatedAt": "2021-06-16T08:38:01Z"
+            },
+            {
+              "originalPosition": 11,
+              "body": "I see that this adds the explicit parts from the original text. I like it for being clear about what's mutable and what isn't, and I still think that the whole thing would be best with my suggested text change above - this here just adds further clarification.\r\n\r\nThe first sentence of this paragraph says \"... is independent of other connections.\"  I guess this should really say \"\"... is independent of any other connections that are not part of the same Connection Group.\"",
+              "createdAt": "2021-06-16T08:35:38Z",
+              "updatedAt": "2021-06-16T08:38:01Z"
+            },
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\nAlthough Connection Properties (see {{connection-props}}) can be set during pre-establishment, they may be changed later. They are used to inform decisions made during establishment and to fine-tune the established connection. Calling Initiate on a Preconnection creates an outbound Connection or a Listener, and the Selection Properties remain readable from the Connection or Listener, but become immutable. \r\n```",
+              "createdAt": "2021-06-16T08:36:21Z",
+              "updatedAt": "2021-06-16T08:38:01Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg0ODk3MTQ2",
+          "commit": {
+            "abbreviatedOid": "17132e4"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-16T08:49:50Z",
+          "updatedAt": "2021-06-16T08:49:50Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "Yes, that didn't seem right to me - I would like to align with the Arch and say \"instance\"",
+              "createdAt": "2021-06-16T08:49:50Z",
+              "updatedAt": "2021-06-16T08:49:50Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg0OTA1MjQ1",
+          "commit": {
+            "abbreviatedOid": "53a8967"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-16T08:57:02Z",
+          "updatedAt": "2021-06-16T08:57:03Z",
+          "comments": [
+            {
+              "originalPosition": 10,
+              "body": "Could is /use/ better than /represent/?:  \r\n(1) For example, the same Connection object may ultimately use a single instance of one transport protocol ",
+              "createdAt": "2021-06-16T08:57:03Z",
+              "updatedAt": "2021-06-16T08:57:03Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg0OTE5NzI0",
+          "commit": {
+            "abbreviatedOid": "bfb28e4"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-16T09:10:34Z",
+          "updatedAt": "2021-06-16T09:10:34Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "I tried, and merged. Please check the new diff and suggest improvements.",
+              "createdAt": "2021-06-16T09:10:34Z",
+              "updatedAt": "2021-06-16T09:10:34Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg0OTIwMjAz",
+          "commit": {
+            "abbreviatedOid": "bfb28e4"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-06-16T09:11:03Z",
+          "updatedAt": "2021-06-16T09:11:04Z",
+          "comments": [
+            {
+              "originalPosition": 11,
+              "body": "I think this was done.",
+              "createdAt": "2021-06-16T09:11:03Z",
+              "updatedAt": "2021-06-16T09:11:04Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg1MTgyMDk1",
+          "commit": {
+            "abbreviatedOid": "bfb28e4"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-06-16T13:39:43Z",
+          "updatedAt": "2021-06-16T13:40:55Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "FWIW, I agree with this update. Thanks!",
+              "createdAt": "2021-06-16T13:39:44Z",
+              "updatedAt": "2021-06-16T13:40:55Z"
+            }
+          ]
         }
       ]
     },
@@ -70032,26 +70447,50 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjY5NDEyMTYw",
       "title": "Change B.2.3. unreliable-datagram profile",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/861",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gorryfair",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Update and explain choices\r\nSeeks to address #821 ",
       "createdAt": "2021-06-14T09:39:14Z",
-      "updatedAt": "2021-06-14T09:39:14Z",
+      "updatedAt": "2021-06-15T16:50:11Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "fdea22b1f5acaabecd5c5a6c576d8f64a111833d",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "gorryfair-patch-4",
       "headRefOid": "a3a7cd410bb2f8928f74210ac55d0246b220e813",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "closedAt": "2021-06-15T16:50:11Z",
+      "mergedAt": "2021-06-15T16:50:11Z",
+      "mergedBy": "gorryfair",
+      "mergeCommit": {
+        "oid": "6db57a457feb37767373157b5251023d060164bc"
+      },
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Merged copy after Interim",
+          "createdAt": "2021-06-15T16:49:31Z",
+          "updatedAt": "2021-06-15T16:49:31Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njg0MjQzMTMz",
+          "commit": {
+            "abbreviatedOid": "a3a7cd4"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "I like the way this is phrased, it gives a good argument for the default property values.",
+          "createdAt": "2021-06-15T16:37:04Z",
+          "updatedAt": "2021-06-15T16:37:04Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 862,
