@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-06-20T00:20:02.318532+00:00",
+  "timestamp": "2021-06-27T00:20:31.707072+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -23278,7 +23278,7 @@
       ],
       "body": "The interface draft, section 4.1.1, talks about multicast endpoints, but doesn't mention whether such endpoints can be used with Rendezvous(). ",
       "createdAt": "2021-06-11T14:04:17Z",
-      "updatedAt": "2021-06-16T03:56:06Z",
+      "updatedAt": "2021-06-24T11:24:05Z",
       "closedAt": null,
       "comments": [
         {
@@ -23343,6 +23343,13 @@
           "body": "I don't understand the claim that SSM would require explicit send-to-group or receive-from-group calls.  To me if you've made a local endpoint with a group address, the connection is non-sending, and if you made a remote endpoint with a group address, the connection is non-receiving.\r\n\r\nWith that said: a search for \"multicast stun\" did find what seems like a non-IETF STUN usage proposal that does something with multicast, so maybe somebody's using it?  I have no idea: https://ieeexplore.ieee.org/document/7275794\r\n\r\nAnyway, my starting assumption was that if you make a multicast group endpoint and give it a \"withStunServer\" and use it in a preconnection that you Rendezvous(), you'll get an error unless the stack and the server thinks it knows what to do with that, in which case sending or receiving will just work if there's a remote app that did the opposite.\r\n\r\nIn the (unlikely?) case the stack does support it, like with unicast, I guess I'd assume if you did a sending preconnection (remote group address), you'd want to do the withStunServer on the remote endpoint, and if you did a receiving preconnection (local group address), you'd do the withStunServer on the local endpoint.\r\n\r\nI guess also I'd assume that if you'd like bidirectional ASM, you'll want to make 2 separate connections, one for sending (with the group address as the remote endpoint) and the other for receiving (with the group address as the local endpoint), and on the receive one you won't provide a remote address.\r\n\r\nAFAICT all the above is sort of implicit in what's already written in the spec, and I'm not sure it needs spelling out if that sort of usage would work in a stack that cared to implement it.\r\n\r\nBut I do worry I'm missing something, and it could be annoying to find out in 5 years that the API structurally doesn't work with any kind of Rendezvous because it was specified wrong.  And on that score I'm worried that I might not be fully understanding what happens in a Rendezvous.  And when I tried to follow the pseudocode example in section 3.1.3, I noticed there's a complicated bit that's just comments as an exercise for the reader, which perhaps contains some assumptions I haven't really understood:\r\n\r\n~~~\r\n// ...Send the ResolvedLocal list to peer via signalling channel\r\n// ...Receive a list of RemoteCandidates from peer via signalling channel\r\n~~~\r\n\r\nAnyway, does anyone know what the STUN/TURN servers actually do here?  Taking a step back from what I'd expect out of an API that did support it, I'd think defining a new usage for STUN is probably out of scope for this doc, if it's not written up and deployed somewhere already.",
           "createdAt": "2021-06-16T03:56:06Z",
           "updatedAt": "2021-06-16T03:56:06Z"
+        },
+        {
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "For SSM, the model of `Initiate()` to create a send-only connection and `Listen()` to create a receive-only connection makes sense and matches the semantic of the multicast group. The sender creates the group, and everyone else listens in.\r\n\r\nFor ASM, the underlying group is peer-to-peer and members can both send and receive. It's symmetric. To me, that doesn't fit the asymmetric model of `Initiate()` and `Listen()`, and seems a better conceptual fit for a `Rendezvous()` semantic. \r\n\r\nA `Rendezvous()` will typically devolve to STUN/ICE for unicast, but I don't see that it has to use STUN, and I don't see that it would use STUN for multicast. The key difference is that `Rendezvous()` is peer-to-peer while `Initiate()`/`Listen()` are client-server, and I view ASM as peer-to-peer and SSM as closer to client-server.\r\n\r\n",
+          "createdAt": "2021-06-24T11:24:04Z",
+          "updatedAt": "2021-06-24T11:24:04Z"
         }
       ]
     },
@@ -23392,7 +23399,7 @@
       ],
       "body": "Discussion at the 11 Jun 2021 Interim:\r\n\r\nThe content of any objects passed as part of NewPreconnection(), Initiate(), Listen(), or Rendezvous() is frozen at the moment of Initiate/Listen/Rendezvous.\r\n\r\nThus, objects sent to NewPreconnection (Endpoints and Properties) are mutable, and it might be possible (depending on the implementation) to change them in the preconnection by modifying the object directly. Applications should either\r\n(1) Instantiate the connection before modifying Endpoint or Property objects for another preconnection.\r\n(2) If there are open preconnections that will initiate further connections, create new instances of Properties and Endpoints to modify their attributes in a different preconnection.\r\n\r\nThere are other ways to do this. For example, NewPreconnection() could do a deep copy of the properties and endpoints, and therefore reusing or freeing the argument objects would always be safe. But this was not the sense of the group at the interim.\r\n\r\nWhile this issue is uncomfortably close to the \"implementation dependent\", not having fixed assumptions about this increasing the friction of switching platforms using TAPS, and would probably be the source of nasty bugs.",
       "createdAt": "2021-06-11T16:30:12Z",
-      "updatedAt": "2021-06-17T16:30:26Z",
+      "updatedAt": "2021-06-24T23:04:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -23492,6 +23499,20 @@
           "body": "If we want to forbid the first and allow the second, then the answer would be to make pc1 do a deep copy of tp when created.\r\n\r\nThough doing two deep copies seems unnecessarily expensive.\r\n \r\n> Well, things might be different to the way I thought, so....\r\n> \r\n> I didn't think it was ever wise to do:\r\n> \r\n> tp := TransportProperties.new()\r\n> pc1 := Preconnection.new(tp)\r\n> tp.SetProperty(foo, true)\r\n> pc2 := Preconnection.new(tp)\r\n> c1 := pc1.Initiate()\r\n> c2 := pc2.Initiate()\r\n> \r\n> But it did seem OK to do:\r\n> \r\n> tp := TransportProperties.new()\r\n> pc1 := Preconnection.new(tp)\r\n> c1 := pc1.Initiate()\r\n> \r\n> tp.SetProperty(foo, true)\r\n> pc2 := Preconnection.new(tp)\r\n> c2 := pc2.Initiate()\r\n> \r\n> I thought it was OK to add remote information to a preconnection, as a part of some out of band signalling. To do clever traversal stuff.\r\n> \r\n> Gorry\r\n\r\n",
           "createdAt": "2021-06-17T16:30:26Z",
           "updatedAt": "2021-06-17T16:30:26Z"
+        },
+        {
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm probably confused, but I don't understand why we can't rely on the usual programming language semantics for whether parameters are passed by reference, copied, etc. Preconnections and transport properties are just structs, and whatever value they have when `Initiate()` is called is used.",
+          "createdAt": "2021-06-24T11:09:52Z",
+          "updatedAt": "2021-06-24T11:09:52Z"
+        },
+        {
+          "author": "tfpauly",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I very much agree with @csperkins that this is down to programming language semantics. The preconnection is just a \"struct\", a bunch of data grouped together. Let's not overcomplicate it.",
+          "createdAt": "2021-06-24T23:04:20Z",
+          "updatedAt": "2021-06-24T23:04:20Z"
         }
       ]
     }
