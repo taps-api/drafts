@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-06-27T00:20:31.707072+00:00",
+  "timestamp": "2021-06-29T00:18:16.517308+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -23278,7 +23278,7 @@
       ],
       "body": "The interface draft, section 4.1.1, talks about multicast endpoints, but doesn't mention whether such endpoints can be used with Rendezvous(). ",
       "createdAt": "2021-06-11T14:04:17Z",
-      "updatedAt": "2021-06-24T11:24:05Z",
+      "updatedAt": "2021-06-28T19:38:30Z",
       "closedAt": null,
       "comments": [
         {
@@ -23350,6 +23350,20 @@
           "body": "For SSM, the model of `Initiate()` to create a send-only connection and `Listen()` to create a receive-only connection makes sense and matches the semantic of the multicast group. The sender creates the group, and everyone else listens in.\r\n\r\nFor ASM, the underlying group is peer-to-peer and members can both send and receive. It's symmetric. To me, that doesn't fit the asymmetric model of `Initiate()` and `Listen()`, and seems a better conceptual fit for a `Rendezvous()` semantic. \r\n\r\nA `Rendezvous()` will typically devolve to STUN/ICE for unicast, but I don't see that it has to use STUN, and I don't see that it would use STUN for multicast. The key difference is that `Rendezvous()` is peer-to-peer while `Initiate()`/`Listen()` are client-server, and I view ASM as peer-to-peer and SSM as closer to client-server.\r\n\r\n",
           "createdAt": "2021-06-24T11:24:04Z",
           "updatedAt": "2021-06-24T11:24:04Z"
+        },
+        {
+          "author": "GrumpyOldTroll",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Ah, ok, thanks for explaining.  I guess the idea here is to have bidirectional ASM represented as a single connection object instead of 2 separate ones?\r\n\r\nI guess that's a way to consider it, but I think this conflicts with the local/remote endpoint concept, more than it conflicts with Initiate/Listen, with the problem being that you both receive with the group address and send to the group address.\r\n\r\nIn general, for a UDP connection it's possible to just Initiate, followed by both Send and Receive, correct?  So the trick here if we need a bidirectional Connection for multicast (whether ASM or SSM) would maybe be to do something like \"preconnection.BidirMulticastEndpoint(endpoint).WithASM()\" (with default as SSM-only, pulled from the addresses in the remote endpoint and using ASM only if WithASM was called), and then call Initiate, with both Receive and Send available.\r\n\r\nThat would be doable, either now or as a later (or optional) extension if it seems useful enough.  But either way, Initiate() seems to me like a better fit a sending or bidirectional UDP than Rendezvous().",
+          "createdAt": "2021-06-28T05:11:54Z",
+          "updatedAt": "2021-06-28T05:11:54Z"
+        },
+        {
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Ah, ok, thanks for explaining. I guess the idea here is to have bidirectional ASM represented as a single connection object instead of 2 separate ones?\r\n\r\nYes.\r\n\r\n> In general, for a UDP connection it's possible to just Initiate, followed by both Send and Receive, correct?\r\n\r\nI guess so, although UDP also doesn't fit well with the model - the actual semantics depend on the upper layer protocol implemented over UDP, and plain UDP isn't useful except as a substrate. For QUIC you want Initiate/Listen, but I'd argue that Rendezvous is the right model for unicast RTP since it's naturally peer-to-peer and wants NAT traversal. \r\n\r\n`Initiate()` for bidirectional UDP would work, but I'm not sure I agree that it's right.",
+          "createdAt": "2021-06-28T19:38:30Z",
+          "updatedAt": "2021-06-28T19:38:30Z"
         }
       ]
     },
@@ -23399,7 +23413,7 @@
       ],
       "body": "Discussion at the 11 Jun 2021 Interim:\r\n\r\nThe content of any objects passed as part of NewPreconnection(), Initiate(), Listen(), or Rendezvous() is frozen at the moment of Initiate/Listen/Rendezvous.\r\n\r\nThus, objects sent to NewPreconnection (Endpoints and Properties) are mutable, and it might be possible (depending on the implementation) to change them in the preconnection by modifying the object directly. Applications should either\r\n(1) Instantiate the connection before modifying Endpoint or Property objects for another preconnection.\r\n(2) If there are open preconnections that will initiate further connections, create new instances of Properties and Endpoints to modify their attributes in a different preconnection.\r\n\r\nThere are other ways to do this. For example, NewPreconnection() could do a deep copy of the properties and endpoints, and therefore reusing or freeing the argument objects would always be safe. But this was not the sense of the group at the interim.\r\n\r\nWhile this issue is uncomfortably close to the \"implementation dependent\", not having fixed assumptions about this increasing the friction of switching platforms using TAPS, and would probably be the source of nasty bugs.",
       "createdAt": "2021-06-11T16:30:12Z",
-      "updatedAt": "2021-06-24T23:04:20Z",
+      "updatedAt": "2021-06-28T08:43:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -23513,6 +23527,13 @@
           "body": "I very much agree with @csperkins that this is down to programming language semantics. The preconnection is just a \"struct\", a bunch of data grouped together. Let's not overcomplicate it.",
           "createdAt": "2021-06-24T23:04:20Z",
           "updatedAt": "2021-06-24T23:04:20Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Please can we try amend our text to explain a little more that this is the case?\r\n I think this (possibly with my example above) clarifies what the purpose is, and we might be able to close this after we have that. My suggestion is a small explanation on re-use of a previous pre-connection after section 3.1.2.",
+          "createdAt": "2021-06-28T08:07:28Z",
+          "updatedAt": "2021-06-28T08:43:17Z"
         }
       ]
     }
@@ -70577,6 +70598,37 @@
           "updatedAt": "2021-06-14T11:21:44Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 863,
+      "id": "MDExOlB1bGxSZXF1ZXN0Njc4ODE5NzQ3",
+      "title": "Re-group managing  properties & protocol instances",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/863",
+      "state": "OPEN",
+      "author": "gorryfair",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "gorryfair"
+      ],
+      "labels": [
+        "API",
+        "editorial"
+      ],
+      "body": "In response to #813 ... This moves the discussion of protocol instances into bullet 4, and the properties (mainly selection) into bullet 5. It does not intend to change any text, and is intended to avoid what appeared to be overlap.",
+      "createdAt": "2021-06-28T08:19:37Z",
+      "updatedAt": "2021-06-28T08:20:08Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "6f07eb75c5e847e37460140cc4b57bb406acd320",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "gorryfair-patch-managing",
+      "headRefOid": "908888509c91453e5a0b542c29193765ac14b064",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
