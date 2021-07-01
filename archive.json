@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-06-29T00:18:16.517308+00:00",
+  "timestamp": "2021-07-01T00:18:50.985636+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -23278,7 +23278,7 @@
       ],
       "body": "The interface draft, section 4.1.1, talks about multicast endpoints, but doesn't mention whether such endpoints can be used with Rendezvous(). ",
       "createdAt": "2021-06-11T14:04:17Z",
-      "updatedAt": "2021-06-28T19:38:30Z",
+      "updatedAt": "2021-06-29T19:38:53Z",
       "closedAt": null,
       "comments": [
         {
@@ -23364,6 +23364,13 @@
           "body": "> Ah, ok, thanks for explaining. I guess the idea here is to have bidirectional ASM represented as a single connection object instead of 2 separate ones?\r\n\r\nYes.\r\n\r\n> In general, for a UDP connection it's possible to just Initiate, followed by both Send and Receive, correct?\r\n\r\nI guess so, although UDP also doesn't fit well with the model - the actual semantics depend on the upper layer protocol implemented over UDP, and plain UDP isn't useful except as a substrate. For QUIC you want Initiate/Listen, but I'd argue that Rendezvous is the right model for unicast RTP since it's naturally peer-to-peer and wants NAT traversal. \r\n\r\n`Initiate()` for bidirectional UDP would work, but I'm not sure I agree that it's right.",
           "createdAt": "2021-06-28T19:38:30Z",
           "updatedAt": "2021-06-28T19:38:30Z"
+        },
+        {
+          "author": "GrumpyOldTroll",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Ok, after one more pass at reading Rendezvous text in the draft I'm starting to get it.  That's an interesting point about generalized peer to peer connections, I don't think I had grasped that difference between this API and the way sockets are used.\r\n\r\nBacking up a bit further, I think I'm also finally understanding something I missed in an earlier comment from more than a year ago when somebody tried to make the case that Listen() should be the call the sender side of a multicast connection makes, and Initiate() should be the receiver side.  That position makes more sense to me now that I'm finally realizing this API is trying to normalize the concept of clients vs servers vs peers at the app layer, rather than describing socket-like things to do.\r\n\r\nI think maybe there is a wider issue here that this naming scheme is fundamentally confusing when you're looking at a non-TCP-like app.  Maybe \"Listen()\" should be renamed to \"ServerInitiate()\", \"Initiate()\" should be renamed to \"ClientInitiate()\", and \"Rendezvous()\" should be renamed to \"PeerInitiate()\"?\r\n\r\nUnder that naming scheme it would make complete sense for a multicast sender doing a ServerInitiate to get an immediate unidirectional sending Connection object, whereas it makes no sense at all to get that behavior out of a call named \"Listen\".\r\n\r\nI guess this probably needs a list discussion.  Now that you've got me understanding what the viewpoint was that drove these comments, I think the right thing to do is probably to fix all 3 drafts to make it explicit that the these APIs are designed to support 2 different kinds of connections (Client-Server or Peer-Peer) with 3 different roles, and to start the connection with a call that explicitly declares the role this connection object will be playing, and to name the initiation calls to match that.\r\n\r\nIf that ends up matching with the wg consensus, then I agree the multicast section needs to be refactored to make ServerInitiate() be similar to the action from today's Initiate(), and ClientInitiate() to be the action from today's Listen(), and that in this case a PeerInitiate() would be good to specify also, as well as adding a call to add a GroupEndpoint (with an ASM/SSM selector) that can be used to support bidirectional multicast traffic.  To me this sounds like a design improvement to the API, and thus the right thing to do.\r\n\r\nIf the group vetoes that direction and chooses to stick with the current naming scheme that describes things that map onto socket behaviors, then I think it's better to stick with the current approach.\r\n\r\nAlso, the claim that UDP is only useful as a substrate seems at odds with the text in the current draft.  The explanation of what a connection is explicitly mentions plain UDP as one possibility:\r\nhttps://ietf-tapswg.github.io/api-drafts/draft-ietf-taps-arch.html#section-4.1.2\r\n\r\n\"Connection: A Connection object represents one or more active transport protocol instances that can send and/or receive Messages between local and remote systems. It holds state pertaining to the underlying transport protocol instances and any ongoing data transfers. This represents, for example, an active Connection in a connection-oriented protocol such as TCP, or a fully-specified 5-tuple for a connectionless protocol such as UDP.\"\r\n\r\nThis reinforces my suspicion that this issue is not specifically about multicast, but rather about the confusing names of the connection initiation operations, where multicast is one example that highlights the problem well.\r\n\r\nI'm glad you raised the issue, I think I'm finally starting to understand what you mean and I think there is a very good point in here that rates to make this API better :)  But we probably need to take this to the list, I don't think this should be taken as a minor \"fix up the multicast section\" point, if I'm understanding it correctly.",
+          "createdAt": "2021-06-29T19:37:05Z",
+          "updatedAt": "2021-06-29T19:38:53Z"
         }
       ]
     },
@@ -23536,6 +23543,38 @@
           "updatedAt": "2021-06-28T08:43:17Z"
         }
       ]
+    },
+    {
+      "number": 864,
+      "id": "MDU6SXNzdWU5MzI4NDc5OTU=",
+      "title": "Are scoped IPv6 address (and zone indexes in particular) supported?",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/864",
+      "state": "OPEN",
+      "author": "dhobsd",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Sections 4.1 and 4.1.3 introduce `WithIPv6Address` to configure an Endpoint Object. The address supplied in examples appears to be an address literal. However, Section 1.1 does not define any types explicitly associated with an internet address -- `Integer` or `Numeric` could work, but I don't think that's the intent for these APIs, either. Section 3.2.2 does not extend this. \r\n\r\nIt's unclear whether this literal is intended to support IPv6 scoped addresses as described in [RFC4007]. While this RFC describes a textual representation (possibly not in line with the goals of the API), [RFC6874] describes how to represent zone indexes in an address literal.\r\n\r\nIf zone indexes are not intended to be supported, this could be clarified by, when \"IPv4 and IPv6 address\" is mentioned in section 4.1, also citing [RFC791] and [RFC4007] with the respective address family.\r\n\r\nIf zone indexes _are_ intended to be supported, ambiguity exists around the use of `WithIPv6Address` and `WithInterface` on a Local Endpoint, where the supplied address has a zone index that does not match the supplied interface. This could be clarified by:\r\n\r\n 1. Defining type names that represent IPv4 and IPv6 addresses in section 1.1.\r\n 2. Specifying the properties of an address literal supported by that type (referencing [RFC791] for IPv4 and both [RFC4007] and [RFC6874] for IPv6).\r\n 3. Clarifying in section 4.1 that \"IPv4 or IPv6 address\" are of the respective type described in section 1.1 when used in `WithIPv4Address` or `WithIPv6Address`.\r\n 4. Clarifying the behavior of zone index and interface choices on a Local Endpoint in a new section 4.1.4. This may tie in to #859 to some extent in that this is unlikely to be discoverable until `Initiate` is called.\r\n\r\n[RFC791]: https://datatracker.ietf.org/doc/html/rfc791\r\n[RFC4007]: https://datatracker.ietf.org/doc/html/rfc4007\r\n[RFC6874]: https://datatracker.ietf.org/doc/html/rfc6874",
+      "createdAt": "2021-06-29T15:42:07Z",
+      "updatedAt": "2021-06-29T15:42:07Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 865,
+      "id": "MDU6SXNzdWU5MzI5MjM1NTk=",
+      "title": "Should Endpoint Object identifiers be discoverable?",
+      "url": "https://github.com/ietf-tapswg/api-drafts/issues/865",
+      "state": "OPEN",
+      "author": "dhobsd",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "It feels to me like there's a bit of a gap between how software ought to discover Endpoint Object identifiers for Remote Endpoints versus Local Endpoints. Remote Endpoint identifiers are likely to be defined by the kind of software being used acting on some user input (web browser requesting a page, DNS server recursing, etc.), and these identifiers are resolved through existing internet architecture. Importantly, there's not really any way to check a valid input would work until `Initiate` for a Remote Endpoint.\r\n\r\nThis isn't really true for identifiers on Local Endpoints. While it's true that discovering these things is system-specific, a TAPS API implementation ought to provide a vehicle for discovering what inputs are valid. Two reasons I think it's reasonable to support discovery of local addresses and interfaces include:\r\n\r\n * It'd be unfortunate for TAPS-consuming software to rely on system-specific APIs to implement a UX for configuring that software.\r\n * Given diversity of public cloud offerings and wide use of multi-cloud deployments, it's reasonable to expect folks to want to dynamically discover what local network addresses and interfaces exist in their environment.\r\n\r\nIf the intent is to not define an API to discover these identifiers, the document should be clarified to discuss what Errors can be returned by `WithInterface` and `WithIPv[46]Address` Actions on Local Endpoints. (This is coming from a perspective that \"error early, error often\" is a best practice, which is admittedly subjective.)\r\n\r\nIf there is agreement to add (for example) `GetInterfaces` and `GetIPv[46]Addresses` Actions on a Local Endpoint, these should be documented. Further, the `WithInterface` and `WithIPv[46]Address` Actions on a Local Endpoint should be described to return an Error when the supplied input would not exist in the results returned by the corresponding `Get<identifier>` call at the time the `With<identifier>` Action was called.\r\n\r\nIn either case, it would be useful to mention that a successful invocation of a `With<identifier>` Action is not a guarantee that initiating the precondition will succeed.",
+      "createdAt": "2021-06-29T17:04:35Z",
+      "updatedAt": "2021-06-29T17:04:35Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
