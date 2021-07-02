@@ -5,7 +5,7 @@
 TAPS Working Group                                      B. Trammell, Ed.
 Internet-Draft                                   Google Switzerland GmbH
 Intended status: Standards Track                           M. Welzl, Ed.
-Expires: 30 December 2021                             University of Oslo
+Expires: 3 January 2022                               University of Oslo
                                                              T. Enghardt
                                                                  Netflix
                                                             G. Fairhurst
@@ -22,7 +22,7 @@ Expires: 30 December 2021                             University of Oslo
                                                               Apple Inc.
                                                                  K. Rose
                                                Akamai Technologies, Inc.
-                                                            28 June 2021
+                                                             2 July 2021
 
 
      An Abstract Application Layer Interface to Transport Services
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 December 2021.
+   This Internet-Draft will expire on 3 January 2022.
 
 Copyright Notice
 
@@ -1844,7 +1844,7 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
    *  For Connections that are Established or Closing: Transport
       Properties that the application specified on the Preconnection.
       Selection Properties indicate whether or not the Connection has or
-      offers a certain Selection Property, see Section 4.2
+      offers a certain Selection Property, see Section 4.2.
       The actually instantiated protocol stack might not match all
       Protocol Selection Properties that the application specified on
       the Preconnection.  For example, a certain Protocol Selection
