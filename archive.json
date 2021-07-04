@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-07-01T00:18:50.985636+00:00",
+  "timestamp": "2021-07-04T00:17:17.793826+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -22765,9 +22765,17 @@
       ],
       "body": "I do not understand the relationship between bullets four and five. They seem to overlap?",
       "createdAt": "2021-04-30T23:05:10Z",
-      "updatedAt": "2021-05-07T15:49:39Z",
+      "updatedAt": "2021-07-02T07:24:40Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@abrunstrom : Anna, is this resolved by this PR: Re-group managing properties & protocol instances #863?",
+          "createdAt": "2021-07-02T07:24:40Z",
+          "updatedAt": "2021-07-02T07:24:40Z"
+        }
+      ]
     },
     {
       "number": 814,
@@ -70656,19 +70664,40 @@
       ],
       "body": "In response to #813 ... This moves the discussion of protocol instances into bullet 4, and the properties (mainly selection) into bullet 5. It does not intend to change any text, and is intended to avoid what appeared to be overlap.",
       "createdAt": "2021-06-28T08:19:37Z",
-      "updatedAt": "2021-06-28T08:20:08Z",
+      "updatedAt": "2021-07-02T07:20:58Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "6f07eb75c5e847e37460140cc4b57bb406acd320",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "gorryfair-patch-managing",
-      "headRefOid": "908888509c91453e5a0b542c29193765ac14b064",
+      "headRefOid": "d000a3b5b2ec51f44aa0183a3c46f918c80092b8",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njk2ODc5Mjc4",
+          "commit": {
+            "abbreviatedOid": "9088885"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "LGTM, but note that I marked a nit (missing full stop).",
+          "createdAt": "2021-07-01T06:49:14Z",
+          "updatedAt": "2021-07-01T06:50:08Z",
+          "comments": [
+            {
+              "originalPosition": 20,
+              "body": "```suggestion\r\n  a certain Selection Property, see {{selection-props}}.   \r\n```",
+              "createdAt": "2021-07-01T06:49:14Z",
+              "updatedAt": "2021-07-01T06:50:08Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
