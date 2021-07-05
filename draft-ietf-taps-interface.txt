@@ -5,7 +5,7 @@
 TAPS Working Group                                      B. Trammell, Ed.
 Internet-Draft                                   Google Switzerland GmbH
 Intended status: Standards Track                           M. Welzl, Ed.
-Expires: 18 December 2021                             University of Oslo
+Expires: 6 January 2022                               University of Oslo
                                                              T. Enghardt
                                                                  Netflix
                                                             G. Fairhurst
@@ -22,7 +22,7 @@ Expires: 18 December 2021                             University of Oslo
                                                               Apple Inc.
                                                                  K. Rose
                                                Akamai Technologies, Inc.
-                                                            16 June 2021
+                                                             5 July 2021
 
 
      An Abstract Application Layer Interface to Transport Services
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 December 2021.
+   This Internet-Draft will expire on 6 January 2022.
 
 Copyright Notice
 
@@ -1837,23 +1837,23 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
       certain transport protocols, e.g., by TCP as half-closed
       connection.
 
+   *  For Connections that are Established, Closing, or Closed:
+      Connection Properties (Section 6.1) of the actual protocols that
+      were selected and instantiated.
+
    *  For Connections that are Established or Closing: Transport
       Properties that the application specified on the Preconnection.
-      See Section 4.2.  Selection properties of type "Preference" will
-      be exposed as boolean values indicating whether or not the
-      property applies to the selected transport.
-
-   *  For Connections that are Established, Closing, or Closed:
-      Selection (Section 4.2) and Connection Properties (Section 6.1) of
-      the actual protocols that were selected and instantiated.
       Selection Properties indicate whether or not the Connection has or
-      offers a certain Selection Property.  The actually instantiated
-      protocol stack might not match all Protocol Selection Properties
-      that the application specified on the Preconnection.  For example,
-      a certain Protocol Selection Property that an application
-      specified as Preferred might not actually be present in the chosen
-      protocol stack because none of the currently available transport
-      protocols had this feature.
+      offers a certain Selection Property, see Section 4.2.
+      The actually instantiated protocol stack might not match all
+      Protocol Selection Properties that the application specified on
+      the Preconnection.  For example, a certain Protocol Selection
+      Property that an application specified as Preferred might not
+      actually be present in the chosen protocol stack because none of
+      the currently available transport protocols had this feature.
+      Selection properties of type "Preference" will be exposed as
+      boolean values indicating whether or not the property applies to
+      the selected transport.
 
    *  For Connections that are Established, additional properties of the
       path(s) in use.  These properties can be derived from the local
@@ -3318,7 +3318,7 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
               Architecture for Transport Services", Work in Progress,
               Internet-Draft, draft-ietf-taps-arch-10, 30 April 2021,
               <https://datatracker.ietf.org/doc/html/draft-ietf-taps-
-              arch-10.txt>.
+              arch-10>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -3363,7 +3363,7 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
               for HTTP", Work in Progress, Internet-Draft, draft-ietf-
               httpbis-priority-03, 11 January 2021,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              priority-03.txt>.
+              priority-03>.
 
    [I-D.ietf-taps-impl]
               Brunstrom, A., Pauly, T., Enghardt, T., Grinnemo, K.,
@@ -3371,7 +3371,7 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
               "Implementing Interfaces to Transport Services", Work in
               Progress, Internet-Draft, draft-ietf-taps-impl-09, 30
               April 2021, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-taps-impl-09.txt>.
+              ietf-taps-impl-09>.
 
    [RFC2474]  Nichols, K., Blake, S., Baker, F., and D. Black,
               "Definition of the Differentiated Services Field (DS

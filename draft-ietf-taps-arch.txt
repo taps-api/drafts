@@ -5,7 +5,7 @@
 TAPS Working Group                                         T. Pauly, Ed.
 Internet-Draft                                                Apple Inc.
 Intended status: Standards Track                        B. Trammell, Ed.
-Expires: 18 December 2021                        Google Switzerland GmbH
+Expires: 6 January 2022                          Google Switzerland GmbH
                                                             A. Brunstrom
                                                      Karlstad University
                                                             G. Fairhurst
@@ -16,7 +16,7 @@ Expires: 18 December 2021                        Google Switzerland GmbH
                                                                   SAP SE
                                                                C.A. Wood
                                                               Cloudflare
-                                                            16 June 2021
+                                                             5 July 2021
 
 
                  An Architecture for Transport Services
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 December 2021.
+   This Internet-Draft will expire on 6 January 2022.
 
 Copyright Notice
 
@@ -1104,7 +1104,7 @@ Table of Contents
               Interface to Transport Services", Work in Progress,
               Internet-Draft, draft-ietf-taps-interface-12, 9 April
               2021, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              taps-interface-12.txt>.
+              taps-interface-12>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1123,7 +1123,7 @@ Table of Contents
               "Implementing Interfaces to Transport Services", Work in
               Progress, Internet-Draft, draft-ietf-taps-impl-09, 30
               April 2021, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-taps-impl-09.txt>.
+              ietf-taps-impl-09>.
 
    [POSIX]    "IEEE Std. 1003.1-2008 Standard for Information Technology
               -- Portable Operating System Interface (POSIX).  Open
