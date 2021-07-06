@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-07-04T00:17:17.793826+00:00",
+  "timestamp": "2021-07-06T00:18:35.011504+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -23286,7 +23286,7 @@
       ],
       "body": "The interface draft, section 4.1.1, talks about multicast endpoints, but doesn't mention whether such endpoints can be used with Rendezvous(). ",
       "createdAt": "2021-06-11T14:04:17Z",
-      "updatedAt": "2021-06-29T19:38:53Z",
+      "updatedAt": "2021-07-05T21:53:35Z",
       "closedAt": null,
       "comments": [
         {
@@ -23379,6 +23379,27 @@
           "body": "Ok, after one more pass at reading Rendezvous text in the draft I'm starting to get it.  That's an interesting point about generalized peer to peer connections, I don't think I had grasped that difference between this API and the way sockets are used.\r\n\r\nBacking up a bit further, I think I'm also finally understanding something I missed in an earlier comment from more than a year ago when somebody tried to make the case that Listen() should be the call the sender side of a multicast connection makes, and Initiate() should be the receiver side.  That position makes more sense to me now that I'm finally realizing this API is trying to normalize the concept of clients vs servers vs peers at the app layer, rather than describing socket-like things to do.\r\n\r\nI think maybe there is a wider issue here that this naming scheme is fundamentally confusing when you're looking at a non-TCP-like app.  Maybe \"Listen()\" should be renamed to \"ServerInitiate()\", \"Initiate()\" should be renamed to \"ClientInitiate()\", and \"Rendezvous()\" should be renamed to \"PeerInitiate()\"?\r\n\r\nUnder that naming scheme it would make complete sense for a multicast sender doing a ServerInitiate to get an immediate unidirectional sending Connection object, whereas it makes no sense at all to get that behavior out of a call named \"Listen\".\r\n\r\nI guess this probably needs a list discussion.  Now that you've got me understanding what the viewpoint was that drove these comments, I think the right thing to do is probably to fix all 3 drafts to make it explicit that the these APIs are designed to support 2 different kinds of connections (Client-Server or Peer-Peer) with 3 different roles, and to start the connection with a call that explicitly declares the role this connection object will be playing, and to name the initiation calls to match that.\r\n\r\nIf that ends up matching with the wg consensus, then I agree the multicast section needs to be refactored to make ServerInitiate() be similar to the action from today's Initiate(), and ClientInitiate() to be the action from today's Listen(), and that in this case a PeerInitiate() would be good to specify also, as well as adding a call to add a GroupEndpoint (with an ASM/SSM selector) that can be used to support bidirectional multicast traffic.  To me this sounds like a design improvement to the API, and thus the right thing to do.\r\n\r\nIf the group vetoes that direction and chooses to stick with the current naming scheme that describes things that map onto socket behaviors, then I think it's better to stick with the current approach.\r\n\r\nAlso, the claim that UDP is only useful as a substrate seems at odds with the text in the current draft.  The explanation of what a connection is explicitly mentions plain UDP as one possibility:\r\nhttps://ietf-tapswg.github.io/api-drafts/draft-ietf-taps-arch.html#section-4.1.2\r\n\r\n\"Connection: A Connection object represents one or more active transport protocol instances that can send and/or receive Messages between local and remote systems. It holds state pertaining to the underlying transport protocol instances and any ongoing data transfers. This represents, for example, an active Connection in a connection-oriented protocol such as TCP, or a fully-specified 5-tuple for a connectionless protocol such as UDP.\"\r\n\r\nThis reinforces my suspicion that this issue is not specifically about multicast, but rather about the confusing names of the connection initiation operations, where multicast is one example that highlights the problem well.\r\n\r\nI'm glad you raised the issue, I think I'm finally starting to understand what you mean and I think there is a very good point in here that rates to make this API better :)  But we probably need to take this to the list, I don't think this should be taken as a minor \"fix up the multicast section\" point, if I'm understanding it correctly.",
           "createdAt": "2021-06-29T19:37:05Z",
           "updatedAt": "2021-06-29T19:38:53Z"
+        },
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "There are several things in this discussion that I don't understand (just because I don't know enough about multicast), so take my answer with a grain of salt. This said, I believe I understand that your proposal of ServerInitiate() etc. can make sense and be \"cleaner\" (more general). I do understand that, as you say, it makes no sense at all to obtain an immediate unidirectional sending Connection object from a call named \"Listen\".\r\n\r\nHowever, for unicast client-server communication, \"ServerInitiate()\" is an odd term, IMO. I think it's common for people to think of an \"active\" open and a \"passive\" open. The key distinction here, at the interface level, is that \"active\" sends something towards a destination - you give it a destination address, but for \"passive\", you don't. So then, \"ServerInitiate\" sounds like it might just be \"listen\", yet it does something active, i.e. it MIGHT signal something to a destination (though, when used as a unicast server \"listen\", it won't be given a destination address, so that couldn't happen... but why is it not called \"Listen\", then?). \"Rendezvous\" is of course more symmetric, but the term makes it explicit that this is neither a \"normal\" active open nor a passive open. Terminology like \"ServerInitiate\" is just strangely ambiguous in a unicast case, IMO.\r\n\r\nTechnically, if I want to rename API\u00a0primitives for such usage, I can easily solve this by introducing new Actions like ServerInitiate etc., which do nothing but hand over the calls (i.e., ServerInitiate calls Listen, etc.). Wouldn't it be a way out to suggest this as a solution for implementers?\r\n\r\nIf this is broader than multicast, this suggestion can be placed outside the multicast section. E.g.: make an appendix called \"Alternative Action and Event Names for Connection Establishment\", and refer to it from mulitple places - in the \"normal\" establishment text, there could be statements like this: \"The terminology here (Initiate(), Listen() etc.) is based on a unicast model. There are communication models where these terms are misleading: for example, (...something...). It is therefore recommended to additionally offer the same Actions with a different set of terms for non-unicast communication. Appendix XX introduces these Action names and their mapping.\"\r\n\r\nWould this be a viable approach?",
+          "createdAt": "2021-07-05T09:37:07Z",
+          "updatedAt": "2021-07-05T09:37:07Z"
+        },
+        {
+          "author": "GrumpyOldTroll",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I guess in this model I would think ServerInitiate() calls Initiate() if there's a multicast remote endpoint, but calls Listen() if there's a unicast local endpoint and no multicast remote endpoint.  I guess I doubt it's worth it if it's done as an appendix instead of making the concepts of Server and Client and Peer more central in the API.\r\n\r\nMaybe I should look for a smaller scope that's more multicast-specific.  I guess another alternative would be to add a few things to the Preconnection just for Rendezvous, like \"AddBidirectionalGroup\" that takes a remote endpoint with a group address, then Rendezvous would make Send use the group address.\r\n\r\nI guess another reasonable alternative would be to just say \"Rendezvous is not supported for multicast endpoints.  Bidirectional communication should be implemented with separate connections for sending and receiving.\"",
+          "createdAt": "2021-07-05T20:06:27Z",
+          "updatedAt": "2021-07-05T20:06:27Z"
+        },
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hm, would \"Rendezvous is not supported for multicast endpoint\" take all this complexity away? Then this would sound like a good way to go, for me - based on your earlier argument that interdomain ASM is deprecated.  But ... I'm stepping on very thin ice here. Better for others to chime in.",
+          "createdAt": "2021-07-05T21:53:34Z",
+          "updatedAt": "2021-07-05T21:53:34Z"
         }
       ]
     },
@@ -23561,10 +23582,12 @@
       "author": "dhobsd",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "API"
+      ],
       "body": "Sections 4.1 and 4.1.3 introduce `WithIPv6Address` to configure an Endpoint Object. The address supplied in examples appears to be an address literal. However, Section 1.1 does not define any types explicitly associated with an internet address -- `Integer` or `Numeric` could work, but I don't think that's the intent for these APIs, either. Section 3.2.2 does not extend this. \r\n\r\nIt's unclear whether this literal is intended to support IPv6 scoped addresses as described in [RFC4007]. While this RFC describes a textual representation (possibly not in line with the goals of the API), [RFC6874] describes how to represent zone indexes in an address literal.\r\n\r\nIf zone indexes are not intended to be supported, this could be clarified by, when \"IPv4 and IPv6 address\" is mentioned in section 4.1, also citing [RFC791] and [RFC4007] with the respective address family.\r\n\r\nIf zone indexes _are_ intended to be supported, ambiguity exists around the use of `WithIPv6Address` and `WithInterface` on a Local Endpoint, where the supplied address has a zone index that does not match the supplied interface. This could be clarified by:\r\n\r\n 1. Defining type names that represent IPv4 and IPv6 addresses in section 1.1.\r\n 2. Specifying the properties of an address literal supported by that type (referencing [RFC791] for IPv4 and both [RFC4007] and [RFC6874] for IPv6).\r\n 3. Clarifying in section 4.1 that \"IPv4 or IPv6 address\" are of the respective type described in section 1.1 when used in `WithIPv4Address` or `WithIPv6Address`.\r\n 4. Clarifying the behavior of zone index and interface choices on a Local Endpoint in a new section 4.1.4. This may tie in to #859 to some extent in that this is unlikely to be discoverable until `Initiate` is called.\r\n\r\n[RFC791]: https://datatracker.ietf.org/doc/html/rfc791\r\n[RFC4007]: https://datatracker.ietf.org/doc/html/rfc4007\r\n[RFC6874]: https://datatracker.ietf.org/doc/html/rfc6874",
       "createdAt": "2021-06-29T15:42:07Z",
-      "updatedAt": "2021-06-29T15:42:07Z",
+      "updatedAt": "2021-07-05T10:21:57Z",
       "closedAt": null,
       "comments": []
     },
@@ -23577,12 +23600,29 @@
       "author": "dhobsd",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "API"
+      ],
       "body": "It feels to me like there's a bit of a gap between how software ought to discover Endpoint Object identifiers for Remote Endpoints versus Local Endpoints. Remote Endpoint identifiers are likely to be defined by the kind of software being used acting on some user input (web browser requesting a page, DNS server recursing, etc.), and these identifiers are resolved through existing internet architecture. Importantly, there's not really any way to check a valid input would work until `Initiate` for a Remote Endpoint.\r\n\r\nThis isn't really true for identifiers on Local Endpoints. While it's true that discovering these things is system-specific, a TAPS API implementation ought to provide a vehicle for discovering what inputs are valid. Two reasons I think it's reasonable to support discovery of local addresses and interfaces include:\r\n\r\n * It'd be unfortunate for TAPS-consuming software to rely on system-specific APIs to implement a UX for configuring that software.\r\n * Given diversity of public cloud offerings and wide use of multi-cloud deployments, it's reasonable to expect folks to want to dynamically discover what local network addresses and interfaces exist in their environment.\r\n\r\nIf the intent is to not define an API to discover these identifiers, the document should be clarified to discuss what Errors can be returned by `WithInterface` and `WithIPv[46]Address` Actions on Local Endpoints. (This is coming from a perspective that \"error early, error often\" is a best practice, which is admittedly subjective.)\r\n\r\nIf there is agreement to add (for example) `GetInterfaces` and `GetIPv[46]Addresses` Actions on a Local Endpoint, these should be documented. Further, the `WithInterface` and `WithIPv[46]Address` Actions on a Local Endpoint should be described to return an Error when the supplied input would not exist in the results returned by the corresponding `Get<identifier>` call at the time the `With<identifier>` Action was called.\r\n\r\nIn either case, it would be useful to mention that a successful invocation of a `With<identifier>` Action is not a guarantee that initiating the precondition will succeed.",
       "createdAt": "2021-06-29T17:04:35Z",
-      "updatedAt": "2021-06-29T17:04:35Z",
+      "updatedAt": "2021-07-05T23:51:27Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This all makes sense to me, and sounds like some things should indeed be added. I'm a little afraid that adding \"GetInterface\" could cause a rat tail of \"GetWhateverElse\" ideas... is there a good way to keep that from happening? Something more generic, perhaps - \"GetLocalSystemProperties\", and explain that such properties could, e.g., contain a list of interfaces?\r\n\r\nRegarding early failure, I agree with your suggestions too; note that, even though a Preconnection itself is just a passive data structure (or Object holding data), the call to create it can already fail (some details are in section 3.1 of the implementation draft). I think that's the earliest type of failure that we specify (and since this is an abstract API, I'm not sure if we should start specifying that calls to define an Endpoint (which is where \"WithInterface\" and such are found) could fail too - the endpoints could just be a 100% passive data structure that's handed over, there might not be any calls involved...  so I think it's enough to specify failure of the Preconnection creation).",
+          "createdAt": "2021-07-05T10:44:34Z",
+          "updatedAt": "2021-07-05T10:44:34Z"
+        },
+        {
+          "author": "dhobsd",
+          "authorAssociation": "NONE",
+          "body": "> I'm a little afraid that adding \"GetInterface\" could cause a rat tail of \"GetWhateverElse\" ideas.\r\n\r\nI think that's a fair concern, and I think a `GetLocalSystemProperties` API could work. Two concerns with a single API entry point for Local Endpoint identifier discovery:\r\n\r\n * It provides no means for enumerating interface(s) by address(es) or vice versa without some argument signifying how the caller wants the data returned.\r\n * It's more likely to cause future API and ABI versioning headaches for implementers when new identifiers are deemed useful for discovery, and require changing the returned data structure.\r\n \r\nI'm not sure how to effectively allay concerns about adding a billion discovery APIs. I don't think discovery is needed for Transport Properties: I see that as a TAPS API implementer's documentation problem (and consumer's reading-the-documentation problem), and maybe that's worth a sentence of rationale somewhere. I also do not think that a service <-> port discovery API is particularly useful in modern systems (and there are many service discovery protocols to choose from for the cases they are).\r\n\r\n`GetWhateverElse` would then have to reference a yet-to-be-defined local transport concept; since a Local Endpoint is effectively defined by a 3-tuple of interface, address, and port, I think it's unlikely new discovery APIs would be requested / added frequently.\r\n\r\n> the endpoints could just be a 100% passive data structure that's handed over, there might not be any calls involved... so I think it's enough to specify failure of the Preconnection creation\r\n\r\nGreat point! If the system changes between discovery and `Initiate` such that a previously-valid Preconnection is now invalid, the inverse is also possible. Happy to scope this issue only to the point of discovery APIs.",
+          "createdAt": "2021-07-05T23:51:27Z",
+          "updatedAt": "2021-07-05T23:51:27Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -70625,7 +70665,7 @@
       ],
       "body": "Added a couple of sentences to Arch that are hoped to early introduce that connections are things in the API, not aretfacts of the transport protocol instances.\r\n\r\nDifferent to, but related to an issue for the description in API.",
       "createdAt": "2021-06-14T09:55:39Z",
-      "updatedAt": "2021-06-14T11:57:18Z",
+      "updatedAt": "2021-07-05T22:25:40Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "fdea22b1f5acaabecd5c5a6c576d8f64a111833d",
@@ -70643,6 +70683,20 @@
           "body": "\"A `Connection` is an abstraction that represents the communication. If the transport services interface selects a protocol such as TCP for the communication, a `Connection` will correspond to an underlying protocol connection. In the other hand, if a protocol such as UDP is selected, the `Connection` remains an abstraction in the end points and doesn't correspond to explicit protocol state\" ?",
           "createdAt": "2021-06-14T11:21:44Z",
           "updatedAt": "2021-06-14T11:21:44Z"
+        },
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@csperkins : Could you live with the update in this PR?\r\n",
+          "createdAt": "2021-07-05T16:25:07Z",
+          "updatedAt": "2021-07-05T16:25:07Z"
+        },
+        {
+          "author": "csperkins",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "yes, I think so (assuming I'm reading the diff right)",
+          "createdAt": "2021-07-05T22:25:40Z",
+          "updatedAt": "2021-07-05T22:25:40Z"
         }
       ],
       "reviews": []
@@ -70652,7 +70706,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0Njc4ODE5NzQ3",
       "title": "Re-group managing  properties & protocol instances",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/863",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gorryfair",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -70664,18 +70718,28 @@
       ],
       "body": "In response to #813 ... This moves the discussion of protocol instances into bullet 4, and the properties (mainly selection) into bullet 5. It does not intend to change any text, and is intended to avoid what appeared to be overlap.",
       "createdAt": "2021-06-28T08:19:37Z",
-      "updatedAt": "2021-07-02T07:20:58Z",
+      "updatedAt": "2021-07-05T16:25:55Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "6f07eb75c5e847e37460140cc4b57bb406acd320",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "gorryfair-patch-managing",
       "headRefOid": "d000a3b5b2ec51f44aa0183a3c46f918c80092b8",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2021-07-05T16:25:48Z",
+      "mergedAt": "2021-07-05T16:25:48Z",
+      "mergedBy": "gorryfair",
+      "mergeCommit": {
+        "oid": "c4dd4d22510fb1eea38ec9f29b3d94f60380ca47"
+      },
+      "comments": [
+        {
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Resolved issue following MW review",
+          "createdAt": "2021-07-05T16:25:55Z",
+          "updatedAt": "2021-07-05T16:25:55Z"
+        }
+      ],
       "reviews": [
         {
           "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njk2ODc5Mjc4",
@@ -70694,6 +70758,75 @@
               "body": "```suggestion\r\n  a certain Selection Property, see {{selection-props}}.   \r\n```",
               "createdAt": "2021-07-01T06:49:14Z",
               "updatedAt": "2021-07-01T06:50:08Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 866,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjgzNTY5OTIw",
+      "title": "Preconnections are just structs",
+      "url": "https://github.com/ietf-tapswg/api-drafts/pull/866",
+      "state": "OPEN",
+      "author": "mwelzl",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "API"
+      ],
+      "body": "Closes #859\r\n\r\nThis is quite minimal... meant as a start. Or is this already enough?",
+      "createdAt": "2021-07-05T10:18:51Z",
+      "updatedAt": "2021-07-05T21:49:53Z",
+      "baseRepository": "ietf-tapswg/api-drafts",
+      "baseRefName": "master",
+      "baseRefOid": "6f07eb75c5e847e37460140cc4b57bb406acd320",
+      "headRepository": "ietf-tapswg/api-drafts",
+      "headRefName": "mw-api-precons-are-just-structs",
+      "headRefOid": "89f09492dc36e2eb3526c544e278d39e8f474759",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njk5MzE5NzMw",
+          "commit": {
+            "abbreviatedOid": "89f0949"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-07-05T16:27:44Z",
+          "updatedAt": "2021-07-05T16:27:45Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "After Initiated wouldn't this also be OK?",
+              "createdAt": "2021-07-05T16:27:44Z",
+              "updatedAt": "2021-07-05T16:27:45Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njk5NDI3NDY4",
+          "commit": {
+            "abbreviatedOid": "89f0949"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-07-05T21:49:52Z",
+          "updatedAt": "2021-07-05T21:49:53Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Of course - anywhere, really, it's just a struct. But this gets a bit harder to write about (\"a similar line would also work below the 'initiate' call higher above\"), unless we use more code just to show this; I think, with the explanation below, it should be clear enough as it is.",
+              "createdAt": "2021-07-05T21:49:52Z",
+              "updatedAt": "2021-07-05T21:49:53Z"
             }
           ]
         }
