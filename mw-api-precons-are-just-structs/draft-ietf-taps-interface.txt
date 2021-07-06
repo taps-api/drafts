@@ -5,7 +5,7 @@
 TAPS Working Group                                      B. Trammell, Ed.
 Internet-Draft                                   Google Switzerland GmbH
 Intended status: Standards Track                           M. Welzl, Ed.
-Expires: 6 January 2022                               University of Oslo
+Expires: 7 January 2022                               University of Oslo
                                                              T. Enghardt
                                                                  Netflix
                                                             G. Fairhurst
@@ -22,7 +22,7 @@ Expires: 6 January 2022                               University of Oslo
                                                               Apple Inc.
                                                                  K. Rose
                                                Akamai Technologies, Inc.
-                                                             5 July 2021
+                                                             6 July 2021
 
 
      An Abstract Application Layer Interface to Transport Services
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 January 2022.
+   This Internet-Draft will expire on 7 January 2022.
 
 Copyright Notice
 
@@ -488,10 +488,10 @@ Table of Contents
    Connection.Close()
    Connection2.Close()
 
-   Preconnections are reusable.  Hence, for example, after the
-   Connections were closed, the following would be correct: ~~~ //..
-   carry out adjustments to the Preconnection, if desire Connection :=
-   Preconnection.Initiate() ~~~
+   Preconnections are reusable after being used to initiate a
+   Connection.  Hence, for example, after the Connections were closed,
+   the following would be correct: ~~~ //.. carry out adjustments to the
+   Preconnection, if desire Connection := Preconnection.Initiate() ~~~
 
 3.1.3.  Peer Example
 
