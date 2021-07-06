@@ -5,7 +5,7 @@
 TAPS Working Group                                         T. Pauly, Ed.
 Internet-Draft                                                Apple Inc.
 Intended status: Standards Track                        B. Trammell, Ed.
-Expires: 6 January 2022                          Google Switzerland GmbH
+Expires: 7 January 2022                          Google Switzerland GmbH
                                                             A. Brunstrom
                                                      Karlstad University
                                                             G. Fairhurst
@@ -16,7 +16,7 @@ Expires: 6 January 2022                          Google Switzerland GmbH
                                                                   SAP SE
                                                                C.A. Wood
                                                               Cloudflare
-                                                             5 July 2021
+                                                             6 July 2021
 
 
                  An Architecture for Transport Services
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 January 2022.
+   This Internet-Draft will expire on 7 January 2022.
 
 Copyright Notice
 
@@ -193,6 +193,13 @@ Table of Contents
       implementation documents.  The Preconnection allows applications
       to configure Connection Properties, and the Connection represents
       an object that can be used to send and receive Messages.
+
+   *  A Connection is an abstraction that represents the communication.
+      If the transport services interface selects a protocol such as TCP
+      for the communication, a Connection will correspond to an
+      underlying protocol connection.  If however a protocol such as UDP
+      is selected, the Connection remains an abstraction at the end
+      points.
 
 1.3.  Specification of Requirements
 
