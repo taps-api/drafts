@@ -5,7 +5,7 @@
 TAPS Working Group                                         T. Pauly, Ed.
 Internet-Draft                                                Apple Inc.
 Intended status: Standards Track                        B. Trammell, Ed.
-Expires: 7 January 2022                          Google Switzerland GmbH
+Expires: 9 January 2022                          Google Switzerland GmbH
                                                             A. Brunstrom
                                                      Karlstad University
                                                             G. Fairhurst
@@ -16,7 +16,7 @@ Expires: 7 January 2022                          Google Switzerland GmbH
                                                                   SAP SE
                                                                C.A. Wood
                                                               Cloudflare
-                                                             6 July 2021
+                                                             8 July 2021
 
 
                  An Architecture for Transport Services
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 January 2022.
+   This Internet-Draft will expire on 9 January 2022.
 
 Copyright Notice
 
