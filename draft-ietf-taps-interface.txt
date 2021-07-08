@@ -309,9 +309,9 @@ Table of Contents
       applications written to a single API to make use of transport
       protocols in terms of the features they provide.
 
-   *  A unified interface to datagram and connection-oriented
-      transports, allowing use of a common API for connection-
-      establishment and closing.
+   *  A unified interface to datagram and stream-oriented transports,
+      allowing use of a common API for connection establishment and
+      closing.
 
    *  Message-orientation, as opposed to stream-orientation, using
       application-assisted framing and deframing where the underlying
@@ -360,11 +360,19 @@ Table of Contents
    from a Remote Endpoint (i.e., a logical connection that, depending on
    the kind of transport, can be bi-directional or unidirectional, and
    that can use a stream protocol or a datagram protocol).  Connections
-   can be created from Preconnections in three ways: by initiating the
-   Preconnection (i.e., actively opening, as in a client; Section 7.1),
-   through listening on the Preconnection (i.e., passively opening, as
-   in a server Section 7.2), or rendezvousing on the Preconnection
-   (i.e., peer to peer establishment; Section 7.3).
+   are presented consistently to the application, irrespective of
+   whether the underlying transport is connection-less or connection-
+   oriented.  Connections can be created from Preconnections in three
+   ways:
+
+   *  by initiating the Preconnection (i.e., actively opening, as in a
+      client; Section 7.1),
+
+   *  through listening on the Preconnection (i.e., passively opening,
+      as in a server Section 7.2),
+
+   *  or rendezvousing on the Preconnection (i.e., peer to peer
+      establishment; Section 7.3).
 
    Once a Connection is established, data can be sent and received on it
    in the form of Messages.  The interface supports the preservation of
@@ -542,10 +550,10 @@ Preconnection.Rendezvous()
 
 Preconnection -> RendezvousDone<Connection>
 
-//---- Ready event handler begin ----
+//---- RendezvousDone event handler begin ----
 Connection.Send(messageDataRequest)
 Connection.Receive()
-//---- Ready event handler end ----
+//---- RendezvousDone event handler end ----
 
 Connection -> Received<messageDataResponse, messageContext>
 
