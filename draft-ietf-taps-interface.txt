@@ -213,10 +213,16 @@ Table of Contents
 
 1.1.  Terminology and Notation
 
-   This API is described in terms of Objects with which an application
-   can interact; Actions the application can perform on these Objects;
-   Events, which an Object can send to an application asynchronously;
-   and Parameters associated with these Actions and Events.
+   This API is described in terms of
+
+   *  Objects with which an application can interact;
+
+   *  Actions the application can perform on these Objects;
+
+   *  Events, which an Object can send to an application to be processed
+      aynchronously; and
+
+   *  Parameters associated with these Actions and Events.
 
    The following notations, which can be combined, are used in this
    document:
@@ -246,6 +252,10 @@ Table of Contents
    Actions associated with no Object are Actions on the abstract
    interface itself; they are equivalent to Actions on a per-application
    global context.
+
+   Events are sent to the application or application-supplied code (e.g.
+   framers, see Section 7.1.2) for processing; the details of event
+   processing are platform- and implementation-specific.
 
    We also make use of the following basic types:
 
@@ -816,8 +826,7 @@ Connection.Close()
    RemoteSpecifier.AddAlias(AlternateRemoteSpecifier)
 
    In order to scope an alias to a specific transport protocol, an
-   Endpoint can specify a protocol identifier.  These identifiers MUST
-   only be set for aliases.
+   Endpoint can specify a protocol identifier.
 
    RemoteSpecifier.WithProtocol(QUIC)
 
@@ -2825,7 +2834,7 @@ Connection := Preconnection.InitiateWithSend(messageData, messageContext?, timeo
    to those that would be sent by an invocation of Initiate() followed
    immediately by an invocation of Send(), with the caveat that a send
    failure that occurs because the Connection could not be established
-   will not result in a SendError separate from the InitiateError
+   will not result in a SendError separate from the EstablishmentError
    signaling the failure of Connection establishment.
 
 7.2.6.  Priority in TAPS
@@ -3153,9 +3162,9 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
    *  Closed<> occurs when a Connection transitions to Closed state
       without error.
 
-   *  InitiateError<> occurs when a Connection created with Initiate()
-      transitions from Establishing state to Closed state due to an
-      error.
+   *  EstablishmentError<> occurs when a Connection created with
+      Initiate() transitions from Establishing state to Closed state due
+      to an error.
 
    *  ConnectionError<> occurs when a Connection transitions to Closed
       state due to an error in all other circumstances.
@@ -3168,7 +3177,7 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
         |                                                   ^
         |                                                   |
         +---------------------------------------------------+
-                     InitiateError<>
+                     EstablishmentError<>
 
    (*) Ready<>, ConnectionReceived<>, RendezvousDone<>
    (**) Closed<>, ConnectionError<>
@@ -3188,11 +3197,12 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
       Connection.
 
    *  No events will occur on a Connection after it is Closed; i.e.,
-      after a Closed<> event, an InitiateError<> or ConnectionError<>
-      will not occur on that connection.  To ensure this ordering,
-      Closed<> will not occur on a Connection while other events on the
-      Connection are still locally outstanding (i.e., known to the
-      interface and waiting to be dealt with by the application).
+      after a Closed<> event, an EstablishmentError<> or
+      ConnectionError<> will not occur on that connection.  To ensure
+      this ordering, Closed<> will not occur on a Connection while other
+      events on the Connection are still locally outstanding (i.e.,
+      known to the interface and waiting to be dealt with by the
+      application).
 
 10.  IANA Considerations
 
@@ -3564,7 +3574,7 @@ Appendix B.  Convenience Functions
 B.1.  Adding Preference Properties
 
    As Selection Properties of type "Preference" will be set on a
-   TransportProperties object quite frequently, implementations should
+   TransportProperties object quite frequently, implementations can
    provide special actions for adding each preference level i.e,
    "TransportProperties.Set(some_property, avoid)" is equivalent to
    "TransportProperties.Avoid(some_property)":
@@ -3578,10 +3588,10 @@ B.1.  Adding Preference Properties
 B.2.  Transport Property Profiles
 
    To ease the use of the interface specified by this document,
-   implementations should provide a mechanism to create Transport
-   Property objects (see Section 4.2) that are pre-configured with
-   frequently used sets of properties.  Implementations should at least
-   offer short-hands to specify the following property profiles:
+   implementations can provide a mechanism to create Transport Property
+   objects (see Section 4.2) that are pre-configured with frequently
+   used sets of properties; the following are in common use in current
+   applications:
 
 B.2.1.  reliable-inorder-stream
 
@@ -3601,7 +3611,8 @@ B.2.1.  reliable-inorder-stream
                     | preserveMsgBoundaries | ignore  |
                     +-----------------------+---------+
 
-                                  Table 2
+                         Table 2: reliable-inorder-
+                             stream preferences
 
 B.2.2.  reliable-message
 
@@ -3622,7 +3633,8 @@ B.2.2.  reliable-message
                     | preserveMsgBoundaries | require |
                     +-----------------------+---------+
 
-                                  Table 3
+                         Table 3: reliable-message
+                                preferences
 
 B.2.3.  unreliable-datagram
 
@@ -3644,7 +3656,8 @@ B.2.3.  unreliable-datagram
                     | safely replayable     | true    |
                     +-----------------------+---------+
 
-                                  Table 4
+                        Table 4: unreliable-datagram
+                                preferences
 
    Applications that choose this Transport Property Profile would avoid
    the additional latency that could be introduced by retransmission or
