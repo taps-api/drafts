@@ -315,7 +315,7 @@ Table of Contents
 
    *  Selection between alternate network paths, also allowing
       applications to be notified additional information is available
-      about the networks over which an connetcion can operate (e.g.
+      about the networks over which a connection can operate (e.g.
       Provisioning Domain (PvD) information [RFC7556]).
 
    *  Explicit support for transport-specific features to be applied,
@@ -619,7 +619,7 @@ Connection.Close()
 
 3.2.2.  Transport Property Types
 
-   Each Transport Property has a one ot the basic types described in
+   Each Transport Property has a one of the basic types described in
    Section 1.1.
 
    Most Selection Properties (see Section 4.2) are of the Enumeration
@@ -1004,16 +1004,16 @@ Connection.Close()
    "congestionControl" property also yields the value "false".
 
    An implementation of this interface must provide sensible defaults
-   for Selection Properties.  The suggested default values for each
-   property below represent a configuration that can be implemented over
-   TCP.  If these default values are used and TCP is not supported by a
-   Transport Services implementation, then an application using the
-   default set of Properties might not succeed in establishing a
-   connection.  Using the same default values for independent Transport
-   Services implementations can be beneficial when applications are
-   ported between different implementations/platforms, even if this
-   default could lead to a connection failure when TCP is not available.
-   If default values other than those suggested below are used, it is
+   for Selection Properties.  The default values for each property below
+   represent a configuration that can be implemented over TCP.  If these
+   default values are used and TCP is not supported by a Transport
+   Services implementation, then an application using the default set of
+   Properties might not succeed in establishing a connection.  Using the
+   same default values for independent Transport Services
+   implementations can be beneficial when applications are ported
+   between different implementations/platforms, even if this default
+   could lead to a connection failure when TCP is not available.  If
+   default values other than those suggested below are used, it is
    RECOMMENDED to clearly document any differences.
 
 4.2.1.  Reliable Data Transfer (Connection)
