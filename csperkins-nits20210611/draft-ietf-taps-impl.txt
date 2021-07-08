@@ -5,7 +5,7 @@
 TAPS Working Group                                     A. Brunstrom, Ed.
 Internet-Draft                                       Karlstad University
 Intended status: Informational                             T. Pauly, Ed.
-Expires: 13 December 2021                                     Apple Inc.
+Expires: 9 January 2022                                       Apple Inc.
                                                              T. Enghardt
                                                                  Netflix
                                                            K-J. Grinnemo
@@ -18,7 +18,7 @@ Expires: 13 December 2021                                     Apple Inc.
                                                    University of Glasgow
                                                                 M. Welzl
                                                       University of Oslo
-                                                            11 June 2021
+                                                             8 July 2021
 
 
              Implementing Interfaces to Transport Services
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 December 2021.
+   This Internet-Draft will expire on 9 January 2022.
 
 Copyright Notice
 
@@ -163,26 +163,33 @@ Table of Contents
       Connections.
 
    Preconnection objects should be implemented as bundles of properties
-   that an application can both read and write.  Once a Preconnection
-   has been used to create an outbound Connection or a Listener, the
-   implementation should ensure that the copy of the properties held by
-   the Connection or Listener is immutable.  This may involve performing
-   a deep-copy, copying the object with all the objects it references,
-   if the application is still able to modify properties on the original
-   Preconnection object.
+   that an application can both read and write.  A Preconnection object
+   influences a Connection only at one point in time: when the
+   Connection is created.  Connection objects represent the interface
+   between the application and the implementation to manage transport
+   state, and conduct data transfer.  During the process of
+   establishment (Section 4), the Connection will not be bound to a
+   specific transport protocol instance, since multiple candidate
+   Protocol Stacks might be raced.
 
-   Connection objects represent the interface between the application
-   and the implementation to manage transport state, and conduct data
-   transfer.  During the process of establishment (Section 4), the
-   Connection will not be bound to a specific transport flow, since
-   there may be multiple candidate Protocol Stacks being raced.  Once
-   the Connection is established, its interface maps actions and events
-   to the details of the chosen Protocol Stack.  For example, the same
-   Connection object may ultimately represent the interface into a TCP
-   connection, a TLS session over TCP, a UDP flow with fully-specified
-   Local and Remote Endpoints, a DTLS session, a SCTP stream, a QUIC
-   stream, or an HTTP/2 stream.
+   Once a Preconnection has been used to create an outbound Connection
+   or a Listener, the implementation should ensure that the copy of the
+   properties held by the Connection or Listener is not affected when
+   the application makes changes to a Preconnection object.  This may
+   involve the implementation performing a deep-copy, copying the object
+   with all the objects that it references.
 
+   Once the Connection is established, its interface maps actions and
+   events to the details of the chosen Protocol Stack.  For example, the
+   same Connection object may ultimately represent a single instance of
+   one transport protocol (e.g., a TCP connection, a TLS session over
+   TCP, a UDP flow with fully-specified Local and Remote Endpoints, a
+   DTLS session, a SCTP stream, a QUIC stream, or an HTTP/2 stream).
+   The properties held by a Connection or Listener is independent of
+   other connections that are not part of the same Connection Group.
+   Once Initate has been called, the Selection Properties and Endpoint
+   information are immutable (i.e, an application is not able to later
+   modify Selection Properties on the original Preconnection object).
    Listener objects are created with a Preconnection, at which point
    their configuration should be considered immutable by the
    implementation.  The process of listening is described in
@@ -220,10 +227,10 @@ Table of Contents
    *  A request by an application for Protocol Properties that include
       requirements or prohibitions that cannot be satisfied by any of
       the available protocols.  For example, if an application requires
-      "Configure Reliability per Message", but no such protocol is
-      available on the host running the transport system this should
-      result in an error, e.g., when SCTP is not supported by the
-      operating system.
+      "Configure Reliability per Message", but no such feature is
+      available in any protocol the host running the transport system on
+      the host running the transport system this should result in an
+      error, e.g., when SCTP is not supported by the operating system.
 
    *  A request by an application for Protocol Properties that are in
       conflict with each other, i.e., the required and prohibited
@@ -232,10 +239,8 @@ Table of Contents
       requires "Configure Reliability per Message", this mismatch should
       result in an error.
 
-   To avoid allocating resources, it is important that such cases fail
-   as early as possible, e.g., prior to endpoint resolution, only to
-   find out later that there is no protocol that satisfies the
-   requirements.
+   To avoid allocating resources that are not finally needed, it is
+   important that configuration-time errors fail as early as possible.
 
 3.2.  Role of system policy
 
@@ -617,14 +622,22 @@ Aggregate [Endpoint: www.example.com:80] [Interface: Any]   [Protocol: TCP]
       Section 9.2:
 
       -  Scavenger: Prefer paths with the highest expected available
-         capacity, based on the observed maximum throughput;
+         capacity, but minimising impact on other traffic, based on the
+         observed maximum throughput;
 
       -  Low Latency/Interactive: Prefer paths with the lowest expected
          Round Trip Time, based on observed round trip time estimates;
 
-      -  Constant-Rate Streaming: Prefer paths that can are expected to
+      -  Low Latency/Non-Interactive: Prefer paths with a low expected
+         Round Trip Time, but can tolerate delay variation;
+
+      -  Constant-Rate Streaming: Prefer paths that are expected to
          satisy the requested Stream Send or Stream Receive Bitrate,
-         based on the observed maximum throughput.
+         based on the observed maximum throughput;
+
+      -  Capacity-Seeking: Prefer adapting to paths to determine the
+         highest available capacity, based on the observed maximum
+         throughput.
 
    Implementations process the Properties in the following order:
    Prohibit, Require, Prefer, Avoid.  If Selection Properties contain
@@ -2078,7 +2091,7 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
               Architecture for Transport Services", Work in Progress,
               Internet-Draft, draft-ietf-taps-arch-10, 30 April 2021,
               <https://datatracker.ietf.org/doc/html/draft-ietf-taps-
-              arch-10.txt>.
+              arch-10>.
 
    [I-D.ietf-taps-interface]
               Trammell, B., Welzl, M., Enghardt, T., Fairhurst, G.,
@@ -2087,7 +2100,7 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
               Interface to Transport Services", Work in Progress,
               Internet-Draft, draft-ietf-taps-interface-12, 9 April
               2021, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              taps-interface-12.txt>.
+              taps-interface-12>.
 
    [RFC7413]  Cheng, Y., Chu, J., Radhakrishnan, S., and A. Jain, "TCP
               Fast Open", RFC 7413, DOI 10.17487/RFC7413, December 2014,
@@ -2135,14 +2148,14 @@ MessageFramer.Deliver(Connection, MessageContext, Data, IsEndOfMessage)
               and Secure Transport", Work in Progress, Internet-Draft,
               draft-ietf-quic-transport-34, 14 January 2021,
               <https://datatracker.ietf.org/doc/html/draft-ietf-quic-
-              transport-34.txt>.
+              transport-34>.
 
    [I-D.ietf-tcpm-2140bis]
               Touch, J., Welzl, M., and S. Islam, "TCP Control Block
               Interdependence", Work in Progress, Internet-Draft, draft-
               ietf-tcpm-2140bis-11, 12 April 2021,
               <https://datatracker.ietf.org/doc/html/draft-ietf-tcpm-
-              2140bis-11.txt>.
+              2140bis-11>.
 
    [NEAT-flow-mapping]
               "Transparent Flow Mapping for NEAT", IFIP NETWORKING 2017
