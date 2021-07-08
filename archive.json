@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-07-06T00:18:35.011504+00:00",
+  "timestamp": "2021-07-08T00:16:53.254717+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -70654,7 +70654,7 @@
       "id": "MDExOlB1bGxSZXF1ZXN0NjY5NDIzMTEw",
       "title": "Help UDP fit wrt connection",
       "url": "https://github.com/ietf-tapswg/api-drafts/pull/862",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gorryfair",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -70665,17 +70665,19 @@
       ],
       "body": "Added a couple of sentences to Arch that are hoped to early introduce that connections are things in the API, not aretfacts of the transport protocol instances.\r\n\r\nDifferent to, but related to an issue for the description in API.",
       "createdAt": "2021-06-14T09:55:39Z",
-      "updatedAt": "2021-07-05T22:25:40Z",
+      "updatedAt": "2021-07-06T07:20:39Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "fdea22b1f5acaabecd5c5a6c576d8f64a111833d",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "gorryfair-patch-7",
       "headRefOid": "263a23af8797070250042fb317af99885a756e73",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2021-07-06T07:20:12Z",
+      "mergedAt": "2021-07-06T07:20:12Z",
+      "mergedBy": "gorryfair",
+      "mergeCommit": {
+        "oid": "39c11c205ec33e50ccd4f78988c474f47daa6bdb"
+      },
       "comments": [
         {
           "author": "csperkins",
@@ -70777,13 +70779,13 @@
       ],
       "body": "Closes #859\r\n\r\nThis is quite minimal... meant as a start. Or is this already enough?",
       "createdAt": "2021-07-05T10:18:51Z",
-      "updatedAt": "2021-07-05T21:49:53Z",
+      "updatedAt": "2021-07-06T07:29:36Z",
       "baseRepository": "ietf-tapswg/api-drafts",
       "baseRefName": "master",
       "baseRefOid": "6f07eb75c5e847e37460140cc4b57bb406acd320",
       "headRepository": "ietf-tapswg/api-drafts",
       "headRefName": "mw-api-precons-are-just-structs",
-      "headRefOid": "89f09492dc36e2eb3526c544e278d39e8f474759",
+      "headRefOid": "c4e374a9376d75d7338d699619a9a3b16a13ddd4",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -70829,6 +70831,72 @@
               "updatedAt": "2021-07-05T21:49:53Z"
             }
           ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njk5NTI3MDA0",
+          "commit": {
+            "abbreviatedOid": "89f0949"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "I'm good with this!",
+          "createdAt": "2021-07-06T04:34:03Z",
+          "updatedAt": "2021-07-06T04:34:03Z",
+          "comments": []
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njk5NjEyMDI2",
+          "commit": {
+            "abbreviatedOid": "89f0949"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-07-06T07:18:12Z",
+          "updatedAt": "2021-07-06T07:18:12Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Could we try: \r\n\"Preconnections are reusable after being used to initiate a Connection. Hence, for example, after the Connections were closed,\r\n the following would be correct:\"",
+              "createdAt": "2021-07-06T07:18:12Z",
+              "updatedAt": "2021-07-06T07:18:12Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njk5NjE5NTU1",
+          "commit": {
+            "abbreviatedOid": "89f0949"
+          },
+          "author": "mwelzl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-07-06T07:27:26Z",
+          "updatedAt": "2021-07-06T07:27:26Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Your wish has been granted.",
+              "createdAt": "2021-07-06T07:27:26Z",
+              "updatedAt": "2021-07-06T07:27:26Z"
+            }
+          ]
+        },
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3Njk5NjIxNDY3",
+          "commit": {
+            "abbreviatedOid": "c4e374a"
+          },
+          "author": "gorryfair",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Looks good to me...",
+          "createdAt": "2021-07-06T07:29:36Z",
+          "updatedAt": "2021-07-06T07:29:36Z",
+          "comments": []
         }
       ]
     }
