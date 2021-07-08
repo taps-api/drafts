@@ -264,8 +264,7 @@ Table of Contents
    *  Tuple: An ordered grouping of multiple value types, represented as
       a comma-separated list in parentheses, e.g., "(Enumeration,
       Preference)".  Instances take a sequence of values each valid for
-      the corresponding value type.  The composition of types and their
-      order depends on the property and is fixed for the property.
+      the corresponding value type.
 
    *  Array: Denoted []Type, an instance takes a value for each of zero
       or more elements in a sequence of the given Type.  An array may be
@@ -293,45 +292,47 @@ Table of Contents
    design principles defined in [I-D.ietf-taps-arch].  The interface
    defined in this document provides:
 
-   *  Access to a variety of transport protocols, independent of the the
-      Protocol Stacks that will be used at runtime, such that all common
-      features of these protocol stacks are made available to the
-      application in a transport-independent way to the degree possible,
-      enabling applications written to a single API to make use of
-      transport protocols in terms of the features they provide;
+   *  Access to a variety of transport protocols, independent of the
+      Protocol Stacks that will be used at runtime.  All common features
+      of these protocol stacks are made available to the application in
+      a transport-independent way to the degree possible.  This enables
+      applications written to a single API to make use of transport
+      protocols in terms of the features they provide.
 
    *  A unified interface to datagram and connection-oriented
       transports, allowing use of a common API for connection-
-      establishment and closing;
+      establishment and closing.
 
    *  Message-orientation, as opposed to stream-orientation, using
       application-assisted framing and deframing where the underlying
-      transport does not provide these;
+      transport does not provide these.
 
    *  Asynchronous Connection establishment, transmission, and
-      reception, allowing concurrent operations during establishment and
-      supporting event-driven application interactions with the
-      transport layer, in line with developments in modern platforms and
+      reception.  This allows concurrent operations during establishment
+      and event-driven application interactions with the transport
+      layer, in line with developments in modern platforms and
       programming languages;
 
-   *  Selection between alternate network paths that can be informed
-      when additional information is available about the networks over
-      which an endpoint can operate (e.g.  Provisioning Domain (PvD)
-      information [RFC7556]);
+   *  Selection between alternate network paths, using additional
+      information about the networks over which a connection can operate
+      (e.g.  Provisioning Domain (PvD) information [RFC7556]) where
+      available.
 
-   *  Explicit support for transport-specific features to be applied
+   *  Explicit support for transport-specific features to be applied,
       should that particular transport be part of a chosen Protocol
-      Stack;
+      Stack.
 
    *  Explicit support for security properties as first-order transport
-      features, and for configuration of cryptographic identities and
+      features.
+
+   *  Explicit support for configuration of cryptographic identities and
       transport security parameters persistent across multiple
-      Connections; and
+      Connections.
 
    *  Explicit support for multistreaming and multipath transport
       protocols, and the grouping of related Connections into Connection
-      Groups through cloning of Connections, to allow applications to
-      take full advantage of new transport protocols supporting these
+      Groups through cloning of Connections.  This allows applications
+      to take full advantage of new transport protocols supporting these
       features.
 
 3.  API Summary
@@ -563,17 +564,13 @@ Connection.Close()
    The behavior of the selected protocol stack(s) when sending Messages
    is controlled by Message Properties (see Section 7.1.3).
 
-   All Transport Properties, regardless of the phase in which they are
-   used, are organized within a single namespace.  This enables setting
-   them as defaults at earlier stages and querying them in later stages:
-
-   *  Connection Properties can be set on Preconnections and Connections
-
-   *  Message Properties can be set on Preconnections, Connections and
-      Messages
-
-   *  The effect of Selection Properties can be queried on Connections
-      and Messages
+   Selection Properties can be set on Preconnections, and the effect of
+   Selection Properties can be queried on Connections and Messages.
+   Connection Properties can be set on Connections and Preconnections;
+   when set on Preconnections, they act as an initial default for the
+   resulting Connections.  Message Properties can be set on Messages,
+   Connections, and Preconnections; when set on the latter two, they act
+   as an initial default for the Messages sent over those Connections,
 
    Note that configuring Connection Properties and Message Properties on
    Preconnections is preferred over setting them later.  Early
@@ -627,15 +624,14 @@ Connection.Close()
 
 3.2.2.  Transport Property Types
 
-   Transport Properties each have a type, which can be:
+   Each Transport Property has a one of the basic types described in
+   Section 1.1.
 
-   *  One of the basic types described in Section 1.1; or
-
-   *  Preference, which is an Enumeration with five possible values:
-      Prohibit, Avoid, Ignore, Prefer, or Require.  Each of these
-      denotes a level of preference of a given property during protocol
-      selection.  (See also Section 4.2.)  The Preference type is used
-      only on Preconnections, and only for Selection Properties.
+   Most Selection Properties (see Section 4.2) are of the Enumeration
+   type, and use the Preference Enumeration, which takes one of five
+   possible values (Prohibit, Avoid, Ignore, Prefer, or Require)
+   denoting the level of preference for a given property during protocol
+   selection.
 
 3.3.  Scope of the Interface Definition
 
@@ -1014,17 +1010,17 @@ Connection.Close()
    "congestionControl" property also yields the value "false".
 
    An implementation of this interface must provide sensible defaults
-   for Selection Properties.  The recommended default values for each
-   property below represent a configuration that can be implemented over
-   TCP.  If these default values are used and TCP is not supported by a
-   Transport Services implementation, then an application using the
-   default set of Properties might not succeed in establishing a
-   connection.  Using the same default values for independent Transport
-   Services implementations can be beneficial when applications are
-   ported between different implementations/platforms, even if this
-   default could lead to a connection failure when TCP is not available.
-   If default values other than those recommended below are used, it is
-   recommended to clearly document any differences.
+   for Selection Properties.  The default values for each property below
+   represent a configuration that can be implemented over TCP.  If these
+   default values are used and TCP is not supported by a Transport
+   Services implementation, then an application using the default set of
+   Properties might not succeed in establishing a connection.  Using the
+   same default values for independent Transport Services
+   implementations can be beneficial when applications are ported
+   between different implementations/platforms, even if this default
+   could lead to a connection failure when TCP is not available.  If
+   default values other than those suggested below are used, it is
+   RECOMMENDED to clearly document any differences.
 
 4.2.1.  Reliable Data Transfer (Connection)
 
@@ -1060,8 +1056,8 @@ Connection.Close()
    Default:  Ignore
 
    This property specifies whether an application considers it useful to
-   indicate its reliability requirements on a per-Message basis.  This
-   property applies to Connections and Connection Groups.
+   specify different reliability requirements for individual Messages in
+   a Connection.
 
 4.2.4.  Preservation of Data Ordering
 
@@ -1190,11 +1186,11 @@ Connection.Close()
    "Cellular" interface types available; whereas on a desktop computer,
    "Wi-Fi" and "Wired Ethernet" interface types might be available.  An
    implementation should provide all types that are supported on the
-   local system to all remote systems, to allow applications to be
-   written generically.  For example, if a single implementation is used
-   on both mobile devices and desktop devices, it should define the
-   "Cellular" interface type for both systems, since an application
-   might wish to always prohibit cellular.
+   local system, to allow applications to be written generically.  For
+   example, if a single implementation is used on both mobile devices
+   and desktop devices, it should define the "Cellular" interface type
+   for both systems, since an application might wish to always prohibit
+   cellular.
 
    The set of interface types is expected to change over time as new
    access technologies become available.  The taxonomy of interface
@@ -1468,7 +1464,7 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
    SecurityParameters := NewOpportunisticSecurityParameters()
 
    Representation of Security Parameters in implementations should
-   parallel that chosen for Transport Property names as recommended in
+   parallel that chosen for Transport Property names as sugggested in
    Section 3.3.
 
 4.3.2.  Connection Establishment Callbacks
@@ -1846,21 +1842,13 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
 
    *  For Connections that are Established, Closing, or Closed:
       Connection Properties (Section 6.1) of the actual protocols that
-      were selected and instantiated.
-
-   *  For Connections that are Established or Closing: Transport
-      Properties that the application specified on the Preconnection.
-      Selection Properties indicate whether or not the Connection has or
-      offers a certain Selection Property, see Section 4.2.
-      The actually instantiated protocol stack might not match all
+      were selected and instantiated, and Selection Properties that the
+      application specified on the Preconnection.  Selection Properties
+      of type "Preference" will be exposed as boolean values indicating
+      whether or not the property applies to the selected transport.
+      Note that the instantiated protocol stack might not match all
       Protocol Selection Properties that the application specified on
-      the Preconnection.  For example, a certain Protocol Selection
-      Property that an application specified as Preferred might not
-      actually be present in the chosen protocol stack because none of
-      the currently available transport protocols had this feature.
-      Selection properties of type "Preference" will be exposed as
-      boolean values indicating whether or not the property applies to
-      the selected transport.
+      the Preconnection.
 
    *  For Connections that are Established, additional properties of the
       path(s) in use.  These properties can be derived from the local
@@ -2506,7 +2494,7 @@ SecurityParameters.Set(signature-algorithm, "ed25519")
    Type:  Boolean
 
    Default:  the queried Boolean value of the Selection Property
-      "reliability" (Section 4.2.1)
+      "preserveOrder" (Section 4.2.4)
 
    The order in which Messages were submitted for transmission via the
    Send Action will be preserved on delivery via Receive<> events for
@@ -2961,11 +2949,12 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
    single Message are delivered in order without gaps.  This event does
    not support delivering discontiguous partial Messages.  If, for
    example, Message A is divided into three pieces (A1, A2, A3) and
-   Message B is divided into three pieces (B1, B2, B3), the
-   ReceivedPartial may deliver them in a sequence like this: A1, B1, B2,
-   A2, A3, B3, because the messageContext allows the application to
-   identify the pieces as belonging to Message A and B, respectively.
-   However, a sequence like: A1, A3 will never occur.
+   Message B is divided into three pieces (B1, B2, B3), and
+   preserveOrder is not Required, the ReceivedPartial may deliver them
+   in a sequence like this: A1, B1, B2, A2, A3, B3, because the
+   messageContext allows the application to identify the pieces as
+   belonging to Message A and B, respectively.  However, a sequence
+   like: A1, A3 will never occur.
 
    If the minIncompleteLength in the Receive request was set to be
    infinite (indicating a request to receive only complete Messages),
@@ -3029,7 +3018,8 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
    access to information about the transport internals for their own
    operation.  This property is specific to UDP and UDP-Lite because
    these protocols do not implement congestion control, and hence expose
-   this functionality to the application.
+   this functionality to the application (see [RFC8293], following the
+   guidance in [RFC8085])
 
 7.3.3.2.  Early Data
 
@@ -3459,6 +3449,12 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
               Stream Control Transmission Protocol", RFC 8260,
               DOI 10.17487/RFC8260, November 2017,
               <https://datatracker.ietf.org/doc/html/rfc8260>.
+
+   [RFC8293]  Ghanwani, A., Dunbar, L., McBride, M., Bannai, V., and R.
+              Krishnan, "A Framework for Multicast in Network
+              Virtualization over Layer 3", RFC 8293,
+              DOI 10.17487/RFC8293, January 2018,
+              <https://datatracker.ietf.org/doc/html/rfc8293>.
 
    [RFC8489]  Petit-Huguenin, M., Salgueiro, G., Rosenberg, J., Wing,
               D., Mahy, R., and P. Matthews, "Session Traversal
