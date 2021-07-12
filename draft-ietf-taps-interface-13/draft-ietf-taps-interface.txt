@@ -3331,9 +3331,9 @@ Connection -> ReceivedPartial<messageData, messageContext, endOfMessage>
               Pauly, T., Trammell, B., Brunstrom, A., Fairhurst, G.,
               Perkins, C., Tiesel, P. S., and C. A. Wood, "An
               Architecture for Transport Services", Work in Progress,
-              Internet-Draft, draft-ietf-taps-arch-10, 30 April 2021,
+              Internet-Draft, draft-ietf-taps-arch-11, 12 July 2021,
               <https://datatracker.ietf.org/doc/html/draft-ietf-taps-
-              arch-10>.
+              arch-11>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
