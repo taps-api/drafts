@@ -5,7 +5,7 @@
 TAPS Working Group                                         T. Pauly, Ed.
 Internet-Draft                                                Apple Inc.
 Intended status: Standards Track                        B. Trammell, Ed.
-Expires: 13 December 2021                        Google Switzerland GmbH
+Expires: 13 January 2022                         Google Switzerland GmbH
                                                             A. Brunstrom
                                                      Karlstad University
                                                             G. Fairhurst
@@ -16,7 +16,7 @@ Expires: 13 December 2021                        Google Switzerland GmbH
                                                                   SAP SE
                                                                C.A. Wood
                                                               Cloudflare
-                                                            11 June 2021
+                                                            12 July 2021
 
 
                  An Architecture for Transport Services
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 December 2021.
+   This Internet-Draft will expire on 13 January 2022.
 
 Copyright Notice
 
@@ -193,6 +193,13 @@ Table of Contents
       implementation documents.  The Preconnection allows applications
       to configure Connection Properties, and the Connection represents
       an object that can be used to send and receive Messages.
+
+   *  A Connection is an abstraction that represents the communication.
+      If the transport services interface selects a protocol such as TCP
+      for the communication, a Connection will correspond to an
+      underlying protocol connection.  If however a protocol such as UDP
+      is selected, the Connection remains an abstraction at the end
+      points.
 
 1.3.  Specification of Requirements
 
@@ -785,7 +792,7 @@ Table of Contents
    *  Listen: Enables a listener to accept incoming Connections.  The
       Listener will then create Connection objects as incoming
       connections are accepted (Section 4.1.6).  Listeners by default
-      register with multiple paths, protocols, and local endpoints,
+      register with multiple paths, protocols, and Local Endpoints,
       unless constrained by Selection Properties and/or the specified
       Local Endpoint(s).  Connections can be accepted on any of the
       available paths or endpoints.
@@ -1104,7 +1111,7 @@ Table of Contents
               Interface to Transport Services", Work in Progress,
               Internet-Draft, draft-ietf-taps-interface-12, 9 April
               2021, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              taps-interface-12.txt>.
+              taps-interface-12>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1123,7 +1130,7 @@ Table of Contents
               "Implementing Interfaces to Transport Services", Work in
               Progress, Internet-Draft, draft-ietf-taps-impl-09, 30
               April 2021, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-taps-impl-09.txt>.
+              ietf-taps-impl-09>.
 
    [POSIX]    "IEEE Std. 1003.1-2008 Standard for Information Technology
               -- Portable Operating System Interface (POSIX).  Open
