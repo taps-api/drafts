@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-07-11T00:18:16.011655+00:00",
+  "timestamp": "2021-07-13T00:17:36.527485+00:00",
   "repo": "ietf-tapswg/api-drafts",
   "labels": [
     {
@@ -19771,7 +19771,7 @@
       ],
       "body": "When you're talking about an API object (as a proper noun), capitalize it the way it has been introduced in the doc. When you're talking about the abstract object (e.g., in reference to the arch doc), don't capitalize it like the corresponding API object.\r\n\r\nMostly adding this as a placeholder for myself. I volunteer to do a sweep before WGLC.",
       "createdAt": "2020-09-11T11:28:39Z",
-      "updatedAt": "2021-07-08T09:39:01Z",
+      "updatedAt": "2021-07-12T21:21:19Z",
       "closedAt": null,
       "comments": [
         {
@@ -19815,6 +19815,13 @@
           "body": "Also s/TAPS/something else/g",
           "createdAt": "2021-07-08T09:39:00Z",
           "updatedAt": "2021-07-08T09:39:00Z"
+        },
+        {
+          "author": "squarooticus",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I realize I never submitted this comment after the last meeting. Thankfully, it somehow survived several restarts of Firefox.\r\n\r\nI'm going to drop some questions here for discussion during today's meeting:\r\n\r\n* Should we use backticks (\\`...\\`) consistently for anything that is intended to be interpreted as pseudocode, e.g., for all types as well as values? Or is there some other heuristic? I advocate drawing the line at some point closer to code than Object classes like Preconnections, Connections, Events, Errors, etc., as those are directly used *only* in the text; but I'd like to get aligned on a heuristic short of that.\r\n** An example of the kind of thing I'm dithering about is `[]Type`.\r\n** What about `Initiate()`, `Listen()`, etc., where referenced in text? Those seem like code snippets that should use backticks.\r\n* Should we use backticks for property names at their initial definition (i.e., the `: propertyName` line)?\r\n* There are a bunch of instances in which backticks are used to reference property names in text, such as `Reliable Data Transfer (Connection)`: I presume these should either be changed to the actual property name and left in backticks, or have the backticks removed. Preferences?\r\n* I have alpha-substituted some of the dashed references (`{...}` and `{#...}`) with the camelCase names. I can do this for the others, but since they don't end up in the output it would only be for ease of further editing. Does anyone care?",
+          "createdAt": "2021-07-12T21:21:19Z",
+          "updatedAt": "2021-07-12T21:21:19Z"
         }
       ]
     },
